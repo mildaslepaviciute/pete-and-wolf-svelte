@@ -214,7 +214,6 @@
               controls 
               poster={currentProject.thumbnail}
               bind:this={videoElement}
-              fm-fade-in
             >
               <source src={currentProject.video} type="video/mp4">
             </video>
@@ -238,7 +237,7 @@
         </div>
   
         <!-- Projects List Column -->
-        <div class="col-lg-4 h-100 ps-lg-1">
+        <div class="col-lg-4  ps-lg-1">
           <div class="max-h-screen border border-black overflow-hidden">
             <div class="swiper scrollSwiperAdvertising">
               <div class="swiper-wrapper">
@@ -249,7 +248,7 @@
                       class="d-flex align-items-center border-bottom border-black text-decoration-none"
                       class:active={currentProject.slug === project.slug}
                     >
-                      <div class="w-30 border-end border-black">
+                      <div class="w-35 border-end border-black">
                         <video 
                           class="w-100" 
                           playsinline 
@@ -261,7 +260,7 @@
                           <source src={project.video} type="video/mp4">
                         </video>
                       </div>
-                      <div class="w-70 h-100 d-flex align-items-center font-7 p-3 text-black">
+                      <div class="w-65 h-100 d-flex align-items-center font-7 p-3 text-black">
                         {project.title}
                       </div>
                     </a>
