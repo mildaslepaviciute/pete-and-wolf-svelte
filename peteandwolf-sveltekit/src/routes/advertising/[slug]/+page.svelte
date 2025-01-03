@@ -164,11 +164,11 @@
     $: currentProject = advertisingProjects.find(p => p.slug === $page.params.slug) || advertisingProjects[0];
 
     // Reactive statement to handle current project changes
-    $: if (currentProject) {
-      gsap.to('[fm-fade-in]', { opacity: 0, duration: 0, onComplete: () => {
-        gsap.to('[fm-fade-in]', { opacity: 1, duration: 1.5 });
-      }});
-    }
+    // $: if (currentProject) {
+    //   gsap.to('[fm-fade-in]', { opacity: 0, duration: 0, onComplete: () => {
+    //     gsap.to('[fm-fade-in]', { opacity: 1, duration: 1.5 });
+    //   }});
+    // }
        
     // Reference to the video element
     let videoElement;
