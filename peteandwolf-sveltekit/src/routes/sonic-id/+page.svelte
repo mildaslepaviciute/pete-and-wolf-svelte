@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { page } from '$app/stores';
+    import { redirect } from '@sveltejs/kit';
 
     // Define project data (using slugs for dynamic routing)
     const caseItems = [
@@ -20,11 +21,11 @@
                     grid: 2,
                     col_1: {
                         type: 'text',
-                        content: 'More content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                        content: 'More content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                     },
                     col_2: {
                         type: 'image',
-                        content: 'https://picsum.photos/301/200/',
+                        content: 'https://source.unsplash.com/random/400x300',
                     }
                 },
                 {
@@ -35,7 +36,7 @@
                     },
                     col_2: {
                         type: 'image',
-                        content: 'https://picsum.photos/300/200/',
+                        content: 'https://picsum.photos/300/200',
                     },
                     col_3: {
                         type: 'text',
@@ -71,7 +72,7 @@
                     },
                     col_2: {
                         type: 'image',
-                        content: 'https://picsum.photos/300/200/',
+                        content: 'https://via.placeholder.com/800x600',
                     },
                     col_3: {
                         type: 'text',
@@ -79,30 +80,16 @@
                     }
                 }
             ]
-        },
-        {
-            slug: 'case-4',
-            title: 'Case 4',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            content: [
-                {
-                    grid: 2,
-                    col_1: {
-                        type: 'image',
-                        content: 'https://picsum.photos/300/200/',
-                    },
-                    col_2: {
-                        type: 'image',
-                        content: 'https://picsum.photos/300/200/',
-                    },
-                   
-                }
-            ]
         }
     ];
 
     // Reactive statement to update the current project based on the slug
     $: currentProject = caseItems.find(item => item.slug === $page.params.slug) || caseItems[0];
+
+    // Redirect to the default project if no slug is provided
+    $: if (!$page.params.slug) {
+       // throw redirect(307, `/sonic-id/${currentProject.slug}`);
+    }
 
     onMount(() => {
         new Swiper(".scrollSwiperSonic", {
@@ -152,7 +139,7 @@
                                     <div class="swiper-slide">
                                         <div class="d-flex align-items-center border-bottom border-blue-wide">
                                             <div class="w-35 h-100 d-flex align-items-center p-2">
-                                                <img src="https://picsum.photos/200/300/" alt="" class="w-100 border border-black">
+                                                <img src={caseItem.content[0].col_1.type === 'image' ? caseItem.content[0].col_1.content : 'https://via.placeholder.com/150'} alt="" class="w-100 border border-black">
                                             </div>
                                             <div class="w-65 h-100 d-flex flex-column p-2">
                                                 <h3 class="font-6"><b>{caseItem.title}</b></h3>
@@ -178,7 +165,7 @@
                             {#each currentProject.content as section}
                                 <div class="row">
                                     {#if section.grid == 1}
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-12">
                                             {#if section.col_1.type == 'text'}
                                                 <p>{section.col_1.content}</p>
                                             {:else if section.col_1.type == 'image'}
@@ -186,14 +173,14 @@
                                             {/if}
                                         </div>
                                     {:else if section.grid == 2}
-                                        <div class="col-lg-6 mb-3">
+                                        <div class="col-lg-6">
                                             {#if section.col_1.type == 'text'}
                                                 <p>{section.col_1.content}</p>
                                             {:else if section.col_1.type == 'image'}
                                                 <img src={section.col_1.content} alt="" class="w-100">
                                             {/if}
                                         </div>
-                                        <div class="col-lg-6 mb-3">
+                                        <div class="col-lg-6">
                                             {#if section.col_2.type == 'text'}
                                                 <p>{section.col_2.content}</p>
                                             {:else if section.col_2.type == 'image'}
@@ -201,21 +188,21 @@
                                             {/if}
                                         </div>
                                     {:else if section.grid == 3}
-                                        <div class="col-lg-4 mb-3">
+                                        <div class="col-lg-4">
                                             {#if section.col_1.type == 'text'}
                                                 <p>{section.col_1.content}</p>
                                             {:else if section.col_1.type == 'image'}
                                                 <img src={section.col_1.content} alt="" class="w-100">
                                             {/if}
                                         </div>
-                                        <div class="col-lg-4 mb-3">
+                                        <div class="col-lg-4">
                                             {#if section.col_2.type == 'text'}
                                                 <p>{section.col_2.content}</p>
                                             {:else if section.col_2.type == 'image'}
                                                 <img src={section.col_2.content} alt="" class="w-100">
                                             {/if}
                                         </div>
-                                        <div class="col-lg-4 mb-3">
+                                        <div class="col-lg-4">
                                             {#if section.col_3.type == 'text'}
                                                 <p>{section.col_3.content}</p>
                                             {:else if section.col_3.type == 'image'}
@@ -240,7 +227,7 @@
                                 <div class="swiper-slide">
                                     <div class="d-flex align-items-center border-bottom border-blue-wide">
                                         <div class="w-35 h-100 d-flex align-items-center p-2">
-                                            <img src="https://picsum.photos/300/200/" alt="" class="w-100 border border-black">
+                                            <img src={caseItem.content[0].col_1.type === 'image' ? caseItem.content[0].col_1.content : 'https://via.placeholder.com/150'} alt="" class="w-100 border border-black">
                                         </div>
                                         <div class="w-65 h-100 d-flex flex-column p-2">
                                             <h3 class="font-6"><b>{caseItem.title}</b></h3>
