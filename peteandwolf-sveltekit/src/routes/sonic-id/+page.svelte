@@ -1,31 +1,9 @@
 <script>
-    import { onMount } from 'svelte';
-    import { page } from '$app/stores';
-    import { redirect } from '@sveltejs/kit';
+    import { onMount } from "svelte";
+    import { page } from "$app/stores";
+    import { goto } from '$app/navigation';
 
-    // Reactive statement to update the current project based on the slug
-    $: currentProject = caseItems.find(item => item.slug === $page.params.slug) || caseItems[0];
-
-    // Redirect to the default project if no slug is provided
-    $: if (!$page.params.slug) {
-       // throw redirect(307, `/sonic-id/${currentProject.slug}`);
-    }
-
-    onMount(() => {
-        new Swiper(".scrollSwiperSonic", {
-            direction: "vertical",
-            slidesPerView: "auto",
-            freeMode: true,
-            loop: true,
-            scrollbar: {
-                el: ".swiper-scrollbar",
-            },
-            mousewheel: true,
-        });
-
-        const offcanvasElementsList = document.querySelectorAll('.offcanvas');
-        offcanvasElementsList.forEach(offcanvasEl => new bootstrap.Offcanvas(offcanvasEl));
-    });
+    let currentProject = null;
 
     // Dummy data object
     const caseItems = [
@@ -36,44 +14,6 @@
             sections: [
                 {
                     title: 'Sonic ID',
-                    blocks: [
-                        {
-                            grid: 1,
-                            col_1: {
-                                type: 'text',
-                                content: 'Content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                            }
-                        },
-                        {
-                            grid: 2,
-                            col_1: {
-                                type: 'text',
-                                content: 'More content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                            },
-                            col_2: {
-                                type: 'image',
-                                content: 'https://source.unsplash.com/random/400x300',
-                            }
-                        },
-                        {
-                            grid: 3,
-                            col_1: {
-                                type: 'text',
-                                content: 'Even more content for Sonic ID: Lorem ipsum dolor sit amet.',
-                            },
-                            col_2: {
-                                type: 'image',
-                                content: 'https://picsum.photos/300/200',
-                            },
-                            col_3: {
-                                type: 'text',
-                                content: 'Additional content for Sonic ID: Lorem ipsum dolor sit amet.',
-                            }
-                        }
-                    ]
-                },
-                {
-                    title: 'Section 2',
                     blocks: [
                         {
                             grid: 1,
@@ -159,6 +99,32 @@
             ]
         }
     ];
+
+    $: if ($page.params.slug) {
+        currentProject = caseItems.find(item => item.slug === $page.params.slug);
+    } else {
+        currentProject = null;
+    }
+
+    function goBack() {
+        goto('/sonic-id');
+    }
+
+    onMount(() => {
+        new Swiper(".scrollSwiperSonic", {
+            direction: "vertical",
+            slidesPerView: "auto",
+            freeMode: true,
+            loop: true,
+            scrollbar: {
+                el: ".swiper-scrollbar",
+            },
+            mousewheel: true,
+        });
+
+        const offcanvasElementsList = document.querySelectorAll('.offcanvas');
+        offcanvasElementsList.forEach(offcanvasEl => new bootstrap.Offcanvas(offcanvasEl));
+    });
 </script>
 
 <svelte:head>
@@ -166,19 +132,23 @@
     <meta name="description" content="We help you to unmute your brand">
 </svelte:head>
 
+<!-- Back Button -->
+{#if currentProject}
+    <div class="back-button-container">
+        <a href="#" class="back-button" on:click|preventDefault={goBack}>&larr; About Sonic ID</a>
+    </div>
+{/if}
+
 <section class="h-100vh pt-below-nav">
     <div class="container h-100 d-flex flex-column">
         <div class="row align-items-stretch no-gutters px-screen-mob">
             <div class="position-relative">
                 <div class="position-absolute d-flex text-rotate top-0 text-end" style="left: -23px;">
-                    {#each [...currentProject.sections].reverse() as section}
+                    {#each caseItems as caseItem}
                         <div class="fw-bold mt-4">
-                            <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">{section.title}</a>
+                            <a href={`/sonic-id/${caseItem.slug}`} class="case-title u-offset-n1 text-black">{caseItem.title}</a>
                         </div>
                     {/each}
-                </div>
-                <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -27px;">
-                    <div class="bg-blue font-4 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">Cases</div>
                 </div>
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCases" aria-labelledby="offcanvasCasesLabel">
                     <div class="offcanvas-header">
@@ -210,70 +180,79 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8 h-100" style="min-height:100%">
-                <div class="max-h-screen min-h-screen scrolling border border-black p-3">
-                    <div id={currentProject.slug}>
-                        <h2 class="font-2 mb-3"><b>{currentProject.title}</b></h2>
-                        <div class="mb-3">
-                            {#each currentProject.sections as section}
-                                <div id={section.title.replace(/\s+/g, '-').toLowerCase()}>
-                                    <h3>{section.title}</h3>
-                                    <div class="row">
-                                        {#each section.blocks as block}
-                                            {#if block.grid == 1}
-                                                <div class="col-lg-12">
-                                                    {#if block.col_1.type == 'text'}
-                                                        <p>{block.col_1.content}</p>
-                                                    {:else if block.col_1.type == 'image'}
-                                                        <img src={block.col_1.content} alt="" class="w-100">
-                                                    {/if}
-                                                </div>
-                                            {:else if block.grid == 2}
-                                                <div class="col-lg-6">
-                                                    {#if block.col_1.type == 'text'}
-                                                        <p>{block.col_1.content}</p>
-                                                    {:else if block.col_1.type == 'image'}
-                                                        <img src={block.col_1.content} alt="" class="w-100">
-                                                    {/if}
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    {#if block.col_2.type == 'text'}
-                                                        <p>{block.col_2.content}</p>
-                                                    {:else if block.col_2.type == 'image'}
-                                                        <img src={block.col_2.content} alt="" class="w-100">
-                                                    {/if}
-                                                </div>
-                                            {:else if block.grid == 3}
-                                                <div class="col-lg-4">
-                                                    {#if block.col_1.type == 'text'}
-                                                        <p>{block.col_1.content}</p>
-                                                    {:else if block.col_1.type == 'image'}
-                                                        <img src={block.col_1.content} alt="" class="w-100">
-                                                    {/if}
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    {#if block.col_2.type == 'text'}
-                                                        <p>{block.col_2.content}</p>
-                                                    {:else if block.col_2.type == 'image'}
-                                                        <img src={block.col_2.content} alt="" class="w-100">
-                                                    {/if}
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    {#if block.col_3.type == 'text'}
-                                                        <p>{block.col_3.content}</p>
-                                                    {:else if block.col_3.type == 'image'}
-                                                        <img src={block.col_3.content} alt="" class="w-100">
-                                                    {/if}
-                                                </div>
-                                            {/if}
-                                        {/each}
+            {#if currentProject}
+                <div class="col-lg-8 h-100" style="min-height:100%">
+                    <div class="max-h-screen min-h-screen scrolling border border-black p-3">
+                        <div id={currentProject.slug}>
+                            <h2 class="font-2 mb-3"><b>{currentProject.title}</b></h2>
+                            <div class="mb-3">
+                                {#each currentProject.sections as section}
+                                    <div id={section.title.replace(/\s+/g, '-').toLowerCase()}>
+                                        <h3>{section.title}</h3>
+                                        <div class="row">
+                                            {#each section.blocks as block}
+                                                {#if block.grid == 1}
+                                                    <div class="col-lg-12">
+                                                        {#if block.col_1.type == 'text'}
+                                                            <p>{block.col_1.content}</p>
+                                                        {:else if block.col_1.type == 'image'}
+                                                            <img src={block.col_1.content} alt="" class="w-100">
+                                                        {/if}
+                                                    </div>
+                                                {:else if block.grid == 2}
+                                                    <div class="col-lg-6">
+                                                        {#if block.col_1.type == 'text'}
+                                                            <p>{block.col_1.content}</p>
+                                                        {:else if block.col_1.type == 'image'}
+                                                            <img src={block.col_1.content} alt="" class="w-100">
+                                                        {/if}
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        {#if block.col_2.type == 'text'}
+                                                            <p>{block.col_2.content}</p>
+                                                        {:else if block.col_2.type == 'image'}
+                                                            <img src={block.col_2.content} alt="" class="w-100">
+                                                        {/if}
+                                                    </div>
+                                                {:else if block.grid == 3}
+                                                    <div class="col-lg-4">
+                                                        {#if block.col_1.type == 'text'}
+                                                            <p>{block.col_1.content}</p>
+                                                        {:else if block.col_1.type == 'image'}
+                                                            <img src={block.col_1.content} alt="" class="w-100">
+                                                        {/if}
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        {#if block.col_2.type == 'text'}
+                                                            <p>{block.col_2.content}</p>
+                                                        {:else if block.col_2.type == 'image'}
+                                                            <img src={block.col_2.content} alt="" class="w-100">
+                                                        {/if}
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        {#if block.col_3.type == 'text'}
+                                                            <p>{block.col_3.content}</p>
+                                                        {:else if block.col_3.type == 'image'}
+                                                            <img src={block.col_3.content} alt="" class="w-100">
+                                                        {/if}
+                                                    </div>
+                                                {/if}
+                                            {/each}
+                                        </div>
                                     </div>
-                                </div>
-                            {/each}
+                                {/each}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {:else}
+                <div class="col-lg-8 h-100" style="min-height:100%">
+                    <div class="max-h-screen min-h-screen scrolling border border-black p-3">
+                        <h2 class="font-2 mb-3"><b>About Sonic ID</b></h2>
+                        <p>Default content for Sonic ID base page.</p>
+                    </div>
+                </div>
+            {/if}
             <div class="col-lg-4 h-100 ps-lg-1 d-none d-lg-block">
                 <div class="max-h-screen border border-black overflow-hidden">
                     <div class="bg-blue sticky-top">
@@ -305,3 +284,17 @@
         </div>
     </div>
 </section>
+
+<style>
+    .back-button-container {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+    }
+    .back-button {
+        font-size: 1.2em;
+        color: #000;
+        text-decoration: none;
+    }
+</style>
