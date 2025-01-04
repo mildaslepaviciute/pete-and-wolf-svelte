@@ -43,7 +43,7 @@
   {
     slug: 'nike-summer-2024',
     title: 'Nike Summer',
-    thumbnail: 'https://cdn.pixabay.com/photo/2020/04/13/05/52/runner-5030988_1280.jpg',
+    thumbnail: 'https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg',
     video: 'https://peteandwolf.com/wp-content/uploads/2023/09/CGATES-BICIUKAS.mp4',
     description: 'This energetic Nike ad captures the spirit of summer with vibrant visuals and an upbeat soundtrack.',
     credits: {
@@ -60,7 +60,7 @@
   {
     slug: 'apple-new-year-2024',
     title: 'Apple New Year',
-    thumbnail: 'https://cdn.pixabay.com/photo/2015/09/23/03/56/apple-953625_1280.jpg',
+    thumbnail: 'https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg',
     video: 'https://videos.pexels.com/video-files/6548176/6548176-hd_1920_1080_24fps.mp4',
     description: 'Apple\'s New Year ad showcases the latest technology in a beautifully crafted narrative.',
     credits: {
@@ -77,7 +77,7 @@
   {
     slug: 'adidas-winter-2024',
     title: 'Adidas Winter',
-    thumbnail: 'https://cdn.pixabay.com/photo/2015/11/12/12/13/snowboarding-1049998_1280.jpg',
+    thumbnail: 'https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg',
     video: 'https://videos.pexels.com/video-files/7565462/7565462-sd_960_506_25fps.mp4',
     description: 'Adidas\'s winter ad highlights the latest winter sports gear with stunning visuals and dynamic action.',
     credits: {
