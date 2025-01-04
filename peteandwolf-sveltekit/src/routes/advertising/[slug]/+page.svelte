@@ -201,10 +201,10 @@
   
   <section class="h-100vh pt-below-nav">
     <div class="container h-100 d-flex flex-column">
-      <div class="row align-items-stretch">
+      <div class="row align-items-stretch min-h-screen max-h-screen">
 
         <!-- Main Content Column -->
-        <div class="col-lg-8">
+        <div class="col-lg-8 min-h-screen max-h-screen">
           <div class="border border-black">
             <!-- svelte-ignore a11y_media_has_caption -->
             <video 

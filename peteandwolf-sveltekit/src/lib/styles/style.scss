@@ -38,6 +38,7 @@ html {
     line-height: 1.4;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
+    overflow: hidden;
 }
 
 body {
@@ -46,6 +47,7 @@ body {
     color: #000;
     font-size: 16px;
     line-height: 1.4;
+    overflow: hidden;
 }
 
 
@@ -285,6 +287,10 @@ video {
 
 .max-h-screen {
     max-height: calc(100vh - 200px);
+}
+
+.min-h-screen {
+    min-height: calc(100vh - 200px);
 }
 
 .w-30 {

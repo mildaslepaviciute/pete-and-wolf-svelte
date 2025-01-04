@@ -3,86 +3,6 @@
     import { page } from '$app/stores';
     import { redirect } from '@sveltejs/kit';
 
-    // Define project data (using slugs for dynamic routing)
-    const caseItems = [
-        {
-            slug: 'sonic-id',
-            title: 'Sonic ID',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            content: [
-                {
-                    grid: 1,
-                    col_1: {
-                        type: 'text',
-                        content: 'Content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                    }
-                },
-                {
-                    grid: 2,
-                    col_1: {
-                        type: 'text',
-                        content: 'More content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                    },
-                    col_2: {
-                        type: 'image',
-                        content: 'https://source.unsplash.com/random/400x300',
-                    }
-                },
-                {
-                    grid: 3,
-                    col_1: {
-                        type: 'text',
-                        content: 'Even more content for Sonic ID: Lorem ipsum dolor sit amet.',
-                    },
-                    col_2: {
-                        type: 'image',
-                        content: 'https://picsum.photos/300/200',
-                    },
-                    col_3: {
-                        type: 'text',
-                        content: 'Additional content for Sonic ID: Lorem ipsum dolor sit amet.',
-                    }
-                }
-            ]
-        },
-        {
-            slug: 'sonic-logo',
-            title: 'Sonic Logo',
-            description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
-            content: [
-                {
-                    grid: 1,
-                    col_1: {
-                        type: 'text',
-                        content: 'Content for Sonic Logo: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                    }
-                }
-            ]
-        },
-        {
-            slug: 'telia-christmas-2024',
-            title: 'Telia Christmas 2024',
-            description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
-            content: [
-                {
-                    grid: 3,
-                    col_1: {
-                        type: 'text',
-                        content: 'Content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-                    },
-                    col_2: {
-                        type: 'image',
-                        content: 'https://via.placeholder.com/800x600',
-                    },
-                    col_3: {
-                        type: 'text',
-                        content: 'Additional content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-                    }
-                }
-            ]
-        }
-    ];
-
     // Reactive statement to update the current project based on the slug
     $: currentProject = caseItems.find(item => item.slug === $page.params.slug) || caseItems[0];
 
@@ -106,6 +26,139 @@
         const offcanvasElementsList = document.querySelectorAll('.offcanvas');
         offcanvasElementsList.forEach(offcanvasEl => new bootstrap.Offcanvas(offcanvasEl));
     });
+
+    // Dummy data object
+    const caseItems = [
+        {
+            slug: 'sonic-id',
+            title: 'Sonic ID',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            sections: [
+                {
+                    title: 'Sonic ID',
+                    blocks: [
+                        {
+                            grid: 1,
+                            col_1: {
+                                type: 'text',
+                                content: 'Content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                            }
+                        },
+                        {
+                            grid: 2,
+                            col_1: {
+                                type: 'text',
+                                content: 'More content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                            },
+                            col_2: {
+                                type: 'image',
+                                content: 'https://source.unsplash.com/random/400x300',
+                            }
+                        },
+                        {
+                            grid: 3,
+                            col_1: {
+                                type: 'text',
+                                content: 'Even more content for Sonic ID: Lorem ipsum dolor sit amet.',
+                            },
+                            col_2: {
+                                type: 'image',
+                                content: 'https://picsum.photos/300/200',
+                            },
+                            col_3: {
+                                type: 'text',
+                                content: 'Additional content for Sonic ID: Lorem ipsum dolor sit amet.',
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: 'Section 2',
+                    blocks: [
+                        {
+                            grid: 1,
+                            col_1: {
+                                type: 'text',
+                                content: 'Content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                            }
+                        },
+                        {
+                            grid: 2,
+                            col_1: {
+                                type: 'text',
+                                content: 'More content for Sonic ID: Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                            },
+                            col_2: {
+                                type: 'image',
+                                content: 'https://source.unsplash.com/random/400x300',
+                            }
+                        },
+                        {
+                            grid: 3,
+                            col_1: {
+                                type: 'text',
+                                content: 'Even more content for Sonic ID: Lorem ipsum dolor sit amet.',
+                            },
+                            col_2: {
+                                type: 'image',
+                                content: 'https://picsum.photos/300/200',
+                            },
+                            col_3: {
+                                type: 'text',
+                                content: 'Additional content for Sonic ID: Lorem ipsum dolor sit amet.',
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            slug: 'sonic-logo',
+            title: 'Sonic Logo',
+            description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
+            sections: [
+                {
+                    title: 'Sonic Logo',
+                    blocks: [
+                        {
+                            grid: 1,
+                            col_1: {
+                                type: 'text',
+                                content: 'Content for Sonic Logo: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            slug: 'telia-christmas-2024',
+            title: 'Telia Christmas 2024',
+            description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
+            sections: [
+                {
+                    title: 'Telia Christmas 2024',
+                    blocks: [
+                        {
+                            grid: 3,
+                            col_1: {
+                                type: 'text',
+                                content: 'Content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                            },
+                            col_2: {
+                                type: 'image',
+                                content: 'https://via.placeholder.com/800x600',
+                            },
+                            col_3: {
+                                type: 'text',
+                                content: 'Additional content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ];
 </script>
 
 <svelte:head>
@@ -118,9 +171,9 @@
         <div class="row align-items-stretch no-gutters px-screen-mob">
             <div class="position-relative">
                 <div class="position-absolute d-flex text-rotate top-0 text-end" style="left: -23px;">
-                    {#each caseItems as caseItem}
+                    {#each [...currentProject.sections].reverse() as section}
                         <div class="fw-bold mt-4">
-                            <a href={`/sonic-id/${caseItem.slug}`} class="case-title u-offset-n1 text-black">{caseItem.title}</a>
+                            <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">{section.title}</a>
                         </div>
                     {/each}
                 </div>
@@ -139,7 +192,7 @@
                                     <div class="swiper-slide">
                                         <div class="d-flex align-items-center border-bottom border-blue-wide">
                                             <div class="w-35 h-100 d-flex align-items-center p-2">
-                                                <img src={caseItem.content[0].col_1.type === 'image' ? caseItem.content[0].col_1.content : 'https://via.placeholder.com/150'} alt="" class="w-100 border border-black">
+                                                <img src={caseItem.sections[0].blocks[0].col_1.type === 'image' ? caseItem.sections[0].blocks[0].col_1.content : 'https://via.placeholder.com/150'} alt="" class="w-100 border border-black">
                                             </div>
                                             <div class="w-65 h-100 d-flex flex-column p-2">
                                                 <h3 class="font-6"><b>{caseItem.title}</b></h3>
@@ -158,58 +211,63 @@
                 </div>
             </div>
             <div class="col-lg-8 h-100" style="min-height:100%">
-                <div class="max-h-screen scrolling border border-black p-3">
+                <div class="max-h-screen min-h-screen scrolling border border-black p-3">
                     <div id={currentProject.slug}>
                         <h2 class="font-2 mb-3"><b>{currentProject.title}</b></h2>
                         <div class="mb-3">
-                            {#each currentProject.content as section}
-                                <div class="row">
-                                    {#if section.grid == 1}
-                                        <div class="col-lg-12">
-                                            {#if section.col_1.type == 'text'}
-                                                <p>{section.col_1.content}</p>
-                                            {:else if section.col_1.type == 'image'}
-                                                <img src={section.col_1.content} alt="" class="w-100">
+                            {#each currentProject.sections as section}
+                                <div id={section.title.replace(/\s+/g, '-').toLowerCase()}>
+                                    <h3>{section.title}</h3>
+                                    <div class="row">
+                                        {#each section.blocks as block}
+                                            {#if block.grid == 1}
+                                                <div class="col-lg-12">
+                                                    {#if block.col_1.type == 'text'}
+                                                        <p>{block.col_1.content}</p>
+                                                    {:else if block.col_1.type == 'image'}
+                                                        <img src={block.col_1.content} alt="" class="w-100">
+                                                    {/if}
+                                                </div>
+                                            {:else if block.grid == 2}
+                                                <div class="col-lg-6">
+                                                    {#if block.col_1.type == 'text'}
+                                                        <p>{block.col_1.content}</p>
+                                                    {:else if block.col_1.type == 'image'}
+                                                        <img src={block.col_1.content} alt="" class="w-100">
+                                                    {/if}
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    {#if block.col_2.type == 'text'}
+                                                        <p>{block.col_2.content}</p>
+                                                    {:else if block.col_2.type == 'image'}
+                                                        <img src={block.col_2.content} alt="" class="w-100">
+                                                    {/if}
+                                                </div>
+                                            {:else if block.grid == 3}
+                                                <div class="col-lg-4">
+                                                    {#if block.col_1.type == 'text'}
+                                                        <p>{block.col_1.content}</p>
+                                                    {:else if block.col_1.type == 'image'}
+                                                        <img src={block.col_1.content} alt="" class="w-100">
+                                                    {/if}
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    {#if block.col_2.type == 'text'}
+                                                        <p>{block.col_2.content}</p>
+                                                    {:else if block.col_2.type == 'image'}
+                                                        <img src={block.col_2.content} alt="" class="w-100">
+                                                    {/if}
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    {#if block.col_3.type == 'text'}
+                                                        <p>{block.col_3.content}</p>
+                                                    {:else if block.col_3.type == 'image'}
+                                                        <img src={block.col_3.content} alt="" class="w-100">
+                                                    {/if}
+                                                </div>
                                             {/if}
-                                        </div>
-                                    {:else if section.grid == 2}
-                                        <div class="col-lg-6">
-                                            {#if section.col_1.type == 'text'}
-                                                <p>{section.col_1.content}</p>
-                                            {:else if section.col_1.type == 'image'}
-                                                <img src={section.col_1.content} alt="" class="w-100">
-                                            {/if}
-                                        </div>
-                                        <div class="col-lg-6">
-                                            {#if section.col_2.type == 'text'}
-                                                <p>{section.col_2.content}</p>
-                                            {:else if section.col_2.type == 'image'}
-                                                <img src={section.col_2.content} alt="" class="w-100">
-                                            {/if}
-                                        </div>
-                                    {:else if section.grid == 3}
-                                        <div class="col-lg-4">
-                                            {#if section.col_1.type == 'text'}
-                                                <p>{section.col_1.content}</p>
-                                            {:else if section.col_1.type == 'image'}
-                                                <img src={section.col_1.content} alt="" class="w-100">
-                                            {/if}
-                                        </div>
-                                        <div class="col-lg-4">
-                                            {#if section.col_2.type == 'text'}
-                                                <p>{section.col_2.content}</p>
-                                            {:else if section.col_2.type == 'image'}
-                                                <img src={section.col_2.content} alt="" class="w-100">
-                                            {/if}
-                                        </div>
-                                        <div class="col-lg-4">
-                                            {#if section.col_3.type == 'text'}
-                                                <p>{section.col_3.content}</p>
-                                            {:else if section.col_3.type == 'image'}
-                                                <img src={section.col_3.content} alt="" class="w-100">
-                                            {/if}
-                                        </div>
-                                    {/if}
+                                        {/each}
+                                    </div>
                                 </div>
                             {/each}
                         </div>
@@ -227,7 +285,7 @@
                                 <div class="swiper-slide">
                                     <div class="d-flex align-items-center border-bottom border-blue-wide">
                                         <div class="w-35 h-100 d-flex align-items-center p-2">
-                                            <img src={caseItem.content[0].col_1.type === 'image' ? caseItem.content[0].col_1.content : 'https://via.placeholder.com/150'} alt="" class="w-100 border border-black">
+                                            <img src={caseItem.sections[0].blocks[0].col_1.type === 'image' ? caseItem.sections[0].blocks[0].col_1.content : 'https://via.placeholder.com/150'} alt="" class="w-100 border border-black">
                                         </div>
                                         <div class="w-65 h-100 d-flex flex-column p-2">
                                             <h3 class="font-6"><b>{caseItem.title}</b></h3>
