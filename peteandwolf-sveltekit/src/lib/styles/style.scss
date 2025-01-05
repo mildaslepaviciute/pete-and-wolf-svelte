@@ -253,8 +253,22 @@ button:focus {
     height: auto;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    transition: background-color 0.2s ease-out;
 }
 
+.swiper-slide-link:not(.swiper-slide-link-active):hover {
+    background-color: rgba(#0022f7, 0.3);
+}
+
+
+.swiper-slide-link-active {
+    background-color: #0022f7;
+    color: #fff!important;
+}
+
+.swiper-slide-link-active div {
+    color: #fff!important;
+}
 
 /* ------- POSITIONING -------- */
 
@@ -286,11 +300,11 @@ video {
 }
 
 .max-h-screen {
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 150px);
 }
 
 .min-h-screen {
-    min-height: calc(100vh - 200px);
+    min-height: calc(100vh - 150px);
 }
 
 .w-30 {
@@ -448,7 +462,7 @@ a:hover {
     }
 
     .swiper {
-        height: calc(100vh - 200px);
+        height: calc(100vh - 120px);
     }
 
     .navbar-brand img {

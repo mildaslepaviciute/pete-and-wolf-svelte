@@ -4,6 +4,7 @@ export const load = () => {
             {
                 slug: 'sonic-id',
                 title: 'Project 1',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
                 description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                 sections: [
                     {
@@ -24,7 +25,7 @@ export const load = () => {
                                 },
                                 col_2: {
                                     type: 'image',
-                                    content: 'https://source.unsplash.com/random/400x300',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
                                 }
                             },
                             {
@@ -35,7 +36,7 @@ export const load = () => {
                                 },
                                 col_2: {
                                     type: 'image',
-                                    content: 'https://picsum.photos/300/200',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
                                 },
                                 col_3: {
                                     type: 'text',
@@ -61,7 +62,7 @@ export const load = () => {
                                 },
                                 col_2: {
                                     type: 'image',
-                                    content: 'https://source.unsplash.com/random/400x300',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
                                 }
                             },
                             {
@@ -72,7 +73,7 @@ export const load = () => {
                                 },
                                 col_2: {
                                     type: 'image',
-                                    content: 'https://picsum.photos/300/200',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
                                 },
                                 col_3: {
                                     type: 'text',
@@ -87,6 +88,7 @@ export const load = () => {
                 slug: 'sonic-logo',
                 title: 'Sonic Logo',
                 description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
                 sections: [
                     {
                         title: 'Sonic Logo',
@@ -103,9 +105,61 @@ export const load = () => {
                 ]
             },
             {
+                slug: 'project-1000',
+                title: 'One more Project',
+                description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
+                sections: [
+                    {
+                        title: 'First paragraph',
+                        blocks: [
+                            {
+                                grid: 1,
+                                col_1: {
+                                    type: 'text',
+                                    content: 'Content for Sonic Logo: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                slug: 'random-project',
+                title: 'Random Project',
+                description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
+                sections: [
+                    {
+                        title: 'Section 1',
+                        blocks: [
+                            {
+                                grid: 1,
+                                col_1: {
+                                    type: 'text',
+                                    content: 'Content for Sonic Logo: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                                }
+                            }
+                        ]
+                    },{
+                        title: 'Section 2',
+                        blocks: [
+                            {
+                                grid: 1,
+                                col_1: {
+                                    type: 'text',
+                                    content: 'Content for Sonic Logo: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 slug: 'telia-christmas-2024',
                 title: 'Telia Christmas 2024',
                 description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
                 sections: [
                     {
                         title: 'Telia Christmas 2024',
@@ -118,7 +172,7 @@ export const load = () => {
                                 },
                                 col_2: {
                                     type: 'image',
-                                    content: 'https://via.placeholder.com/800x600',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
                                 },
                                 col_3: {
                                     type: 'text',

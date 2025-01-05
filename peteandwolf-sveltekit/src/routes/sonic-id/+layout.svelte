@@ -59,9 +59,124 @@
                         {/each}
                     {:else}
                         <div class="fw-bold mt-4">
-                            <span class="case-title u-offset-n1 text-black">About Sonic ID</span>
+                            <span class="case-title u-offset-n1 text-black">Sonic ID</span>
                         </div>
                     {/if}
+                </div>
+                <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -27px;">
+                    <div class="bg-blue font-4 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">Cases</div>
+                </div>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCases" aria-labelledby="offcanvasCasesLabel">
+                    <div class="swiper scrollSwiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                    <div class="w-35 h-100 d-flex align-items-center p-2">
+                                        <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <h3 class="font-6"><b>Telia christmas 2024</b></h3>
+                                        <p class="font-8 text-truncate-2 mb-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum assumenda aperiam dolorem laudantium quasi placeat natus, animi nisi, incidunt commodi, beatae eos voluptatibus!</p>
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="font-8 text-blue">Technology</div>
+                                            <a href="" class="text-underline text-black">read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                    <div class="w-35 h-100 d-flex align-items-center p-2">
+                                        <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <h3 class="font-6"><b>Telia christmas 2024</b></h3>
+                                        <p class="font-8 text-truncate-2 mb-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum assumenda aperiam dolorem laudantium quasi placeat natus, animi nisi, incidunt commodi, beatae eos voluptatibus!</p>
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="font-8 text-blue">Technology</div>
+                                            <a href="" class="text-underline text-black">read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                    <div class="w-35 h-100 d-flex align-items-center p-2">
+                                        <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <h3 class="font-6"><b>Telia christmas 2024</b></h3>
+                                        <p class="font-8 text-truncate-2 mb-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum assumenda aperiam dolorem laudantium quasi placeat natus, animi nisi, incidunt commodi, beatae eos voluptatibus!</p>
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="font-8 text-blue">Technology</div>
+                                            <a href="" class="text-underline text-black">read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                    <div class="w-35 h-100 d-flex align-items-center p-2">
+                                        <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <h3 class="font-6"><b>Telia christmas 2024</b></h3>
+                                        <p class="font-8 text-truncate-2 mb-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum assumenda aperiam dolorem laudantium quasi placeat natus, animi nisi, incidunt commodi, beatae eos voluptatibus!</p>
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="font-8 text-blue">Technology</div>
+                                            <a href="" class="text-underline text-black">read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                    <div class="w-35 h-100 d-flex align-items-center p-2">
+                                        <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <h3 class="font-6"><b>Telia christmas 2024</b></h3>
+                                        <p class="font-8 text-truncate-2 mb-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum assumenda aperiam dolorem laudantium quasi placeat natus, animi nisi, incidunt commodi, beatae eos voluptatibus!</p>
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="font-8 text-blue">Technology</div>
+                                            <a href="" class="text-underline text-black">read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                    <div class="w-35 h-100 d-flex align-items-center p-2">
+                                        <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <h3 class="font-6"><b>Telia christmas 2024</b></h3>
+                                        <p class="font-8 text-truncate-2 mb-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum assumenda aperiam dolorem laudantium quasi placeat natus, animi nisi, incidunt commodi, beatae eos voluptatibus!</p>
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="font-8 text-blue">Technology</div>
+                                            <a href="" class="text-underline text-black">read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                    <div class="w-35 h-100 d-flex align-items-center p-2">
+                                        <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <h3 class="font-6"><b>Telia christmas 2024</b></h3>
+                                        <p class="font-8 text-truncate-2 mb-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum assumenda aperiam dolorem laudantium quasi placeat natus, animi nisi, incidunt commodi, beatae eos voluptatibus!</p>
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="font-8 text-blue">Technology</div>
+                                            <a href="" class="text-underline text-black">read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                    <div class="w-35 h-100 d-flex align-items-center p-2">
+                                        <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <h3 class="font-6"><b>Telia christmas 2024</b></h3>
+                                        <p class="font-8 text-truncate-2 mb-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum assumenda aperiam dolorem laudantium quasi placeat natus, animi nisi, incidunt commodi, beatae eos voluptatibus!</p>
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="font-8 text-blue">Technology</div>
+                                            <a href="" class="text-underline text-black">read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -84,7 +199,7 @@
                                 <div class="swiper-slide">
                                     <div class="d-flex align-items-center border-bottom border-blue-wide">
                                         <div class="w-35 h-100 d-flex align-items-center p-2">
-                                            <img src={caseItem.sections[0].blocks[0].col_1.type === 'image' ? caseItem.sections[0].blocks[0].col_1.content : 'https://via.placeholder.com/150'} alt="" class="w-100 border border-black">
+                                            <img src={caseItem.image} alt="" class="w-100 border border-black">
                                         </div>
                                         <div class="w-65 h-100 d-flex flex-column p-2">
                                             <h3 class="font-6"><b>{caseItem.title}</b></h3>
@@ -107,7 +222,7 @@
 
 <style>
     .back-button {
-        font-size: 1.2em;
+        /* font-size: 1.2em; */
         color: #000;
         text-decoration: none;
     }
