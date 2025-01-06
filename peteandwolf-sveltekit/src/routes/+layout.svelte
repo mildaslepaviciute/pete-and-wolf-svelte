@@ -1,8 +1,10 @@
 <script>
   import { onMount } from 'svelte';
   import Navbar from '$lib/components/Navbar.svelte';
-  import '../lib/styles/style.scss';
   
+  // import '../lib/styles/style.scss';
+
+
   // Add this to prevent FOUC
   let mounted = false;
   
@@ -24,14 +26,6 @@
       }
   </style>
 
-  <!-- Load Bootstrap CSS before your custom styles -->
-  <link 
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-  rel="stylesheet" 
-  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-  crossorigin="anonymous"
->
-  
   <!-- Pre-load your fonts -->
   <link 
       rel="preload" 
@@ -47,11 +41,18 @@
       type="font/woff" 
       crossorigin
   >
+
+ 
   
   <!-- Your existing links -->
   <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+  
+  <style>
+    @import '../lib/styles/style.scss';
+</style>
+
   <script src="https://kit.fontawesome.com/e3336da53c.js" crossorigin="anonymous"></script>
 </svelte:head>
 
