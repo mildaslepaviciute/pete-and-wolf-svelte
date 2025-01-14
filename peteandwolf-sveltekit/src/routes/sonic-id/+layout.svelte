@@ -29,8 +29,8 @@
             mousewheel: true,
         });
 
-        const offcanvasElementsList = document.querySelectorAll('.offcanvas');
-        offcanvasElementsList.forEach(offcanvasEl => new bootstrap.Offcanvas(offcanvasEl));
+       // const offcanvasElementsList = document.querySelectorAll('.offcanvas');
+       // offcanvasElementsList.forEach(offcanvasEl => new bootstrap.Offcanvas(offcanvasEl));
     });
 </script>
 
@@ -204,10 +204,10 @@
                                         <div class="w-65 h-100 d-flex flex-column p-2">
                                             <h3 class="font-6"><b>{caseItem.title}</b></h3>
                                             <p class="font-8 text-truncate-2 mb-2">{caseItem.description}</p>
-                                            <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <!-- <div class="d-flex align-items-center justify-content-between mt-auto">
                                                 <div class="font-8 text-blue">Technology</div>
                                                 <a href={`/sonic-id/${caseItem.slug}`} class="text-underline text-black">read more</a>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
