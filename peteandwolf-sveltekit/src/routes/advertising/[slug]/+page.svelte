@@ -198,7 +198,7 @@
 	}
 
     onMount(() => {
-		adjustVideoHeight();
+		//adjustVideoHeight();
         window.addEventListener('resize', adjustVideoHeight);
 
 		swiper = new Swiper(".scrollSwiperAdvertising", {
@@ -238,7 +238,7 @@
             videoElement.currentTime = 0;
             videoElement.load();
         }
-        adjustVideoHeight();
+        //adjustVideoHeight();
     });
 </script>
 
@@ -250,7 +250,7 @@
                 <!-- Video Container -->
                 <div class="border border-black bg-black" bind:this={videoContainer}>
                     <!-- svelte-ignore a11y_media_has_caption -->
-                    <video 
+                    <!-- <video 
                         class="w-100 h-100 object-fit-contain"
                         preload="metadata" 
                         playsinline 
@@ -259,10 +259,10 @@
                         bind:this={videoElement}
                     >
                         <source src={currentProject.video} type="video/mp4">
-                    </video>
-                </div>
-
-                <!-- Info Section with fixed height -->
+                    </video> -->
+					<div style="position:relative;padding-top:56.25%;"><iframe src="https://iframe.mediadelivery.net/embed/368997/0b5146a4-ce8a-491a-a309-a795f481c580?autoplay=false&loop=false&muted=false&preload=true&responsive=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe></div>
+				</div>				
+				<!-- Info Section with fixed height -->
                 <div class="font-8 position-relative" style="min-height: 100px; margin-top: 20px; margin-bottom: 20px;">
                     <div class="position-absolute top-0 start-0">
                         <h2 class="font-5 text-underline" fm-fade-in>{currentProject.title}</h2>
@@ -296,7 +296,8 @@
 										data-slug={project.slug}
 									>
                                       <div class="w-35 border-end border-black">
-                                          <video 
+										<!-- <div style="position:relative;padding-top:56.25%;"><iframe src="https://iframe.mediadelivery.net/embed/368997/0b5146a4-ce8a-491a-a309-a795f481c580?autoplay=false&loop=false&muted=false&preload=true&responsive=true&controls=false" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe></div> -->
+										<video 
                                               class="w-100" 
                                               playsinline 
                                               autoplay 
@@ -304,7 +305,10 @@
                                               muted="muted"
                                               poster={project.thumbnail}
                                           >
-                                              <source src={project.video} type="video/mp4">
+                                              <!-- <source src={project.video} type="video/mp4"> -->
+												<source src="https://iframe.mediadelivery.net/play/368997/0b5146a4-ce8a-491a-a309-a795f481c580" type="video/mp4">
+
+												
                                           </video>
                                       </div>
                                       <div class="w-65 h-100 d-flex align-items-center font-7 p-3 text-black">
