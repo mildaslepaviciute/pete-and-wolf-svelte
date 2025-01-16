@@ -285,7 +285,7 @@ video {
 }
 
 .offcanvas.offcanvas-end {
-    max-width: 93%;
+    max-width: 85%;
 }
 
 .scrolling {
@@ -443,6 +443,10 @@ a:hover {
     // .nav-item:first-child .nav-link {
     //     padding-left: 0px;
     // }
+
+    .h-100vh {
+        height: calc(100vh - 86px);
+    }
 
     .max-h-screen-mob {
         max-height: calc(100vh - 86px);

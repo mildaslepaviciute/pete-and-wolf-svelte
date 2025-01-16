@@ -52,7 +52,7 @@
 
 <section class="h-100vh max-h-screen-mob pt-below-nav overflow-hidden">
     <div class="container h-100 d-flex flex-column">
-        <div class="row align-items-stretch no-gutters min-h-screen max-h-screen px-screen-mob">
+        <div class="row align-items-stretch no-gutters px-screen-mob">
             <div class="position-relative">
                 {#if currentProject}
                     <div class="position-absolute d-flex " style="top: -26px;">
