@@ -242,13 +242,36 @@
     });
 </script>
 
-<section class="h-100vh pt-below-nav">
+<section class="h-100vh max-h-screen-mob pt-below-nav overflow-hidden">
     <div class="container h-100 d-flex flex-column">
         <div class="row align-items-stretch min-h-screen max-h-screen">
             <!-- Main Content Column -->
-            <div class="col-lg-8 min-h-screen max-h-screen d-flex flex-column">
+            <div class="col-lg-8 min-h-lg-screen max-h-screen d-flex flex-column px-0-mob">
+
+				<div class="position-relative">
+					<div class="position-absolute d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
+						<div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCredits" aria-controls="offcanvasCredits">+ Credits</div>
+					</div>
+					<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCredits" aria-labelledby="offcanvasCreditsLabel">
+						<div class="font-8 p-3">
+							<div class="mb-4">
+								<h2 class="font-5 text-underline" fm-fade-in>{currentProject.title}</h2>
+								<p fm-fade-in>{currentProject.description}</p>
+							</div>
+							<div class="mb-4">
+								<p fm-fade-in>{currentProject.credits.role}</p>
+								<p fm-fade-in>
+									{#each currentProject.credits.details as credit}
+										<span>{credit}<br></span>
+									{/each}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
                 <!-- Video Container -->
-                <div class="border border-black bg-black" bind:this={videoContainer}>
+                <div class="border border-black border-x-0-mob bg-black" bind:this={videoContainer}>
                     <!-- svelte-ignore a11y_media_has_caption -->
                     <!-- <video 
                         class="w-100 h-100 object-fit-contain"
@@ -261,9 +284,9 @@
                         <source src={currentProject.video} type="video/mp4">
                     </video> -->
 					<div style="position:relative;padding-top:56.25%;"><iframe src="https://iframe.mediadelivery.net/embed/368997/0b5146a4-ce8a-491a-a309-a795f481c580?autoplay=false&loop=false&muted=false&preload=true&responsive=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe></div>
-				</div>				
+				</div>	
 				<!-- Info Section with fixed height -->
-                <div class="font-8 position-relative" style="min-height: 100px; margin-top: 20px; margin-bottom: 20px;">
+                <!-- <div class="font-8 position-relative" style="min-height: 100px; margin-top: 20px; margin-bottom: 20px;">
                     <div class="position-absolute top-0 start-0">
                         <h2 class="font-5 text-underline" fm-fade-in>{currentProject.title}</h2>
                     </div>
@@ -280,12 +303,34 @@
                             {/each}
                         </p>
                     </div>
-                </div>
+                </div> -->
+				<div class="d-none d-lg-block font-8 py-3">
+					<div class="row justify-content-between align-items-end mb-3">
+						<div class="col-lg-4">
+							<h2 class="font-5 text-underline mb-0" fm-fade-in>{currentProject.title}</h2>
+						</div>
+						<div class="col-lg-4 text-lg-end">
+							<p class="mb-0" fm-fade-in>{currentProject.credits.role}</p>
+						</div>
+					</div>
+					<div class="row justify-content-between align-items-end">
+						<div class="col-lg-3">
+							<p class="mb-0" fm-fade-in>{currentProject.description}</p>
+						</div>
+						<div class="col-lg-4 text-lg-end">
+							<p class="mb-0" fm-fade-in>
+								{#each currentProject.credits.details as credit}
+									<span>{credit}<br></span>
+								{/each}
+							</p>
+						</div>
+					</div>
+				</div>
             </div>
   
             <!-- Projects List Column -->
-            <div class="col-lg-4 ps-lg-1 min-h-screen max-h-screen" bind:this={rightColumn}>
-                <div class="h-100 border border-black overflow-hidden">
+            <div class="col-lg-4 ps-lg-1 min-h-screen max-h-screen px-0-mob" bind:this={rightColumn}>
+                <div class="h-100 border border-black border-x-0-mob overflow-hidden">
                     <div class="swiper scrollSwiperAdvertising">
                         <div class="swiper-wrapper h-100">
                             <div class="swiper-slide">

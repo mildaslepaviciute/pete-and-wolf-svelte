@@ -39,7 +39,7 @@
     <meta name="description" content="We help you to unmute your brand">
 </svelte:head>
 
-<section class="h-100vh pt-below-nav">
+<section class="h-100vh max-h-screen-mob pt-below-nav overflow-hidden">
     <div class="container h-100 d-flex flex-column">
         <div class="row align-items-stretch no-gutters px-screen-mob">
             <div class="position-relative">
@@ -64,7 +64,7 @@
                     {/if}
                 </div>
                 <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -27px;">
-                    <div class="bg-blue font-4 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">Cases</div>
+                    <div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">Cases</div>
                 </div>
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCases" aria-labelledby="offcanvasCasesLabel">
                     <div class="swiper scrollSwiper">
@@ -181,7 +181,7 @@
             </div>
 
             <!-- Main content area -->
-            <div class="col-lg-8 h-100" style="min-height:100%">
+            <div class="col-lg-8 h-100 min-h-100 px-0-mob">
                 <div class="max-h-screen min-h-screen scrolling border border-black p-3">
                     <slot />
                 </div>

@@ -38,7 +38,6 @@ html {
     line-height: 1.4;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
-    overflow: hidden;
 }
 
 body {
@@ -47,7 +46,6 @@ body {
     color: #000;
     font-size: 16px;
     line-height: 1.4;
-    overflow: hidden;
 }
 
 
@@ -149,6 +147,10 @@ b {
     background-color: #0022f7;
 }
 
+.bg-for-image {
+    background-color: rgb(183, 208, 181);
+}
+
 
 /* -----  BORDERS, SHADOWS AND OTHER  ----- */
 
@@ -182,7 +184,7 @@ b {
     text-decoration-color: transparent;
     color: #000;
     transition-duration: 0.3s;
-    font-size: $fs-6;
+    font-size: $fs-7;
 }
 
 .nav-link-active {
@@ -299,6 +301,10 @@ video {
     min-height: 100vh;
 }
 
+.min-h-100 {
+    min-height: 100%;
+}
+
 .max-h-screen {
     max-height: calc(100vh - 150px);
 }
@@ -396,6 +402,20 @@ a:hover {
     .font-3 {
         font-size: 1.8rem;
     }
+
+    .ratio-1x1-mob {
+        --bs-aspect-ratio: 100%;
+    }
+
+    .px-0-mob {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .border-x-0-mob {
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
 }
 
 @media (max-width: 767px) {
@@ -409,10 +429,18 @@ a:hover {
     .nav-item:first-child .nav-link {
         padding-left: 0px;
     }
+
+    .max-h-screen-mob {
+        max-height: calc(100vh - 86px);
+    }
 }
 
 // Small devices
-@media (min-width: 576px) {}
+@media (min-width: 576px) {
+    .nav-link {
+        font-size: $fs-6;
+    }
+}
 
 // Medium devices
 @media (min-width: 768px) {
@@ -451,6 +479,14 @@ a:hover {
         width: 80% !important;
     }
 
+    .w-lg-100 {
+        width: 100%;
+    }
+
+    .h-lg-100 {
+        height: 100%;
+    }
+
     .my-sec {
         margin-top: 90px;
         margin-bottom: 90px;
@@ -469,6 +505,25 @@ a:hover {
         width: 170px;
     }
 
+    .min-h-lg-screen {
+        min-height: calc(100vh - 150px);
+    }
+
+    .max-h-lg-screen {
+        max-height: calc(100vh - 150px);
+    }
+
+    .scrolling-lg {
+        overflow: scroll;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .scrolling-lg::-webkit-scrollbar {
+        display: none;
+    }
+
     // .custom-margin-right {
     //     margin-right: 1rem;
     //     width: calc(58.33% - 1rem);
@@ -481,3 +536,4 @@ a:hover {
         width: 88%;
     }
 }
+
