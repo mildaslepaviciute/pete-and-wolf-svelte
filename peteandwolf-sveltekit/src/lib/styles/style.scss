@@ -325,11 +325,11 @@ video {
 }
 
 .max-h-screen {
-    max-height: calc(100vh - 130px);
+    max-height: calc(100dvh - 130px);
 }
 
 .min-h-screen {
-    min-height: calc(100vh - 130px);
+    min-height: calc(100dvh - 130px);
 }
 
 .w-30 {
@@ -442,6 +442,17 @@ a:hover {
 
     .border-top-0-mob {
         border-top: 0 !important;
+    }
+
+    .scrolling-mob {
+        overflow: scroll;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .scrolling-mob::-webkit-scrollbar {
+        display: none;
     }
 }
 

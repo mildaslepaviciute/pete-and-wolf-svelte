@@ -9,7 +9,7 @@
   
   <section class="h-100vh pt-below-nav">
     <div class="container h-100 d-flex flex-column">
-      <div class="row align-items-stretch min-h-screen max-h-lg-screen">
+      <div class="row align-items-stretch min-h-screen max-h-lg-screen scrolling-mob">
         <div class="col-lg-6 min-h-lg-screen max-h-screen d-flex flex-column">
           <div class="w-lg-100 h-lg-100 ratio ratio-1x1-mob">
             <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="object-fit-contain bg-for-image">
