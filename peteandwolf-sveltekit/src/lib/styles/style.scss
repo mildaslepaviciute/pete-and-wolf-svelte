@@ -288,6 +288,14 @@ video {
     max-width: 85%;
 }
 
+.collapse-right {
+    transform-origin: right;
+}
+  
+#collapseWidthExample:not(.show) {
+    margin-left: auto;
+}
+
 .scrolling {
     overflow: scroll;
     scroll-behavior: smooth;
@@ -316,11 +324,11 @@ video {
 }
 
 .max-h-screen {
-    max-height: calc(100vh - 150px);
+    max-height: calc(100vh - 136px);
 }
 
 .min-h-screen {
-    min-height: calc(100vh - 150px);
+    min-height: calc(100vh - 136px);
 }
 
 .w-30 {
@@ -342,6 +350,10 @@ video {
 .py-sec {
     padding-top: 60px;
     padding-bottom: 60px;
+}
+
+.pt-below-nav {
+    padding-top: 90px;
 }
 
 .my-sec {
@@ -434,8 +446,6 @@ a:hover {
 
 @media (max-width: 767px) {
     .nav-item {
-        // margin-left: 0px;
-        // margin-right: 20px;
         margin-left: 5px;
         margin-right: 0px;
     }
@@ -471,9 +481,9 @@ a:hover {
         width: 50%;
     }
 
-    // .pt-below-nav {
-    //     padding-top: 110px;
-    // }
+    .pt-below-nav {
+        padding-top: 110px;
+    }
 
     .position-md-absolute {
         position: absolute;
@@ -520,6 +530,14 @@ a:hover {
         padding-bottom: 90px;
     }
 
+    .max-h-screen {
+        max-height: calc(100vh - 150px);
+    }
+    
+    .min-h-screen {
+        min-height: calc(100vh - 150px);
+    }
+
     .swiper {
         height: calc(100vh - 120px);
     }
@@ -546,11 +564,6 @@ a:hover {
     .scrolling-lg::-webkit-scrollbar {
         display: none;
     }
-
-    // .custom-margin-right {
-    //     margin-right: 1rem;
-    //     width: calc(58.33% - 1rem);
-    // }
 }
 
 // Extra large devices
@@ -558,21 +571,4 @@ a:hover {
     .container {
         width: 88%;
     }
-}
-
-
-.collapse-right {
-    transform-origin: right; /* Set the animation to originate from the right */
-  }
-  
-  /* Fixes positioning of the collapsed content */
-  #collapseWidthExample:not(.show) {
-    margin-left: auto; /* Push it to the right when collapsed */
-  }
-
-
-
-
-.pt-below-nav {
-    padding-top: 110px;
 }

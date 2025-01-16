@@ -327,24 +327,24 @@
           </div>
 
           <!-- <div class="position-absolute d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
-						<div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCredits" aria-controls="offcanvasCredits">+ Credits</div>
+				<div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCredits" aria-controls="offcanvasCredits">+ Credits</div>
+			</div>
+			<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCredits" aria-labelledby="offcanvasCreditsLabel">
+				<div class="font-8 p-3">
+					<div class="mb-4">
+						<h2 class="font-5 text-underline" fm-fade-in>{currentProject.title}</h2>
+						<p fm-fade-in>{currentProject.description}</p>
 					</div>
-					<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCredits" aria-labelledby="offcanvasCreditsLabel">
-						<div class="font-8 p-3">
-							<div class="mb-4">
-								<h2 class="font-5 text-underline" fm-fade-in>{currentProject.title}</h2>
-								<p fm-fade-in>{currentProject.description}</p>
-							</div>
-							<div class="mb-4">
-								<p fm-fade-in>{currentProject.credits.role}</p>
-								<p fm-fade-in>
-									{#each currentProject.credits.details as credit}
-										<span>{credit}<br></span>
-									{/each}
-								</p>
-							</div>
-						</div>
-					</div> -->
+					<div class="mb-4">
+						<p fm-fade-in>{currentProject.credits.role}</p>
+						<p fm-fade-in>
+							{#each currentProject.credits.details as credit}
+								<span>{credit}<br></span>
+							{/each}
+						</p>
+					</div>
+				</div>
+			</div> -->
         </div>
 
         <!-- Video Container -->
@@ -375,23 +375,23 @@
         </div>
         <!-- Info Section with fixed height -->
         <!-- <div class="font-8 position-relative" style="min-height: 100px; margin-top: 20px; margin-bottom: 20px;">
-                    <div class="position-absolute top-0 start-0">
-                        <h2 class="font-5 text-underline" fm-fade-in>{currentProject.title}</h2>
-                    </div>
-                    <div class="position-absolute bottom-0 start-0">
-                        <p fm-fade-in class="mb-0" style="max-width: 33.33%">{currentProject.description}</p>
-                    </div>
-                    <div class="position-absolute top-0 end-0 text-end">
-                        <p fm-fade-in>{currentProject.credits.role}</p>
-                    </div>
-                    <div class="position-absolute bottom-0 end-0 text-end">
-                        <p fm-fade-in class="mb-0">
-                            {#each currentProject.credits.details as credit}
-                                <span>{credit}<br></span>
-                            {/each}
-                        </p>
-                    </div>
-                </div> -->
+			<div class="position-absolute top-0 start-0">
+				<h2 class="font-5 text-underline" fm-fade-in>{currentProject.title}</h2>
+			</div>
+			<div class="position-absolute bottom-0 start-0">
+				<p fm-fade-in class="mb-0" style="max-width: 33.33%">{currentProject.description}</p>
+			</div>
+			<div class="position-absolute top-0 end-0 text-end">
+				<p fm-fade-in>{currentProject.credits.role}</p>
+			</div>
+			<div class="position-absolute bottom-0 end-0 text-end">
+				<p fm-fade-in class="mb-0">
+					{#each currentProject.credits.details as credit}
+						<span>{credit}<br></span>
+					{/each}
+				</p>
+			</div>
+		</div> -->
         <div class="d-none d-lg-block font-8 py-3">
           <div class="row justify-content-between align-items-end mb-3">
             <div class="col-lg-4">
