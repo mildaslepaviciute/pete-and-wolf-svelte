@@ -222,6 +222,14 @@
 			//video.volume = 0;
 		});
 
+		const collapsible = document.getElementById('collapseWidthExample');
+    	const toggleButton = document.getElementById('toggleButton');
+		document.addEventListener('click', (e) => {
+        if (!collapsible.contains(e.target) && !toggleButton.contains(e.target)) {
+            collapsible.classList.remove('active');
+        }
+    });
+
         return () => {
             window.removeEventListener('resize', adjustVideoHeight);
         };
@@ -240,6 +248,7 @@
         }
         //adjustVideoHeight();
     });
+
 </script>
 
 <section class="h-100vh max-h-screen-mob pt-below-nav overflow-hidden">
@@ -249,7 +258,26 @@
             <div class="col-lg-8 min-h-lg-screen max-h-screen d-flex flex-column px-0-mob">
 
 				<div class="position-relative">
-					<div class="position-absolute d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
+
+					<div class="position-absolute dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
+						<div class="bg-blue font-5 fw-bold text-white py-4" id="toggleButton" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-controls="offcanvasCredits">+ Credits</div>
+					</div>
+					<div class="position-absolute z-2" style="right: 25px; display: flex; justify-content: flex-end;">
+						<div class="collapse collapse-horizontal collapse-right" id="collapseWidthExample">
+							<div class="card card-body border-0 rounded-0 font-8 p-3" style="width: 200px;">
+								<h2 class="font-5 text-underline" fm-fade-in>{currentProject.title}</h2>
+								<p fm-fade-in>{currentProject.description}</p>
+								<p fm-fade-in>{currentProject.credits.role}</p>
+								<p class="mb-0" fm-fade-in>
+									{#each currentProject.credits.details as credit}
+										<span>{credit}<br></span>
+									{/each}
+								</p>
+							</div>
+						</div>
+					</div>
+					
+					<!-- <div class="position-absolute d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
 						<div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCredits" aria-controls="offcanvasCredits">+ Credits</div>
 					</div>
 					<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCredits" aria-labelledby="offcanvasCreditsLabel">
@@ -267,7 +295,7 @@
 								</p>
 							</div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 
                 <!-- Video Container -->
@@ -330,7 +358,7 @@
   
             <!-- Projects List Column -->
             <div class="col-lg-4 ps-lg-1 min-h-screen max-h-screen px-0-mob" bind:this={rightColumn}>
-                <div class="h-100 border border-black border-x-0-mob overflow-hidden">
+                <div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden">
                     <div class="swiper scrollSwiperAdvertising">
                         <div class="swiper-wrapper h-100">
                             <div class="swiper-slide">
@@ -340,7 +368,7 @@
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
 										data-slug={project.slug}
 									>
-                                      <div class="w-35 border-end border-black">
+                                      <div class="w-35 bg-black border-end border-black">
 										<!-- <div style="position:relative;padding-top:56.25%;"><iframe src="https://iframe.mediadelivery.net/embed/368997/0b5146a4-ce8a-491a-a309-a795f481c580?autoplay=false&loop=false&muted=false&preload=true&responsive=true&controls=false" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe></div> -->
 										<video 
                                               class="w-100" 

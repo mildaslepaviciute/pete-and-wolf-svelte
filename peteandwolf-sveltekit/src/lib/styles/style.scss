@@ -278,6 +278,10 @@ video {
     display: block;
 }
 
+.offcanvas.offcanvas-end {
+    max-width: 93%;
+}
+
 .scrolling {
     overflow: scroll;
     scroll-behavior: smooth;
@@ -416,6 +420,10 @@ a:hover {
         border-left: 0 !important;
         border-right: 0 !important;
     }
+
+    .border-top-0-mob {
+        border-top: 0 !important;
+    }
 }
 
 @media (max-width: 767px) {
@@ -537,3 +545,12 @@ a:hover {
     }
 }
 
+
+.collapse-right {
+    transform-origin: right; /* Set the animation to originate from the right */
+  }
+  
+  /* Fixes positioning of the collapsed content */
+  #collapseWidthExample:not(.show) {
+    margin-left: auto; /* Push it to the right when collapsed */
+  }

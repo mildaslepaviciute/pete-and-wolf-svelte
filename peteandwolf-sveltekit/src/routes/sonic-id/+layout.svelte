@@ -81,7 +81,22 @@
                     <div class="swiper scrollSwiperSonicMobile">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                {#each caseItems as caseItem}
+                                    <div class="d-flex align-items-center border-bottom border-blue-wide">
+                                        <div class="w-35 h-100 d-flex align-items-center p-2">
+                                            <img src={caseItem.image} alt="" class="w-100 border border-black">
+                                        </div>
+                                        <div class="w-65 h-100 d-flex flex-column p-2">
+                                            <h3 class="font-6"><b>{caseItem.title}</b></h3>
+                                            <p class="font-8 text-truncate-2 mb-2">{caseItem.description}</p>
+                                            <!-- <div class="d-flex align-items-center justify-content-between mt-auto">
+                                                <div class="font-8 text-blue">Technology</div>
+                                                <a href={`/sonic-id/${caseItem.slug}`} class="text-underline text-black">read more</a>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                {/each}
+                                <!-- <div class="d-flex align-items-center border-bottom border-blue-wide">
                                     <div class="w-35 h-100 d-flex align-items-center p-2">
                                         <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="w-100 border border-black">
                                     </div>
@@ -223,7 +238,7 @@
                                             <a href="" class="text-underline text-black">read more</a>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
