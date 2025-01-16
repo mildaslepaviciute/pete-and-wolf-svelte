@@ -313,6 +313,7 @@ video {
 
 .h-100vh {
     height: 100vh;
+    height: 100dvh
 }
 
 .min-h-100vh {
@@ -324,11 +325,11 @@ video {
 }
 
 .max-h-screen {
-    max-height: calc(100vh - 180px);
+    max-height: calc(100vh - 130px);
 }
 
 .min-h-screen {
-    min-height: calc(100vh - 180px);
+    min-height: calc(100vh - 130px);
 }
 
 .w-30 {
