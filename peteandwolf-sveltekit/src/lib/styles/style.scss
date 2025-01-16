@@ -467,9 +467,9 @@ a:hover {
         width: 50%;
     }
 
-    .pt-below-nav {
-        padding-top: 110px;
-    }
+    // .pt-below-nav {
+    //     padding-top: 110px;
+    // }
 
     .position-md-absolute {
         position: absolute;
@@ -565,3 +565,10 @@ a:hover {
   #collapseWidthExample:not(.show) {
     margin-left: auto; /* Push it to the right when collapsed */
   }
+
+
+
+
+.pt-below-nav {
+    padding-top: 110px;
+}
