@@ -311,10 +311,6 @@ video {
     margin-left: auto;
 }
 
-// .offcanvas-title-wrapper {
-//     transform: translateY(-90px);
-// }
-
 .scrolling {
     overflow: scroll;
     scroll-behavior: smooth;
@@ -489,21 +485,20 @@ a:hover {
         margin-right: 0px;
     }
 
+    @supports (-webkit-touch-callout: none) {
+        .offcanvas-title-wrapper {
+            transform: translateY(-90px);
+        }
+    }
+      
+    @media (hover: none) and (pointer: coarse) {
+        .offcanvas-title-wrapper {
+            transform: translateY(-90px);
+        }
+    }
+
     // .nav-item:first-child .nav-link {
     //     padding-left: 0px;
-    // }
-
-
-
-
-
-    // .h-100vh {
-    //     height: calc(100vh - 86px);
-    //     // height: 60vh;
-    // }
-
-    // .max-h-screen-mob {
-    //     max-height: calc(100vh - 86px);
     // }
 }
 
@@ -530,10 +525,6 @@ a:hover {
 
     nav {
         height: 110px;
-    }
-
-    .offcanvas-title-wrapper {
-        transform: translateY(-110px);
     }
 }
 

@@ -77,7 +77,7 @@
                 <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -27px;">
                     <div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">Cases</div>
                 </div>
-                <div class="offcanvas offcanvas-end h-100vh top-0" tabindex="-1" id="offcanvasCases" aria-labelledby="offcanvasCasesLabel">
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCases" aria-labelledby="offcanvasCasesLabel">
                     <div class="offcanvas-title-wrapper sticky-top top-0 w-100 bg-blue d-flex justify-content-between align-items-center p-2">
                         <h1 class="font-4 text-white mb-0"><b>Cases</b></h1>
                         <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
