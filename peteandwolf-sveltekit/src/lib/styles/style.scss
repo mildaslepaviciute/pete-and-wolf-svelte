@@ -311,6 +311,10 @@ video {
     margin-left: auto;
 }
 
+.offcanvas-title {
+    margin-top: -90px;
+}
+
 .scrolling {
     overflow: scroll;
     scroll-behavior: smooth;
@@ -526,6 +530,10 @@ a:hover {
 
     nav {
         height: 110px;
+    }
+
+    .offcanvas-title {
+        margin-top: -110px;
     }
 }
 
