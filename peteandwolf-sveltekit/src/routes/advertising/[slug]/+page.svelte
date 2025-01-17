@@ -278,7 +278,7 @@
   });
 </script>
 
-<section class="h-100vh max-h-screen-mob pt-below-nav overflow-hidden">
+<section class="h-100vh pt-below-nav overflow-hidden">
   <div class="container h-100 d-flex flex-column">
     <div class="row align-items-stretch min-h-screen max-h-screen">
       <!-- Main Content Column -->

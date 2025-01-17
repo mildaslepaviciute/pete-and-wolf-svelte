@@ -19,7 +19,7 @@
             <div id={section.title.replace(/\s+/g, '-').toLowerCase()} class="mb-4 mb-last-0">
                 <h3>{section.title}</h3>
                 {#each section.blocks as block}
-                    <div class="row mb-3 mb-last-0">
+                    <div class="row gy-3 gy-lg-0 mb-3 mb-last-0">
                         {#if block.grid == 1}
                             <div class="col-lg-12">
                                 {#if block.col_1.type == 'text'}
