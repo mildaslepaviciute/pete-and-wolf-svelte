@@ -182,6 +182,118 @@ export const load = () => {
                         ]
                     }
                 ]
+            },
+            {
+                slug: 'telia-christmas-2024',
+                title: 'Telia Christmas 2024',
+                description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
+                sections: [
+                    {
+                        title: 'Telia Christmas 2024',
+                        blocks: [
+                            {
+                                grid: 3,
+                                col_1: {
+                                    type: 'text',
+                                    content: 'Content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                                },
+                                col_2: {
+                                    type: 'image',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
+                                },
+                                col_3: {
+                                    type: 'text',
+                                    content: 'Additional content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                slug: 'telia-christmas-2024',
+                title: 'Telia Christmas 2024',
+                description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
+                sections: [
+                    {
+                        title: 'Telia Christmas 2024',
+                        blocks: [
+                            {
+                                grid: 3,
+                                col_1: {
+                                    type: 'text',
+                                    content: 'Content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                                },
+                                col_2: {
+                                    type: 'image',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
+                                },
+                                col_3: {
+                                    type: 'text',
+                                    content: 'Additional content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                slug: 'telia-christmas-2024',
+                title: 'Telia Christmas 2024',
+                description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
+                sections: [
+                    {
+                        title: 'Telia Christmas 2024',
+                        blocks: [
+                            {
+                                grid: 3,
+                                col_1: {
+                                    type: 'text',
+                                    content: 'Content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                                },
+                                col_2: {
+                                    type: 'image',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
+                                },
+                                col_3: {
+                                    type: 'text',
+                                    content: 'Additional content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                slug: 'telia-christmas-2024',
+                title: 'Telia Christmas 2024',
+                description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
+                image: `https://picsum.photos/800/600?random=${Math.random()}`,
+                sections: [
+                    {
+                        title: 'Telia Christmas 2024',
+                        blocks: [
+                            {
+                                grid: 3,
+                                col_1: {
+                                    type: 'text',
+                                    content: 'Content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                                },
+                                col_2: {
+                                    type: 'image',
+                                    content: `https://picsum.photos/800/600?random=${Math.random()}`,
+                                },
+                                col_3: {
+                                    type: 'text',
+                                    content: 'Additional content for Telia Christmas 2024: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     };

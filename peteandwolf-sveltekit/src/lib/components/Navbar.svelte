@@ -2,8 +2,8 @@
     import { page } from '$app/stores';
   </script>
   
-  <nav class="navbar navbar-expand position-absolute sticky-top w-100 py-4">
-    <div class="container">
+  <nav class="navbar navbar-expand position-absolute sticky-top w-100">
+    <div class="container pb-2">
       <a href="/" class="navbar-brand">
         <img src="/img/logo.svg" alt="Pete & Wolf">
       </a>

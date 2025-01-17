@@ -175,6 +175,10 @@ b {
 
 
 /* ------- NAVBAR -------- */
+
+nav {
+    height: 86px;
+}
   
 .navbar-brand img {
     // width: 150px;
@@ -226,6 +230,17 @@ b {
 
 .btn {
     min-width: 150px;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 1;
+}
+
+.back-button-wrapper {
+    top: -23px;
+    left: 0;
+    z-index: 2000;
 }
 
 .button-style-none {
@@ -285,7 +300,7 @@ video {
 }
 
 .offcanvas.offcanvas-end {
-    max-width: 85%;
+    max-width: 80%;
 }
 
 .collapse-right {
@@ -325,11 +340,11 @@ video {
 }
 
 .max-h-screen {
-    max-height: calc(100dvh - 130px);
+    max-height: calc(100dvh - 125px);
 }
 
 .min-h-screen {
-    min-height: calc(100dvh - 130px);
+    min-height: calc(100dvh - 125px);
 }
 
 .w-30 {
@@ -370,12 +385,20 @@ video {
     margin-right: 12%;
 }
 
+.mb-last-0:last-child {
+    margin-bottom: 0 !important;
+}
+
 .z-1 {
     z-index: 1;
 }
 
 .z-2 {
     z-index: 2;
+}
+
+.z-2000 {
+    z-index: 2000;
 }
 
 
@@ -500,6 +523,10 @@ a:hover {
     .position-md-absolute {
         position: absolute;
     }
+
+    nav {
+        height: 110px;
+    }
 }
 
 // Large devices
@@ -576,11 +603,24 @@ a:hover {
     .scrolling-lg::-webkit-scrollbar {
         display: none;
     }
+
+    .back-button-wrapper {
+        top: -26px;
+        left: 0;
+        padding-left: 0.75rem;
+        z-index: 2000;
+    }
 }
 
 // Extra large devices
 @media (min-width: 1600px) {
     .container {
         width: 88%;
+    }
+    html {
+        font-size: 19px;
+    }
+    body {
+        font-size: 19px;
     }
 }
