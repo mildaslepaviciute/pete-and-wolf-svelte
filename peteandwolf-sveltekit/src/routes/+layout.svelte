@@ -5,7 +5,7 @@
   import '../lib/styles/style.scss';
   // Add this to prevent FOUC
   let mounted = false;
-  
+
   onMount(() => {
       mounted = true;
   });

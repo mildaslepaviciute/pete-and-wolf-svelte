@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-  </script>
+</script>
   
   <svelte:head>
     <title>Pete & Wolf</title>

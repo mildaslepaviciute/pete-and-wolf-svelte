@@ -184,15 +184,55 @@
 
   let videoContainer;
   let rightColumn;
+  let leftColumn
   let videoElement;
   let swiper;
 
   function adjustVideoHeight() {
     if (videoContainer && rightColumn && window.innerWidth > 992) {
-      const rightColumnHeight = rightColumn.offsetHeight;
-      const infoSectionHeight = 120; // Your fixed height for the info section
-      const newVideoHeight = rightColumnHeight - infoSectionHeight;
-      videoContainer.style.height = `${newVideoHeight}px`;
+        const rightColumnHeight = rightColumn.scrollHeight;
+        console.log('Initial right column height: ' + rightColumn.scrollHeight);
+        console.log('Initial left column height: ' + leftColumn.scrollHeight);
+
+        if (leftColumn.scrollHeight > rightColumn.scrollHeight) {
+            let padding = 0;
+            const step = 1;
+            const maxIterations = 500;
+            let iterations = 0;
+            let lastHeight = leftColumn.scrollHeight;
+
+            // Get the container
+            const container = document.querySelector('#advertisingContainer');
+            
+            // Reset container padding
+            container.style.setProperty('padding-left', '0', 'important');
+            container.style.setProperty('padding-right', '0', 'important');
+
+            while (leftColumn.scrollHeight > rightColumn.scrollHeight && iterations < maxIterations) {
+                padding += step;
+                // Apply padding to the container class
+                container.style.setProperty('padding-left', `${padding}px`, 'important');
+                container.style.setProperty('padding-right', `${padding}px`, 'important');
+                
+                if (leftColumn.scrollHeight === lastHeight) {
+                    padding += step * 2;
+                }
+                lastHeight = leftColumn.scrollHeight;
+                iterations++;
+
+                if (iterations % 50 === 0) {
+                    console.log(`Iteration ${iterations}: Current height difference: ${leftColumn.scrollHeight - rightColumn.scrollHeight}px`);
+                }
+            }
+
+            console.log('Final container padding applied: ' + padding + 'px');
+            console.log('Final iterations needed: ' + iterations);
+            console.log('Final height difference: ' + (leftColumn.scrollHeight - rightColumn.scrollHeight) + 'px');
+
+            if (iterations >= maxIterations) {
+                console.warn('Maximum iterations reached without achieving desired height match');
+            }
+        }
     }
   }
 
@@ -210,7 +250,7 @@
 
     // Add bg-primary to links in slides matching the slug
     allSlideLinks.forEach((link) => {
-      console.log(link.dataset);
+     // console.log(link.dataset);
       if (link.dataset.slug === slug) {
         link.classList.add("swiper-slide-link-active");
       }
@@ -220,7 +260,7 @@
   let collapseElement;
 
   onMount(() => {
-    //adjustVideoHeight();
+    adjustVideoHeight();
     window.addEventListener("resize", adjustVideoHeight);
 
     swiper = new Swiper(".scrollSwiperAdvertising", {
@@ -279,11 +319,12 @@
 </script>
 
 <section class="h-100vh pt-below-nav overflow-hidden">
-  <div class="container h-100 d-flex flex-column">
+  <div class="container h-100 d-flex flex-column" id="advertisingContainer">
     <div class="row align-items-stretch min-h-screen max-h-screen">
       <!-- Main Content Column -->
       <div
         class="col-lg-8 min-h-lg-screen max-h-screen d-flex flex-column px-0-mob"
+		bind:this={leftColumn}
       >
         <div class="position-relative">
           <div
@@ -392,7 +433,7 @@
 				</p>
 			</div>
 		</div> -->
-        <div class="d-none d-lg-block font-8 py-3">
+        <div class="d-none d-lg-block font-8 pt-3">
           <div class="row justify-content-between align-items-end mb-3">
             <div class="col-lg-4">
               <h2 class="font-5 text-underline mb-0" fm-fade-in>
