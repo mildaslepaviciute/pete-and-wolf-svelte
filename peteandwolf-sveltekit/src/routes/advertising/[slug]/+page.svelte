@@ -238,6 +238,7 @@
 
   // Function to update active states for all slides including clones
   function updateActiveSlides(slug) {
+	console.log(slug)
     if (!swiper) return;
 
     // Get all link elements inside slides including clones
