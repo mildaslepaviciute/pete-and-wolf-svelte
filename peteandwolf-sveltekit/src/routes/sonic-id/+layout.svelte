@@ -16,7 +16,6 @@
     // Function to update active states for all slides including clones
     function updateActiveSlides(slug) {
         //if (!swiper) return;
-        console.log(slug)
 
         // Get all link elements inside slides including clones
         const allSlideLinks = document.querySelectorAll(".swiper-slide-link");
@@ -114,17 +113,21 @@
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
                                 {#each caseItems as caseItem}
-                                    <a 
+                                   <a 
                                         href={`/sonic-id/${caseItem.slug}`}
-                                        class="d-flex align-items-center border-bottom border-blue-wide swiper-slide-link"
+                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                         data-slug={caseItem.slug}
                                     >
-                                        <div class="w-35 h-100 d-flex align-items-center p-2">
-                                            <img src={caseItem.image} alt="" class="w-100 border border-black">
+                                        <div class="w-35 bg-black border-end border-black">
+                                            <img src={caseItem.image} alt="" class="w-100">
                                         </div>
-                                        <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <div class="w-65 h-100 d-flex flex-column p-3">
                                             <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
                                             <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
+                                            <!-- <div class="d-flex align-items-center justify-content-between mt-auto">
+                                                <div class="font-8 text-blue">Technology</div>
+                                                <a href={`/sonic-id/${caseItem.slug}`} class="text-underline text-black">read more</a>
+                                            </div> -->
                                         </div>
                                     </a>
                                 {/each}
@@ -153,13 +156,13 @@
                                 {#each caseItems as caseItem}
                                     <a 
                                         href={`/sonic-id/${caseItem.slug}`}
-                                        class="d-flex align-items-center border-bottom border-blue-wide swiper-slide-link"
+                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                         data-slug={caseItem.slug}
                                     >
-                                        <div class="w-35 h-100 d-flex align-items-center p-2">
-                                            <img src={caseItem.image} alt="" class="w-100 border border-black">
+                                        <div class="w-35 bg-black border-end border-black">
+                                            <img src={caseItem.image} alt="" class="w-100">
                                         </div>
-                                        <div class="w-65 h-100 d-flex flex-column p-2">
+                                        <div class="w-65 h-100 d-flex flex-column p-3">
                                             <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
                                             <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
                                             <!-- <div class="d-flex align-items-center justify-content-between mt-auto">

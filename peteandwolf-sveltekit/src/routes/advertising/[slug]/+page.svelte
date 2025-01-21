@@ -197,7 +197,7 @@
         if (leftColumn.scrollHeight > rightColumn.scrollHeight) {
             let padding = 0;
             const step = 1;
-            const maxIterations = 500;
+            const maxIterations = 1000;
             let iterations = 0;
             let lastHeight = leftColumn.scrollHeight;
 
@@ -289,12 +289,12 @@
 
 	// COLLAPSE CLOSING
 	const closeCollapse = (event) => {
-    if (collapseElement && collapseElement.classList.contains("show")) {
-        const bsCollapse = bootstrap.Collapse.getInstance(collapseElement);
-        if (!collapseElement.contains(event.target)) {
-          bsCollapse?.hide();
-        }
-      }
+    	if (collapseElement && collapseElement.classList.contains("show")) {
+			const bsCollapse = bootstrap.Collapse.getInstance(collapseElement);
+			if (!collapseElement.contains(event.target)) {
+				bsCollapse?.hide();
+			}
+		}
     };
     document.addEventListener("click", closeCollapse);
 

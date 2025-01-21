@@ -569,11 +569,11 @@ a:hover {
     }
 
     .max-h-screen {
-        max-height: calc(100vh - 150px);
+        max-height: calc(100vh - 180px);
     }
     
     .min-h-screen {
-        min-height: calc(100vh - 150px);
+        min-height: calc(100vh - 180px);
     }
 
     .swiper {
@@ -585,11 +585,11 @@ a:hover {
     }
 
     .min-h-lg-screen {
-        min-height: calc(100vh - 150px);
+        min-height: calc(100vh - 180px);
     }
 
     .max-h-lg-screen {
-        max-height: calc(100vh - 150px);
+        max-height: calc(100vh - 180px);
     }
 
     .scrolling-lg {

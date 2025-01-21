@@ -14,10 +14,14 @@
 
 {#if currentProject}
     <div id={currentProject.slug}>
-        <h2 class="font-2 mb-3"><b>{currentProject.title}</b></h2>
-        {#each currentProject.sections as section}
+        <!-- <h2 class="font-2 mb-3"><b>{currentProject.title}</b></h2> -->
+        {#each currentProject.sections as section, index}
             <div id={section.title.replace(/\s+/g, '-').toLowerCase()} class="mb-4 mb-last-0">
-                <h3>{section.title}</h3>
+                {#if index === 0}
+                    <h1 class="font-2 mb-3 fw-bold">{section.title}</h1>
+                {:else}
+                    <h2 class="font-2 mb-3 fw-bold">{section.title}</h2>
+                {/if}
                 {#each section.blocks as block}
                     <div class="row gy-3 gy-lg-0 mb-3 mb-last-0">
                         {#if block.grid == 1}
