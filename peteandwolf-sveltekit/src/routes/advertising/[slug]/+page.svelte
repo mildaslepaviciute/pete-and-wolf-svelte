@@ -176,6 +176,44 @@
         ],
       },
     },
+    {
+      slug: "tv3",
+      title: "Tv3 marathon",
+      thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
+      video:
+        "https://videos.pexels.com/video-files/2982434/2982434-sd_640_360_30fps.mp4",
+      description:
+        "Google's tech ad introduces the latest advancements in AI and connectivity.",
+      credits: {
+        role: "Sound design/Original music",
+        details: [
+          "Agency: R/GA",
+          "Production: Park Pictures",
+          "Director: Lance Acord",
+          "DOP: Dan Mindel",
+          "Producer: Jacqueline Kelman Bisbee",
+        ],
+      },
+    },
+    {
+      slug: "boom-boom",
+      title: "Boom boom",
+      thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
+      video:
+        "https://videos.pexels.com/video-files/2982434/2982434-sd_640_360_30fps.mp4",
+      description:
+        "Google's tech ad introduces the latest advancements in AI and connectivity.",
+      credits: {
+        role: "Sound design/Original music",
+        details: [
+          "Agency: R/GA",
+          "Production: Park Pictures",
+          "Director: Lance Acord",
+          "DOP: Dan Mindel",
+          "Producer: Jacqueline Kelman Bisbee",
+        ],
+      },
+    },
   ];
 
   $: currentProject =
