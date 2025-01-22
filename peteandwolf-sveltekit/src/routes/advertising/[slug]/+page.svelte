@@ -9,8 +9,8 @@
       slug: "telia-christmas-2024",
       title: "Telia Christmas",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://peteandwolf.com/wp-content/uploads/2023/09/Ikea_Ukulele_15s_LT_web.mp4",
+      videoId:
+        "0b5146a4-ce8a-491a-a309-a795f481c580",
       description:
         "We are thrilled to share this heartfelt Telia Christmas ad, which portrays the experience of a boy on the autism spectrum during the festive season.",
       credits: {
@@ -28,8 +28,8 @@
       slug: "labas",
       title: "Labas",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://peteandwolf.com/wp-content/uploads/2024/04/Labas_sounddraft7.mov",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "We are thrilled to share this heartfelt Telia Christmas ad, which portrays the experience of a boy on the autism spectrum during the festive season.",
       credits: {
@@ -47,8 +47,8 @@
       slug: "nike-summer-2024",
       title: "Nike Summer",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://peteandwolf.com/wp-content/uploads/2023/09/CGATES-BICIUKAS.mp4",
+      videoId:
+        "97bb5e04-4e17-4a3d-9156-ee64590b25df",
       description:
         "This energetic Nike ad captures the spirit of summer with vibrant visuals and an upbeat soundtrack.",
       credits: {
@@ -66,8 +66,8 @@
       slug: "apple-new-year-2024",
       title: "Apple New Year",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://videos.pexels.com/video-files/6548176/6548176-hd_1920_1080_24fps.mp4",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "Apple's New Year ad showcases the latest technology in a beautifully crafted narrative.",
       credits: {
@@ -85,8 +85,8 @@
       slug: "adidas-winter-2024",
       title: "Adidas Winter",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://videos.pexels.com/video-files/7565462/7565462-sd_960_506_25fps.mp4",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "Adidas's winter ad highlights the latest winter sports gear with stunning visuals and dynamic action.",
       credits: {
@@ -104,8 +104,8 @@
       slug: "samsung-fall-2024",
       title: "Samsung Fall",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://videos.pexels.com/video-files/7102266/7102266-sd_640_360_30fps.mp4",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "Samsung's fall ad introduces the new Galaxy series with a focus on innovation and design.",
       credits: {
@@ -123,8 +123,8 @@
       slug: "pepsi-spring-2024",
       title: "Pepsi Spring",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://videos.pexels.com/video-files/7565986/7565986-sd_960_506_25fps.mp4",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "Pepsi's spring ad is full of energy and freshness, celebrating the vibrancy of the season.",
       credits: {
@@ -142,8 +142,8 @@
       slug: "bmw-summer-2024",
       title: "BMW Summer",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://videos.pexels.com/video-files/5768174/5768174-sd_960_506_25fps.mp4",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "BMW's summer ad showcases the latest models in a thrilling and visually stunning journey.",
       credits: {
@@ -161,8 +161,8 @@
       slug: "google-tech-2024",
       title: "Google Tech",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://videos.pexels.com/video-files/2982434/2982434-sd_640_360_30fps.mp4",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "Google's tech ad introduces the latest advancements in AI and connectivity.",
       credits: {
@@ -180,8 +180,8 @@
       slug: "tv3",
       title: "Tv3 marathon",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://videos.pexels.com/video-files/2982434/2982434-sd_640_360_30fps.mp4",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "Google's tech ad introduces the latest advancements in AI and connectivity.",
       credits: {
@@ -199,8 +199,8 @@
       slug: "boom-boom",
       title: "Boom boom",
       thumbnail: `https://picsum.photos/1920/1080?random=${Math.random()}`,
-      video:
-        "https://videos.pexels.com/video-files/2982434/2982434-sd_640_360_30fps.mp4",
+      videoId:
+        "e9a7e3c0-1806-4331-8a3c-d102100e5e0c",
       description:
         "Google's tech ad introduces the latest advancements in AI and connectivity.",
       credits: {
@@ -445,7 +445,7 @@
                     </video> -->
           <div style="position:relative;padding-top:56.25%;">
             <iframe
-              src="https://iframe.mediadelivery.net/embed/368997/0b5146a4-ce8a-491a-a309-a795f481c580?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
+              src="https://iframe.mediadelivery.net/embed/368997/{currentProject.videoId}?autoplay=false&loop=false&muted=false&preload=true&responsive=true&hideControls=1"
               loading="lazy"
               style="border:0;position:absolute;top:0;height:100%;width:100%;"
               allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
@@ -527,7 +527,7 @@
                       >
                         <!-- <source src={project.video} type="video/mp4"> -->
                         <source
-                          src="https://iframe.mediadelivery.net/play/368997/0b5146a4-ce8a-491a-a309-a795f481c580"
+                          src="https://iframe.mediadelivery.net/embed/368997/{currentProject.videoId}"
                           type="video/mp4"
                         />
                       </video>
