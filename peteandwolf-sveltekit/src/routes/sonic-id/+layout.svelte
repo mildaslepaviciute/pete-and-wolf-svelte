@@ -3,8 +3,10 @@
     import { page } from "$app/stores";
     import { goto } from '$app/navigation';
 
-    
     export let data;
+
+    let swiperSonic, swiperSonicMobile;
+
     const caseItems = data.caseItems;
 
     $: currentProject = $page.url.pathname === '/sonic-id' 
@@ -15,7 +17,7 @@
 
     // Function to update active states for all slides including clones
     function updateActiveSlides(slug) {
-        //if (!swiper) return;
+        if (!swiperSonic && !swiperSonicMobile) return;
         
         // Get all link elements inside slides including clones
         const allSlideLinks = document.querySelectorAll(".swiper-slide-link");
@@ -40,7 +42,7 @@
     onMount(() => {
         //const isMobile = window.innerWidth <= 992; // Define a breakpoint for mobile devices
 
-        new Swiper(".scrollSwiperSonic", {
+        swiperSonic = new Swiper(".scrollSwiperSonic", {
             direction: "vertical",
             slidesPerView: "auto",
             freeMode: true,
@@ -52,7 +54,7 @@
             simulateTouch: false,
         });
 
-        new Swiper(".scrollSwiperSonicMobile", {
+        swiperSonicMobile = new Swiper(".scrollSwiperSonicMobile", {
             direction: "vertical",
             slidesPerView: "auto",
             freeMode: true,

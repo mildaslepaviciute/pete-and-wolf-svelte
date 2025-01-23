@@ -260,9 +260,9 @@
 			if (getActualContentHeight(leftColumn) >= getActualContentHeight(rightColumn)) {
 				let padding = 0;
 				const step = 1;
-				const maxIterations = 1000;
+				const maxIterations = 550;
 				let iterations = 0;
-				let lastHeight = leftColumn.scrollHeight;
+				//let lastHeight = getActualContentHeight(leftColumn);
 
 				// Reset padding for all containers
 				containers.forEach((container) => {
@@ -278,15 +278,13 @@
 						container.style.setProperty("padding-right", `${padding}px`, "important");
 					});
 
-					// if (getActualContentHeight(leftColumn) === lastHeight) {
-					// 	padding += step * 2;
-					// }
-					lastHeight = getActualContentHeight(leftColumn);
+					//lastHeight = getActualContentHeight(leftColumn);
 					iterations++;
-
-					if (iterations % 50 === 0) {
+					console.log('left', getActualContentHeight(leftColumn));
+					console.log('right', getActualContentHeight(rightColumn));
+					//if (iterations % 50 === 0) {
 						console.log(`Iteration ${iterations}: Current height difference: ${getActualContentHeight(leftColumn) - getActualContentHeight(rightColumn)}px`);
-					}
+					//}
 				}
 
 				console.log("Final container padding applied: " + padding + "px",);
@@ -332,7 +330,6 @@
 			}
 		});
 	}
-
 
 	function updateSwiperTouch() {
 		const isMobile = window.innerWidth < 992;

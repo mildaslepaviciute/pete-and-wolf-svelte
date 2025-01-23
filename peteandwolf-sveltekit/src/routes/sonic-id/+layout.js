@@ -184,13 +184,13 @@ export const load = () => {
                 ]
             },
             {
-                slug: 'telia-christmas-2024',
-                title: 'Telia Christmas 2024',
+                slug: 'telia-christmas-2029',
+                title: 'Telia Christmas 2029',
                 description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
                 image: `https://picsum.photos/800/600?random=${Math.random()}`,
                 sections: [
                     {
-                        title: 'Telia Christmas 2024',
+                        title: 'Telia Christmas 2029',
                         blocks: [
                             {
                                 grid: 3,
@@ -212,13 +212,13 @@ export const load = () => {
                 ]
             },
             {
-                slug: 'telia-christmas-2024',
-                title: 'Telia Christmas 2024',
+                slug: 'telia-christmas-2028',
+                title: 'Telia Christmas 2028',
                 description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
                 image: `https://picsum.photos/800/600?random=${Math.random()}`,
                 sections: [
                     {
-                        title: 'Telia Christmas 2024',
+                        title: 'Telia Christmas 2028',
                         blocks: [
                             {
                                 grid: 3,
@@ -240,13 +240,13 @@ export const load = () => {
                 ]
             },
             {
-                slug: 'telia-christmas-2024',
-                title: 'Telia Christmas 2024',
+                slug: 'telia-christmas-2027',
+                title: 'Telia Christmas 2027',
                 description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
                 image: `https://picsum.photos/800/600?random=${Math.random()}`,
                 sections: [
                     {
-                        title: 'Telia Christmas 2024',
+                        title: 'Telia Christmas 2027',
                         blocks: [
                             {
                                 grid: 3,
@@ -268,13 +268,13 @@ export const load = () => {
                 ]
             },
             {
-                slug: 'telia-christmas-2024',
-                title: 'Telia Christmas 2024',
+                slug: 'telia-christmas-2025',
+                title: 'Telia Christmas 2025',
                 description: 'Duis aute irure dolor in reprehenderit in voluptate velit.',
                 image: `https://picsum.photos/800/600?random=${Math.random()}`,
                 sections: [
                     {
-                        title: 'Telia Christmas 2024',
+                        title: 'Telia Christmas 2025',
                         blocks: [
                             {
                                 grid: 3,
