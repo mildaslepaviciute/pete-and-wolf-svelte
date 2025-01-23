@@ -38,6 +38,8 @@
     }
 
     onMount(() => {
+        //const isMobile = window.innerWidth <= 992; // Define a breakpoint for mobile devices
+
         new Swiper(".scrollSwiperSonic", {
             direction: "vertical",
             slidesPerView: "auto",
@@ -47,6 +49,7 @@
                 el: ".swiper-scrollbar",
             },
             mousewheel: true,
+            simulateTouch: false,
         });
 
         new Swiper(".scrollSwiperSonicMobile", {
