@@ -1,19 +1,62 @@
+<!-- src/routes/+layout.svelte -->
 <script>
   import { onMount } from 'svelte';
   import Navbar from '$lib/components/Navbar.svelte';
-  
   import '../lib/styles/style.scss';
-  // Add this to prevent FOUC
+  
   let mounted = false;
 
-  onMount(() => {
-      mounted = true;
-  });
+  function adjustContentHeight() {
+    const innerHeight = window.innerHeight;
+    const innerWidth = window.innerWidth;
+    const minBottomPadding = 180;
+    let ratio;
+
+    if (innerWidth > 992) {
+      if (innerWidth < 1500) {
+        ratio = 2.12;
+      } else if (innerWidth < 1800) {
+        ratio = 2.2;
+      } else if (innerWidth < 2200) {
+        ratio = 2.26;
+      } else {
+        ratio = 2.26;
+      }
+
+      let targetHeight = Math.min(800, innerHeight - minBottomPadding);
+      let targetWidth = targetHeight * ratio;
+      console.log(targetWidth, targetHeight);
+
+      if (targetWidth > (innerWidth - 96.5)) {
+          targetWidth = (innerWidth - 96.5);
+          targetHeight = targetWidth / ratio;
+      }
+
+      // Set CSS custom properties at the document root level
+      document.documentElement.style.setProperty('--target-width', `${targetWidth}px`);
+      document.documentElement.style.setProperty('--target-height', `${targetHeight}px`);
+
+      if (innerWidth > 1600) {
+        let ptNav = 120 * 2*(innerHeight / innerWidth);
+        document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`); 
+      } else {
+        let ptNav = 120
+        document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`);
+      }
+    }
+}
+
+onMount(() => {
+    mounted = true;
+    adjustContentHeight();
+    window.addEventListener('resize', adjustContentHeight);
+    return () => window.removeEventListener('resize', adjustContentHeight);
+});
+  
 </script>
 
 <svelte:head>
-  <!-- Add critical CSS inline -->
-  <!-- <style>
+  <style>
       /* Hide content until styles are loaded */
       .content-wrapper:not(.mounted) {
           opacity: 0;
@@ -22,7 +65,7 @@
           opacity: 1;
           transition: opacity 0.2s;
       }
-  </style> -->
+  </style>
 </svelte:head>
 
 <!-- Wrap your content -->
@@ -30,3 +73,9 @@
   <Navbar />
   <slot />
 </div>
+
+<style>
+    :global(.container) {
+        transition: padding 0.3s ease-out;
+    }
+</style>

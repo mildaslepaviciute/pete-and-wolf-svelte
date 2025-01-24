@@ -6,6 +6,7 @@
     export let data;
 
     let swiperSonic, swiperSonicMobile;
+    let offcanvasCases;
 
     const caseItems = data.caseItems;
 
@@ -33,6 +34,12 @@
                 link.classList.add("swiper-slide-link-active");
             }
         });
+    }
+
+    function hideOffcanvasElements() {
+        if (offcanvasCases) {
+            offcanvasCases.hide()
+        }
     }
 
     function goBack() {
@@ -67,13 +74,14 @@
 
         updateActiveSlides($page.params.slug);
 
-        const offcanvasElementsList = document.querySelectorAll('.offcanvas');
-        offcanvasElementsList.forEach(offcanvasEl => new bootstrap.Offcanvas(offcanvasEl));
+        const offcanvasCasesEl = document.querySelector('#offcanvasCases');
+        offcanvasCases = new bootstrap.Offcanvas(offcanvasCasesEl);
     });
 
     // Watch for URL changes
     $: if ($page.params.slug) {
         updateActiveSlides($page.params.slug);
+        hideOffcanvasElements()
     }
 </script>
 
@@ -84,7 +92,7 @@
 
 <section class="h-100vh pt-below-nav overflow-hidden">
     <div class="container h-100 d-flex flex-column">
-        <div class="row align-items-stretch no-gutters px-screen-mob">
+        <div class="row align-items-stretch no-gutters px-screen-mob" id="sonicRow">
             <div class="position-relative">
                 {#if currentProject}
                     <div class="back-button-wrapper position-absolute">
@@ -144,14 +152,14 @@
 
             <!-- Main content area -->
             <div class="col-lg-8 h-100 min-h-100 px-0-mob">
-                <div class="max-h-screen min-h-screen scrolling border border-black p-3">
+                <div class="max-h-screen min-h-mob-screen h-100 scrolling border border-black p-3">
                     <slot />
                 </div>
             </div>
 
             <!-- Right sidebar -->
             <div class="col-lg-4 h-100 ps-lg-1 d-none d-lg-block">
-                <div class="max-h-screen border border-black overflow-hidden">
+                <div class="h-100 max-h-screen border border-black overflow-hidden">
                     <div class="bg-blue sticky-top">
                         <h1 class="font-2 text-end text-white p-2 mb-0"><b>Cases</b></h1>
                     </div>

@@ -209,7 +209,6 @@
 		advertisingProjects.find((p) => p.slug === $page.params.slug) ||
 		advertisingProjects[0];
 
-	let videoContainer;
 	let rightColumn;
 	let leftColumn;
 	let videoElement;
@@ -218,7 +217,7 @@
 
 
 	function adjustVideoHeight() {
-		if (videoContainer && rightColumn && window.innerWidth > 992) {
+		if (leftColumn && rightColumn && window.innerWidth > 992) {
 			function getActualContentHeight(element) {
 				// Get the total height of all child elements
 				const childrenHeight = Array.from(element.children).reduce(
@@ -338,8 +337,8 @@
 	}
 
 	onMount(() => {
-		adjustVideoHeight();
-		window.addEventListener("resize", adjustVideoHeight);
+		//adjustVideoHeight();
+		//window.addEventListener("resize", adjustVideoHeight);
 
 		swiper = new Swiper(".scrollSwiperAdvertising", {
 			direction: "vertical",
@@ -380,7 +379,7 @@
 		document.addEventListener("click", closeCollapse);
 
 		return () => {
-			window.removeEventListener("resize", adjustVideoHeight);
+			//window.removeEventListener("resize", adjustVideoHeight);
 			document.removeEventListener("click", closeCollapse);
 		};
 	});
@@ -400,12 +399,13 @@
 </script>
 
 <section class="h-100vh pt-below-nav overflow-hidden">
-	<div class="container h-100 d-flex flex-column" id="advertisingContainer">
-		<div class="row align-items-stretch min-h-screen max-h-screen">
+	<div class="container h-100 d-flex flex-column" id="advertisingContainer" style="">
+		<div class="row align-items-stretch max-h-screen h-100" id="advertisingRow">
 			<!-- Main Content Column -->
 			<div
-				class="col-lg-8 min-h-lg-screen max-h-screen d-flex flex-column px-0-mob"
+				class="col-lg-8 d-flex flex-column px-0-mob"
 				bind:this={leftColumn}
+				id="leftColumn"
 			>
 				<div class="position-relative">
 					<div class="position-absolute dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
@@ -421,14 +421,14 @@
 					</div>
 					<div
 						class="position-absolute z-2"
-						style="right: 25px; top: 1px; display: flex; justify-content: flex-end;"
+						style="right: 28px; top: 1px; display: flex; justify-content: flex-end;"
 					>
 						<div
 							class="collapse collapse-horizontal collapse-right"
 							id="collapseWidthExample"
 							bind:this={collapseElement}
 						>
-							<div class="card card-body border-0 rounded-0 font-9 p-3" style="width: 200px;">
+							<div class="card card-body border-0 rounded-0 font-9 p-3" id="cardCredits" style="width: calc(100vw - 28px)">
 								<h2 class="font-7 text-underline" fm-fade-in>
 									{currentProject.title}
 								</h2>
@@ -445,7 +445,7 @@
 				</div>
 
 				<!-- Video Container -->
-				<div class="border border-black border-x-0-mob bg-black" bind:this={videoContainer}>
+				<div class="border border-black border-x-0-mob bg-black">
 					<!-- <video 
                         class="w-100 h-100 object-fit-contain"
                         preload="metadata" 
@@ -481,7 +481,7 @@
 						</div>
 					</div>
 					<div class="row justify-content-between align-items-end">
-						<div class="col-lg-3">
+						<div class="col-lg-4">
 							<p class="mb-0" fm-fade-in>
 								{currentProject.description}
 							</p>
@@ -498,7 +498,7 @@
 			</div>
 
 			<!-- Projects List Column -->
-			<div class="col-lg-4 ps-lg-1 min-h-screen max-h-screen px-0-mob" bind:this={rightColumn}>
+			<div class="col-lg-4 ps-lg-1 px-0-mob h-100" bind:this={rightColumn} id="rightColumn">
 				<div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden">
 					<div class="swiper scrollSwiperAdvertising">
 						<div class="swiper-wrapper h-100">
