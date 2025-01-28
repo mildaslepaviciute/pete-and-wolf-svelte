@@ -9,13 +9,13 @@
   
   <section class="h-100vh pt-below-nav overflow-hidden">
     <div class="container h-100 d-flex flex-column">
-      <div class="row align-items-stretch min-h-screen max-h-lg-screen scrolling-mob gy-4 gy-lg-0 pb-4 pb-lg-0">
-        <div class="col-lg-6 min-h-lg-screen max-h-screen d-flex flex-column">
+      <div class="row align-items-stretch  scrolling-mob gy-4 gy-lg-0 pb-4 pb-lg-0" id="aboutRow">
+        <div class="col-lg-6 h-lg-100 d-flex flex-column">
           <div class="w-lg-100 h-lg-100 ratio ratio-1x1-mob">
             <img src="https://peteandwolf.com/wp-content/uploads/2023/09/Screenshot-2023-09-14-at-18.15.34-e1694774775893-1915x1080.jpg" alt="" class="object-fit-contain bg-for-image">
           </div>
         </div>
-        <div class="col-lg-6 min-h-lg-screen max-h-lg-screen d-flex flex-column scrolling-lg">
+        <div class="col-lg-6 h-lg-100 d-flex flex-column scrolling-lg">
           <h1 class="w-100 sticky-top bg-white font-2 pb-3 mb-0"><b>About Music</b></h1>
           <div class="row gy-3 gy-lg-0 mb-3 mb-last-0">
             <div class="col-lg-12">

@@ -214,101 +214,7 @@
 	let videoElement;
 	let swiper;
 	let collapseElement;
-
-
-	function adjustVideoHeight() {
-		if (leftColumn && rightColumn && window.innerWidth > 992) {
-			function getActualContentHeight(element) {
-				// Get the total height of all child elements
-				const childrenHeight = Array.from(element.children).reduce(
-					(total, child) => total + child.offsetHeight,
-					0,
-				);
-
-				// Get computed styles for margins and paddings
-				const style = getComputedStyle(element);
-				const paddingTop = parseFloat(style.paddingTop);
-				const paddingBottom = parseFloat(style.paddingBottom);
-
-				// Return actual content height
-				return childrenHeight + paddingTop + paddingBottom;
-			}
-
-			console.log({
-				right: {
-					actualContent: getActualContentHeight(rightColumn),
-					minHeight: parseFloat(
-						getComputedStyle(rightColumn).minHeight,
-					),
-					scrollHeight: rightColumn.scrollHeight,
-					clientHeight: rightColumn.clientHeight,
-				},
-				left: {
-					actualContent: getActualContentHeight(leftColumn),
-					minHeight: parseFloat(
-						getComputedStyle(leftColumn).minHeight,
-					),
-					scrollHeight: leftColumn.scrollHeight,
-					clientHeight: leftColumn.clientHeight,
-				},
-			});
-
-			const containers = document.querySelectorAll(".container");
-
-
-			if (getActualContentHeight(leftColumn) >= getActualContentHeight(rightColumn)) {
-				let padding = 0;
-				const step = 1;
-				const maxIterations = 550;
-				let iterations = 0;
-				//let lastHeight = getActualContentHeight(leftColumn);
-
-				// Reset padding for all containers
-				containers.forEach((container) => {
-					container.style.setProperty("padding-left", "0", "important");
-					container.style.setProperty("padding-right", "0", "important");
-				});
-
-				while (getActualContentHeight(leftColumn) != getActualContentHeight(rightColumn) && iterations < maxIterations) {
-					padding += step;
-					// Apply padding to all containers
-					containers.forEach((container) => {
-						container.style.setProperty("padding-left", `${padding}px`, "important");
-						container.style.setProperty("padding-right", `${padding}px`, "important");
-					});
-
-					//lastHeight = getActualContentHeight(leftColumn);
-					iterations++;
-					console.log('left', getActualContentHeight(leftColumn));
-					console.log('right', getActualContentHeight(rightColumn));
-					//if (iterations % 50 === 0) {
-						console.log(`Iteration ${iterations}: Current height difference: ${getActualContentHeight(leftColumn) - getActualContentHeight(rightColumn)}px`);
-					//}
-				}
-
-				console.log("Final container padding applied: " + padding + "px",);
-				console.log("Final iterations needed: " + iterations);
-				console.log(
-					"Final height difference: " +
-					(leftColumn.scrollHeight - rightColumn.scrollHeight) +
-					"px",
-				);
-
-				if (iterations >= maxIterations) {
-					console.warn("Maximum iterations reached without achieving desired height match");
-				}
-			} else if (getActualContentHeight(leftColumn) < getActualContentHeight(rightColumn)) {
-				// Reset padding for all containers
-				containers.forEach((container) => {
-					container.style.setProperty("padding-left", "0", "important");
-					container.style.setProperty("padding-right", "0", "important");
-				});
-
-				rightColumn.style.setProperty("min-height", `${getActualContentHeight(leftColumn)}px`, "important");
-				rightColumn.style.setProperty("max-height", `${getActualContentHeight(leftColumn)}px`, "important");
-			}
-		}
-	}
+	let collapseToggleButton
 
 	// Function to update active states for all slides including clones
 	function updateActiveSlides(slug) {
@@ -337,9 +243,6 @@
 	}
 
 	onMount(() => {
-		//adjustVideoHeight();
-		//window.addEventListener("resize", adjustVideoHeight);
-
 		swiper = new Swiper(".scrollSwiperAdvertising", {
 			direction: "vertical",
 			slidesPerView: "auto",
@@ -378,8 +281,19 @@
 		};
 		document.addEventListener("click", closeCollapse);
 
+		const updateToggleButton = () => {
+			console.log('happening')
+            if (collapseElement.classList.contains('show')) {
+                collapseToggleButton.textContent = '+ Credits';
+            } else {
+                collapseToggleButton.textContent = '— Credits';
+            }
+        };
+
+		collapseElement.addEventListener('show.bs.collapse', updateToggleButton);
+        collapseElement.addEventListener('hide.bs.collapse', updateToggleButton);
+
 		return () => {
-			//window.removeEventListener("resize", adjustVideoHeight);
 			document.removeEventListener("click", closeCollapse);
 		};
 	});
@@ -415,6 +329,7 @@
 							data-bs-toggle="collapse"
 							data-bs-target="#collapseWidthExample"
 							aria-controls="offcanvasCredits"
+							bind:this={collapseToggleButton}
 						>
 							+ Credits
 						</div>

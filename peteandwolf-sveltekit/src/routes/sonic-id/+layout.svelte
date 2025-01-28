@@ -96,6 +96,8 @@
             <div class="position-relative">
                 {#if currentProject}
                     <div class="back-button-wrapper position-absolute">
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
+                        <!-- svelte-ignore a11y_no_static_element_interactions -->
                         <div type="button" class="back-button" on:click|preventDefault={goBack}>&larr; About Sonic ID</div>
                     </div>
                 {/if}

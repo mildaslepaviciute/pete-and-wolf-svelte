@@ -10,20 +10,28 @@
     const innerHeight = window.innerHeight;
     const innerWidth = window.innerWidth;
     const minBottomPadding = 180;
-    let ratio;
+    let ratio, minHeight;
 
     if (innerWidth > 992) {
       if (innerWidth < 1500) {
         ratio = 2.12;
+        minHeight = 750;
       } else if (innerWidth < 1800) {
         ratio = 2.2;
-      } else if (innerWidth < 2200) {
+        minHeight = 700;
+      } else if (innerWidth < 2000) {
         ratio = 2.26;
+        minHeight = 800;
       } else {
         ratio = 2.26;
+        minHeight = 1000;
       }
+      minHeight = innerHeight * 0.775
+      console.log('innerWidth' + innerWidth)
 
-      let targetHeight = Math.min(800, innerHeight - minBottomPadding);
+      console.log('innerHeight' + innerHeight)
+
+      let targetHeight = Math.min(minHeight, innerHeight - minBottomPadding);
       let targetWidth = targetHeight * ratio;
       console.log(targetWidth, targetHeight);
 
@@ -35,14 +43,20 @@
       // Set CSS custom properties at the document root level
       document.documentElement.style.setProperty('--target-width', `${targetWidth}px`);
       document.documentElement.style.setProperty('--target-height', `${targetHeight}px`);
-
-      if (innerWidth > 1600) {
+      console.log('ratio' + innerWidth /innerHeight)
+      if (innerWidth > 2200 && (innerHeight - minBottomPadding) > 1000) {
+        console.log('yes')
+        let ptNav = 120 * 2.5*(innerHeight / innerWidth);
+        document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`); 
+      } else if (innerWidth > 1600 ) {
         let ptNav = 120 * 2*(innerHeight / innerWidth);
         document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`); 
       } else {
         let ptNav = 120
         document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`);
       }
+
+    
     }
 }
 
