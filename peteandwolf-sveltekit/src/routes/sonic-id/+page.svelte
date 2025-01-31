@@ -1,15 +1,8 @@
 <script>
+    import { renderBlocks } from "$lib/helpers.js";
     export let data;
-    const { sonicIdData } = data;
 
-    function renderBlocks(blocks) {
-        return blocks?.map(block => {
-            if (block._type === 'block') {
-                return block.children?.map(child => child.text).join('');
-            }
-            return '';
-        }).join('\n');
-    }
+    const { sonicIdData } = data;
 </script>
 
 <svelte:head>

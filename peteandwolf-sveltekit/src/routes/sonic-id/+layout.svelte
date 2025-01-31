@@ -5,11 +5,11 @@
     import { goto } from '$app/navigation';
 
     export let data;
+    const { caseItems, sonicIdData } = data;
+    console.log(sonicIdData)
 
     let swiperSonic, swiperSonicMobile;
     let offcanvasCases;
-
-    const caseItems = data.caseItems;
 
     $: currentProject = $page.url.pathname === '/sonic-id' 
         ? null 
@@ -18,7 +18,6 @@
         );
 
     function updateActiveSlides(slug) {
-        console.log(slug)
         if (!swiperSonic && !swiperSonicMobile) return;
         
         const allSlideLinks = document.querySelectorAll(".swiper-slide-link");
@@ -107,9 +106,13 @@
                             </div>
                         {/each}
                     {:else}
-                        <div class="fw-bold mt-4">
-                            <span class="case-title u-offset-n1 text-black">Sonic ID</span>
-                        </div>
+                        {#each [...sonicIdData.sections].reverse() as section}
+                            <div class="fw-bold mt-4">
+                                <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">
+                                    {section.title}
+                                </a>
+                            </div>
+                        {/each}
                     {/if}
                 </div>
                 <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -27px;">

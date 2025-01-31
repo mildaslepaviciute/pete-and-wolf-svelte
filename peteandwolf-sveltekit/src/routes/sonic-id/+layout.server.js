@@ -2,7 +2,7 @@
 import { client } from '$lib/sanityClient';
 
 export async function load() {
-    const query = `*[_type == "sonicIdProject"] | order(order asc) {
+    const projectsQuery = `*[_type == "sonicIdProject"] | order(order asc) {
         title,
         "slug": slug.current,
         description,
@@ -42,6 +42,19 @@ export async function load() {
         }
     }`;
 
-    const caseItems = await client.fetch(query);
-    return { caseItems };
+    const basePageQuery = `*[_type == "sonicIdPage"][0] {
+        sections[] {
+            title
+        }
+    }`;
+
+    const [caseItems, sonicIdData] = await Promise.all([
+        client.fetch(projectsQuery),
+        client.fetch(basePageQuery)
+    ]);
+
+    return { 
+        caseItems,
+        sonicIdData 
+    };
 }
