@@ -1,3 +1,4 @@
+<!-- src/routes/sonic-id/+layout.svelte -->
 <script>
     import { onMount } from "svelte";
     import { page } from "$app/stores";
@@ -16,19 +17,16 @@
             $page.params.slug && item.slug === $page.params.slug
         );
 
-    // Function to update active states for all slides including clones
     function updateActiveSlides(slug) {
+        console.log(slug)
         if (!swiperSonic && !swiperSonicMobile) return;
         
-        // Get all link elements inside slides including clones
         const allSlideLinks = document.querySelectorAll(".swiper-slide-link");
 
-        // Remove bg-primary from all links
         allSlideLinks.forEach((link) => {
             link.classList.remove("swiper-slide-link-active");
         });
 
-        // Add bg-primary to links in slides matching the slug
         allSlideLinks.forEach((link) => {
             if (link.dataset.slug === slug) {
                 link.classList.add("swiper-slide-link-active");
@@ -44,11 +42,10 @@
 
     function goBack() {
         goto('/sonic-id');
+        updateActiveSlides(null);
     }
 
     onMount(() => {
-        //const isMobile = window.innerWidth <= 992; // Define a breakpoint for mobile devices
-
         swiperSonic = new Swiper(".scrollSwiperSonic", {
             direction: "vertical",
             slidesPerView: "auto",
@@ -78,7 +75,6 @@
         offcanvasCases = new bootstrap.Offcanvas(offcanvasCasesEl);
     });
 
-    // Watch for URL changes
     $: if ($page.params.slug) {
         updateActiveSlides($page.params.slug);
         hideOffcanvasElements()
@@ -119,6 +115,8 @@
                 <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -27px;">
                     <div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">Cases</div>
                 </div>
+
+                <!-- Mobile offcanvas -->
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCases" aria-labelledby="offcanvasCasesLabel">
                     <div class="offcanvas-title-wrapper sticky-top top-0 w-100 bg-blue d-flex justify-content-between align-items-center px-2 py-3">
                         <h1 class="font-4 text-white mb-0"><b>Cases</b></h1>
@@ -128,21 +126,17 @@
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
                                 {#each caseItems as caseItem}
-                                   <a 
+                                    <a 
                                         href={`/sonic-id/${caseItem.slug}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                         data-slug={caseItem.slug}
                                     >
                                         <div class="w-35 bg-black border-end border-black">
-                                            <img src={caseItem.image} alt="" class="w-100">
+                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
                                         </div>
                                         <div class="w-65 h-100 d-flex flex-column p-3">
                                             <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
                                             <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
-                                            <!-- <div class="d-flex align-items-center justify-content-between mt-auto">
-                                                <div class="font-8 text-blue">Technology</div>
-                                                <a href={`/sonic-id/${caseItem.slug}`} class="text-underline text-black">read more</a>
-                                            </div> -->
                                         </div>
                                     </a>
                                 {/each}
@@ -159,7 +153,7 @@
                 </div>
             </div>
 
-            <!-- Right sidebar -->
+            <!-- Desktop sidebar -->
             <div class="col-lg-4 h-100 ps-lg-1 d-none d-lg-block">
                 <div class="h-100 max-h-screen border border-black overflow-hidden">
                     <div class="bg-blue sticky-top">
@@ -175,15 +169,11 @@
                                         data-slug={caseItem.slug}
                                     >
                                         <div class="w-35 bg-black border-end border-black">
-                                            <img src={caseItem.image} alt="" class="w-100">
+                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
                                         </div>
                                         <div class="w-65 h-100 d-flex flex-column p-3">
                                             <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
                                             <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
-                                            <!-- <div class="d-flex align-items-center justify-content-between mt-auto">
-                                                <div class="font-8 text-blue">Technology</div>
-                                                <a href={`/sonic-id/${caseItem.slug}`} class="text-underline text-black">read more</a>
-                                            </div> -->
                                         </div>
                                     </a>
                                 {/each}

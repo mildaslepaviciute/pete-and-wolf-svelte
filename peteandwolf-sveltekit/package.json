@@ -14,10 +14,12 @@
 		"@sveltejs/kit": "^2.15.1",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"sass": "^1.83.0",
-		"svelte": "^5.0.0",
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
-		"gsap": "^3.12.5"
+		"@sanity/client": "^6.27.2",
+		"groq": "^3.72.1",
+		"gsap": "^3.12.5",
+		"svelte": "^5.19.5"
 	}
 }
