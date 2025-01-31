@@ -5,5 +5,6 @@ export const client = createClient({
   dataset: 'production',
   apiVersion: '2024-01-31', // using today's date
   useCdn: false,
-  ignoreBrowserTokenWarning: true
+  ignoreBrowserTokenWarning: true,
+  perspective: 'published'
 })
