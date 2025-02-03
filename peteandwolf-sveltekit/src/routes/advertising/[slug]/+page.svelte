@@ -195,11 +195,17 @@
                                     <a href="/advertising/{project.slug.current}"
                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                        data-slug={project.slug.current}>
-                                        <div class="w-35 bg-black border-end border-black">
-                                            <div style="position:relative;padding-top:56.25%;">
-                                                <!-- Thumbnail video preview disabled for now -->
-                                            </div>
-                                        </div>
+									   <div class="w-35 bg-black border-end border-black">
+										<video 
+											class="w-100" 
+											src="https://vz-368997.b-cdn.net/0b5146a4-ce8a-491a-a309-a795f481c580.mp4?token=c8e0dff7-d8fe-4a4d-aa26207440e8-dd59-453f"
+											playsinline 
+											autoplay 
+											loop 
+											muted
+										>
+										</video>
+									</div>
                                         <div class="w-65 h-100 d-flex align-items-center font-7 p-3 text-black">
                                             {project.title}
                                         </div>
@@ -213,3 +219,4 @@
         </div>
     </div>
 </section>
+
