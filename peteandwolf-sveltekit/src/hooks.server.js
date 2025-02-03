@@ -4,7 +4,7 @@ export async function handle({ event, resolve }) {
     
     // Add security headers and caching
     const headers = {
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
         'X-Content-Type-Options': 'nosniff',
         'X-Frame-Options': 'DENY'
     };

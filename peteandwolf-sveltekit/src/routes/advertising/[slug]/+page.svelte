@@ -153,7 +153,7 @@
                 <!-- Video Container -->
                 <div class="border border-black border-x-0-mob bg-black">
                     <div style="position:relative;padding-top:56.25%;">
-                        <iframe src="https://iframe.mediadelivery.net/embed/368997/{currentProject.videoId}?autoplay=false&loop=false&muted=false&preload=true&responsive=true&hideControls=1"
+                        <iframe src="https://iframe.mediadelivery.net/embed/372334/{currentProject.videoId}?autoplay=false&loop=false&muted=false&preload=true&responsive=true&hideControls=1"
                                 loading="lazy"
                                 style="border:0;position:absolute;top:0;height:100%;width:100%;"
                                 allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
