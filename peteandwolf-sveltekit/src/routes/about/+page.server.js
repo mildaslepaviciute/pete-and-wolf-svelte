@@ -41,10 +41,6 @@ export const load = async () => {
         }`;
 
         const aboutData = await client.fetch(query);
-        
-        // if (!aboutData?.title || !aboutData?.blocks) {
-        //     throw error(404, 'About page content not found or incomplete');
-        // }
 
         return {
             aboutData

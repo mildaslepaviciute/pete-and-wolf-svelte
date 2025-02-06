@@ -1,5 +1,23 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
+	import Swiper, { 
+    Mousewheel, 
+    FreeMode, 
+    Scrollbar 
+} from 'swiper';
+
+// Import required styles
+    import 'swiper/css';
+    import 'swiper/css/scrollbar';
+    import 'swiper/css/free-mode';
+    import 'swiper/css/mousewheel';
+
+// Register modules
+Swiper.use([Mousewheel, FreeMode, Scrollbar]);
+
+// Import required styles
+// import 'swiper/css';
+// import 'swiper/css/scrollbar';
     import { page } from "$app/stores";
     import { gsap } from "gsap";
 	import { renderBlocks } from "$lib/helpers.js";
@@ -44,17 +62,18 @@
 	}
 
 	onMount(() => {
-		swiper = new Swiper(".scrollSwiperAdvertising", {
-			direction: "vertical",
-			slidesPerView: "auto",
-			freeMode: true,
-			loop: true,
-			scrollbar: {
-				el: ".swiper-scrollbar",
-			},
-			mousewheel: true,
-			simulateTouch: window.innerWidth < 992,
-		});
+		 swiper = new Swiper(".scrollSwiperAdvertising", {
+            direction: "vertical",
+            slidesPerView: "auto",
+            freeMode: true,
+            loop: true,
+            scrollbar: {
+                el: ".swiper-scrollbar",
+                draggable: true
+            },
+            mousewheel: true,
+            simulateTouch: window.innerWidth < 992,
+        });
 
 		window.addEventListener("resize", updateSwiperTouch);
 
@@ -83,7 +102,6 @@
 		document.addEventListener("click", closeCollapse);
 
 		const updateToggleButton = () => {
-			console.log('happening')
             if (collapseElement.classList.contains('show')) {
                 collapseToggleButton.textContent = '+ Credits';
             } else {
@@ -190,8 +208,10 @@
                 <div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden">
                     <div class="swiper scrollSwiperAdvertising">
                         <div class="swiper-wrapper h-100">
-                            <div class="swiper-slide">
+
                                 {#each data.advertisingProjects as project}
+                                <div class="swiper-slide">
+
                                     <a href="/advertising/{project.slug.current}"
                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                        data-slug={project.slug.current}>
@@ -210,10 +230,14 @@
                                             {project.title}
                                         </div>
                                     </a>
+                                </div>
+
                                 {/each}
-                            </div>
+
                         </div>
                     </div>
+                    <div class="swiper-scrollbar"></div>
+
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { goto } from '$app/navigation';
+    import { Swiper }from "swiper";
 
     export let data;
     const { caseItems, sonicIdData } = data;
