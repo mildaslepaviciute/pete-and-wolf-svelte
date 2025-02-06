@@ -3,8 +3,16 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { goto } from '$app/navigation';
-    import { Swiper }from "swiper";
+	import Swiper, { 
+        Mousewheel, 
+        FreeMode, 
+    } from 'swiper';
+    // import 'swiper/css';
+    // import 'swiper/css/free-mode';
+    // import 'swiper/css/mousewheel';
 
+    Swiper.use([Mousewheel, FreeMode]);
+ 
     export let data;
     const { caseItems, sonicIdData } = data;
     console.log(sonicIdData)
@@ -49,24 +57,29 @@
         swiperSonic = new Swiper(".scrollSwiperSonic", {
             direction: "vertical",
             slidesPerView: "auto",
-            freeMode: true,
-            loop: true,
-            scrollbar: {
-                el: ".swiper-scrollbar",
+            freeMode: {
+                enabled: true,
+                momentum: true,
             },
-            mousewheel: true,
+            loopedSlides: 1,
+            loop: true,
+            mousewheel: {
+                releaseOnEdges: true,
+            },
             simulateTouch: false,
         });
 
         swiperSonicMobile = new Swiper(".scrollSwiperSonicMobile", {
             direction: "vertical",
             slidesPerView: "auto",
-            freeMode: true,
-            loop: true,
-            scrollbar: {
-                el: ".swiper-scrollbar",
+            freeMode: {
+                enabled: true,
+                momentum: true,
             },
-            mousewheel: true,
+            loop: true,
+            mousewheel: {
+                releaseOnEdges: true,
+            },
         });
 
         updateActiveSlides($page.params.slug);
@@ -126,10 +139,11 @@
                         <h1 class="font-4 text-white mb-0"><b>Cases</b></h1>
                         <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
-                    <div class="swiper scrollSwiperSonicMobile">
+                    <div class="swiper-container scrollSwiperSonicMobile">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                {#each caseItems as caseItem}
+                            {#each caseItems as caseItem}
+                                <div class="swiper-slide">
+
                                     <a 
                                         href={`/sonic-id/${caseItem.slug}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
@@ -143,8 +157,8 @@
                                             <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
                                         </div>
                                     </a>
-                                {/each}
-                            </div>
+                                </div>
+                            {/each}
                         </div>
                     </div>
                 </div>
@@ -163,10 +177,10 @@
                     <div class="bg-blue sticky-top">
                         <h1 class="font-2 text-end text-white p-2 mb-0"><b>Cases</b></h1>
                     </div>
-                    <div class="swiper scrollSwiperSonic">
+                    <div class="swiper-container scrollSwiperSonic">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                {#each caseItems as caseItem}
+                            {#each caseItems as caseItem}
+                                <div class="swiper-slide">
                                     <a 
                                         href={`/sonic-id/${caseItem.slug}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
@@ -180,8 +194,8 @@
                                             <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
                                         </div>
                                     </a>
-                                {/each}
-                            </div>
+                                </div>
+                            {/each}
                         </div>
                     </div>
                 </div>

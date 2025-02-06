@@ -1,23 +1,15 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
 	import Swiper, { 
-    Mousewheel, 
-    FreeMode, 
-    Scrollbar 
-} from 'swiper';
+        Mousewheel, 
+        FreeMode, 
+    } from 'swiper';
+    // import 'swiper/css';
+    // import 'swiper/css/free-mode';
+    // import 'swiper/css/mousewheel';
 
-// Import required styles
-    import 'swiper/css';
-    import 'swiper/css/scrollbar';
-    import 'swiper/css/free-mode';
-    import 'swiper/css/mousewheel';
+    Swiper.use([Mousewheel, FreeMode]);
 
-// Register modules
-Swiper.use([Mousewheel, FreeMode, Scrollbar]);
-
-// Import required styles
-// import 'swiper/css';
-// import 'swiper/css/scrollbar';
     import { page } from "$app/stores";
     import { gsap } from "gsap";
 	import { renderBlocks } from "$lib/helpers.js";
@@ -62,16 +54,17 @@ Swiper.use([Mousewheel, FreeMode, Scrollbar]);
 	}
 
 	onMount(() => {
-		 swiper = new Swiper(".scrollSwiperAdvertising", {
+        swiper = new Swiper(".scrollSwiperAdvertising", {
             direction: "vertical",
             slidesPerView: "auto",
-            freeMode: true,
-            loop: true,
-            scrollbar: {
-                el: ".swiper-scrollbar",
-                draggable: true
+            freeMode: {
+                enabled: true,
+                momentum: true,
             },
-            mousewheel: true,
+            loop: true,
+            mousewheel: {
+                releaseOnEdges: true,
+            },
             simulateTouch: window.innerWidth < 992,
         });
 
@@ -137,7 +130,7 @@ Swiper.use([Mousewheel, FreeMode, Scrollbar]);
     <div class="container h-100 d-flex flex-column" id="advertisingContainer">
         <div class="row align-items-stretch max-h-screen h-100" id="advertisingRow">
             <!-- Main Content Column -->
-            <div class="col-lg-8 d-flex flex-column px-0-mob" bind:this={leftColumn} id="leftColumn">
+            <div class="col-lg-8 d-flex flex-column px-0-mob" bind:this={leftColumn}>
                 <div class="position-relative">
                     <!-- Collapse toggle button -->
                     <div class="position-absolute dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
@@ -204,14 +197,12 @@ Swiper.use([Mousewheel, FreeMode, Scrollbar]);
             </div>
 
             <!-- Projects List Column -->
-            <div class="col-lg-4 ps-lg-1 px-0-mob h-100" bind:this={rightColumn} id="rightColumn">
+            <div class="col-lg-4 ps-lg-1 px-0-mob h-100" bind:this={rightColumn}>
                 <div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden">
-                    <div class="swiper scrollSwiperAdvertising">
+                    <div class="swiper-container scrollSwiperAdvertising">
                         <div class="swiper-wrapper h-100">
-
-                                {#each data.advertisingProjects as project}
+                            {#each data.advertisingProjects as project}
                                 <div class="swiper-slide">
-
                                     <a href="/advertising/{project.slug.current}"
                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                        data-slug={project.slug.current}>
@@ -231,13 +222,9 @@ Swiper.use([Mousewheel, FreeMode, Scrollbar]);
                                         </div>
                                     </a>
                                 </div>
-
-                                {/each}
-
+                            {/each}
                         </div>
                     </div>
-                    <div class="swiper-scrollbar"></div>
-
                 </div>
             </div>
         </div>
