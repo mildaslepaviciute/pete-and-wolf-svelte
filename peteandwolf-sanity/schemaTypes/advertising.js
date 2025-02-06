@@ -21,12 +21,6 @@ export default {
         validation: Rule => Rule.required()
       },
       {
-        name: 'thumbnail',
-        title: 'Thumbnail Image',
-        type: 'string',
-        validation: Rule => Rule.required()
-      },
-      {
         name: 'videoId',
         title: 'Video ID',
         type: 'string',

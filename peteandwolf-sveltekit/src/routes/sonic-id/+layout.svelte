@@ -3,7 +3,7 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { goto } from '$app/navigation';
-	import Swiper, { 
+    import Swiper, { 
         Mousewheel, 
         FreeMode, 
     } from 'swiper';
@@ -61,7 +61,6 @@
                 enabled: true,
                 momentum: true,
             },
-            loopedSlides: 1,
             loop: true,
             mousewheel: {
                 releaseOnEdges: true,
@@ -159,6 +158,24 @@
                                     </a>
                                 </div>
                             {/each}
+                            {#each caseItems as caseItem}
+                            <div class="swiper-slide">
+
+                                <a 
+                                    href={`/sonic-id/${caseItem.slug}`}
+                                    class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
+                                    data-slug={caseItem.slug}
+                                >
+                                    <div class="w-35 bg-black border-end border-black">
+                                        <img src={caseItem.thumbnail.url} alt="" class="w-100">
+                                    </div>
+                                    <div class="w-65 h-100 d-flex flex-column p-3">
+                                        <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
+                                        <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
+                                    </div>
+                                </a>
+                            </div>
+                        {/each}
                         </div>
                     </div>
                 </div>
@@ -179,6 +196,57 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonic">
                         <div class="swiper-wrapper">
+                            {#each caseItems as caseItem}
+                                <div class="swiper-slide">
+                                    <a 
+                                        href={`/sonic-id/${caseItem.slug}`}
+                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
+                                        data-slug={caseItem.slug}
+                                    >
+                                        <div class="w-35 bg-black border-end border-black">
+                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
+                                        </div>
+                                        <div class="w-65 h-100 d-flex flex-column p-3">
+                                            <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
+                                            <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            {/each}
+                            {#each caseItems as caseItem}
+                                <div class="swiper-slide">
+                                    <a 
+                                        href={`/sonic-id/${caseItem.slug}`}
+                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
+                                        data-slug={caseItem.slug}
+                                    >
+                                        <div class="w-35 bg-black border-end border-black">
+                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
+                                        </div>
+                                        <div class="w-65 h-100 d-flex flex-column p-3">
+                                            <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
+                                            <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            {/each}
+                            {#each caseItems as caseItem}
+                                <div class="swiper-slide">
+                                    <a 
+                                        href={`/sonic-id/${caseItem.slug}`}
+                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
+                                        data-slug={caseItem.slug}
+                                    >
+                                        <div class="w-35 bg-black border-end border-black">
+                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
+                                        </div>
+                                        <div class="w-65 h-100 d-flex flex-column p-3">
+                                            <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
+                                            <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            {/each}
                             {#each caseItems as caseItem}
                                 <div class="swiper-slide">
                                     <a 

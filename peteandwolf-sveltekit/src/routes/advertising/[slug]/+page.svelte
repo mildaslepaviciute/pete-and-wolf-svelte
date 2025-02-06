@@ -164,7 +164,7 @@
                 <!-- Video Container -->
                 <div class="border border-black border-x-0-mob bg-black">
                     <div style="position:relative;padding-top:56.25%;">
-                        <iframe src="https://iframe.mediadelivery.net/embed/372334/{currentProject.videoId}?autoplay=false&loop=false&muted=false&preload=true&responsive=true&hideControls=1"
+                        <iframe src="https://iframe.mediadelivery.net/embed/372334/{currentProject.videoId}?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
                                 loading="lazy"
                                 style="border:0;position:absolute;top:0;height:100%;width:100%;"
                                 allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
@@ -209,7 +209,7 @@
 									   <div class="w-35 bg-black border-end border-black">
 										<video 
 											class="w-100" 
-											src="https://vz-368997.b-cdn.net/0b5146a4-ce8a-491a-a309-a795f481c580.mp4?token=c8e0dff7-d8fe-4a4d-aa26207440e8-dd59-453f"
+											src="https://vz-dd71837a-188.b-cdn.net/e9a7e3c0-1806-4331-8a3c-d102100e5e0c/play_360p.mp4"
 											playsinline 
 											autoplay 
 											loop 
