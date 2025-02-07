@@ -47,6 +47,16 @@
 		});
 	}
 
+    // Function to update active states for all slides including clones
+	function startVideoFeed() {
+		const videFeedItems = swiper.el.querySelectorAll(".video-feed-item");
+
+		// Remove bg-primary from all links
+		videFeedItems.forEach((video) => {
+			video.play()
+		});
+	}
+
 	function updateSwiperTouch() {
 		const isMobile = window.innerWidth < 992;
 		swiper.params.simulateTouch = isMobile;
@@ -71,6 +81,8 @@
 		window.addEventListener("resize", updateSwiperTouch);
 
 		updateActiveSlides($page.params.slug);
+
+        startVideoFeed();
 
 		// Force mute all videos
 		document
@@ -208,10 +220,9 @@
                                        data-slug={project.slug.current}>
 									   <div class="w-35 bg-black border-end border-black">
 										<video 
-											class="w-100" 
-											src="https://vz-dd71837a-188.b-cdn.net/e9a7e3c0-1806-4331-8a3c-d102100e5e0c/play_360p.mp4"
-											playsinline 
-											autoplay 
+											class="w-100 video-feed-item" 
+											src="https://vz-8d625025-b12.b-cdn.net/{project.videoId}/play_360p.mp4"
+											playsinline
 											loop 
 											muted
 										>
