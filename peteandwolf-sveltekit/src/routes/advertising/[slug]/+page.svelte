@@ -16,13 +16,10 @@
 
     export let data;
 
-	$: currentProject = data.advertisingProjects.find(
-    (p) => p.slug.current === $page.params.slug
-) || data.advertisingProjects[0];
+	$: currentProject = data.advertisingProjects.find((p) => p.slug.current === $page.params.slug) || data.advertisingProjects[0];
 
     let rightColumn;
     let leftColumn;
-    let videoElement;
     let swiper;
     let collapseElement;
     let collapseToggleButton;
@@ -117,6 +114,12 @@
 		collapseElement.addEventListener('show.bs.collapse', updateToggleButton);
         collapseElement.addEventListener('hide.bs.collapse', updateToggleButton);
 
+        // document.getElementById('main-video').addEventListener('load', () => {
+        //     console.log('loaded')
+        //     document.getElementById('main-video').style.opacity = 1;
+        //         // iframeElement.style.display = 'block';
+        //     });
+
 		return () => {
 			document.removeEventListener("click", closeCollapse);
 		};
@@ -126,15 +129,6 @@
 	$: if ($page.params.slug) {
 		updateActiveSlides($page.params.slug);
 	}
-
-	afterUpdate(() => {
-		if (videoElement) {
-			videoElement.pause();
-			videoElement.currentTime = 0;
-			videoElement.load();
-		}
-		console.log(currentProject)
-	});
 
 </script>
 
@@ -176,18 +170,28 @@
                 <!-- Video Container -->
                 <div class="border border-black border-x-0-mob bg-black">
                     <div style="position:relative;padding-top:56.25%;">
-                        <iframe src="https://iframe.mediadelivery.net/embed/372334/{currentProject.videoId}?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
+                        <!-- <video 
+                            class="w-100 video-feed-item" 
+                            src="https://vz-8d625025-b12.b-cdn.net/{currentProject.videoId}/play_360p.mp4"
+                            playsinline
+                            autoplay
+                             
+                            
+                        > -->
+                        <iframe src="https://iframe.mediadelivery.net/embed/372334/{currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=false&preload=true&responsive=true"
                                 loading="lazy"
                                 style="border:0;position:absolute;top:0;height:100%;width:100%;"
                                 allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
                                 allowfullscreen="true"
-                                title="Video Player"></iframe>
+                                title="Video Player"
+                                id="main-video"></iframe>
+                                
                     </div>
                 </div>
 
                 <!-- Desktop credits section -->
                 <div class="d-none d-lg-block font-8 pt-3">
-                    <div class="row justify-content-between align-items-end mb-3">
+                    <div class="row justify-content-between align-items-start mb-3">
                         <div class="col-lg-4">
                             <h2 class="font-5 text-underline mb-0" fm-fade-in>{currentProject.title}</h2>
                         </div>
@@ -197,12 +201,14 @@
                     </div>
                     <div class="row justify-content-between align-items-end">
                         <div class="col-lg-4">
-                            <p class="mb-0" fm-fade-in>{currentProject.description}</p>
+                            <div class="mb-0" fm-fade-in>
+                                {@html renderBlocks(currentProject.description)}
+                            </div>
                         </div>
                         <div class="col-lg-4 text-lg-end">
-                            <p class="mb-0" fm-fade-in>
+                            <div class="mb-0" fm-fade-in>
                                 {@html renderBlocks(currentProject.credits)}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,7 +227,7 @@
 									   <div class="w-35 bg-black border-end border-black">
 										<video 
 											class="w-100 video-feed-item" 
-											src="https://vz-8d625025-b12.b-cdn.net/{project.videoId}/play_360p.mp4"
+											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_360p.mp4"
 											playsinline
 											loop 
 											muted

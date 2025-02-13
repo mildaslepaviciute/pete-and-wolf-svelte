@@ -7,6 +7,7 @@ export async function load({ params }) {
         title,
         slug,
         videoId,
+        videoPreviewId,
         thumbnail,
         description,
         type,

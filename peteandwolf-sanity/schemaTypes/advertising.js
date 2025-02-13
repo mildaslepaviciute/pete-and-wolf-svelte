@@ -27,9 +27,16 @@ export default {
         validation: Rule => Rule.required()
       },
       {
+        name: 'videoPreviewId',
+        title: 'Video Preview ID',
+        type: 'string',
+        // validation: Rule => Rule.required()
+      },
+      {
         name: 'description',
         title: 'Description',
-        type: 'text'
+        type: 'array',
+        of: [{ type: 'block' }],
       },
       {
         name: 'type',
