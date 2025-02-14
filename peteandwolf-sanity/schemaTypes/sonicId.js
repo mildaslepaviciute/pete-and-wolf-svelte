@@ -26,21 +26,56 @@ export default {
         type: 'text',
         validation: Rule => Rule.required()
       },
+      // {
+      //   name: 'thumbnail',
+      //   title: 'Thumbnail Image',
+      //   type: 'image',
+      //   options: {
+      //     hotspot: true
+      //   },
+      //   fields: [
+      //     {
+      //       name: 'alt',
+      //       title: 'Alt Text',
+      //       type: 'string'
+      //     }
+      //   ],
+      //   validation: Rule => Rule.required()
+      // },
       {
         name: 'thumbnail',
-        title: 'Thumbnail Image',
-        type: 'image',
-        options: {
-          hotspot: true
-        },
+        title: 'Thumbnail',
+        type: 'object',
         fields: [
           {
-            name: 'alt',
-            title: 'Alt Text',
-            type: 'string'
-          }
-        ],
-        validation: Rule => Rule.required()
+            name: 'type',
+            title: 'Type',
+            type: 'string',
+            options: {
+              list: [
+                { title: 'Image', value: 'image' },
+                { title: 'Video ID', value: 'video' }
+              ],
+              layout: 'radio'
+            },
+            validation: Rule => Rule.required()
+          },
+          {
+            name: 'image',
+            title: 'Image',
+            type: 'image',
+            options: {
+              hotspot: true
+            },
+            hidden: ({ parent }) => parent?.type !== 'image'
+          },
+          {
+            name: 'videoId',
+            title: 'Video ID',
+            type: 'string',
+            hidden: ({ parent }) => parent?.type !== 'video'
+          },
+        ]
       },
       {
         name: 'sections',

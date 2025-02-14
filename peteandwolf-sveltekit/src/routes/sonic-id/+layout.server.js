@@ -7,8 +7,9 @@ export async function load() {
         "slug": slug.current,
         description,
         "thumbnail": {
-            "url": thumbnail.asset->url,
-            "alt": thumbnail.alt
+            "type": thumbnail.type,
+            "url": thumbnail.image.asset->url,
+            "videoId": thumbnail.videoId
         },
         sections[] {
             title,

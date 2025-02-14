@@ -53,6 +53,16 @@
         updateActiveSlides(null);
     }
 
+    function startVideoFeed() {
+		const videoFeedItems = document.querySelectorAll(".video-feed-item");
+
+		videoFeedItems.forEach((video) => {
+			video.play()
+            video.muted = true;
+            video.defaultMuted = true;
+		});
+	}
+
     onMount(() => {
         swiperSonic = new Swiper(".scrollSwiperSonic", {
             direction: "vertical",
@@ -80,6 +90,8 @@
                 releaseOnEdges: true,
             },
         });
+
+        startVideoFeed()
 
         updateActiveSlides($page.params.slug);
 
@@ -140,16 +152,25 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonicMobile">
                         <div class="swiper-wrapper">
-                            {#each caseItems as caseItem}
+                            {#each [].concat(...Array(3).fill(caseItems)) as caseItem}
                                 <div class="swiper-slide">
-
                                     <a 
                                         href={`/sonic-id/${caseItem.slug}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                         data-slug={caseItem.slug}
                                     >
                                         <div class="w-35 bg-black border-end border-black">
-                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
+                                            {#if caseItem.thumbnail.type === 'image'}
+                                                <img src={caseItem.thumbnail.url} alt={'case item'} class="w-100">
+                                            {:else if caseItem.thumbnail.type === 'video'}
+                                                <video 
+                                                    class="w-100 video-feed-item" 
+                                                    src="https://vz-8d625025-b12.b-cdn.net/{caseItem.thumbnail.videoId}/play_360p.mp4"
+                                                    playsinline
+                                                    muted
+                                                >
+                                                </video>
+                                            {/if}
                                         </div>
                                         <div class="w-65 h-100 d-flex flex-column p-3">
                                             <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
@@ -158,24 +179,6 @@
                                     </a>
                                 </div>
                             {/each}
-                            {#each caseItems as caseItem}
-                            <div class="swiper-slide">
-
-                                <a 
-                                    href={`/sonic-id/${caseItem.slug}`}
-                                    class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                    data-slug={caseItem.slug}
-                                >
-                                    <div class="w-35 bg-black border-end border-black">
-                                        <img src={caseItem.thumbnail.url} alt="" class="w-100">
-                                    </div>
-                                    <div class="w-65 h-100 d-flex flex-column p-3">
-                                        <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
-                                        <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
-                                    </div>
-                                </a>
-                            </div>
-                        {/each}
                         </div>
                     </div>
                 </div>
@@ -196,7 +199,7 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonic">
                         <div class="swiper-wrapper">
-                            {#each caseItems as caseItem}
+                            {#each [].concat(...Array(3).fill(caseItems)) as caseItem}
                                 <div class="swiper-slide">
                                     <a 
                                         href={`/sonic-id/${caseItem.slug}`}
@@ -204,58 +207,17 @@
                                         data-slug={caseItem.slug}
                                     >
                                         <div class="w-35 bg-black border-end border-black">
-                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
-                                        </div>
-                                        <div class="w-65 h-100 d-flex flex-column p-3">
-                                            <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
-                                            <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            {/each}
-                            {#each caseItems as caseItem}
-                                <div class="swiper-slide">
-                                    <a 
-                                        href={`/sonic-id/${caseItem.slug}`}
-                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                        data-slug={caseItem.slug}
-                                    >
-                                        <div class="w-35 bg-black border-end border-black">
-                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
-                                        </div>
-                                        <div class="w-65 h-100 d-flex flex-column p-3">
-                                            <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
-                                            <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            {/each}
-                            {#each caseItems as caseItem}
-                                <div class="swiper-slide">
-                                    <a 
-                                        href={`/sonic-id/${caseItem.slug}`}
-                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                        data-slug={caseItem.slug}
-                                    >
-                                        <div class="w-35 bg-black border-end border-black">
-                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
-                                        </div>
-                                        <div class="w-65 h-100 d-flex flex-column p-3">
-                                            <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
-                                            <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            {/each}
-                            {#each caseItems as caseItem}
-                                <div class="swiper-slide">
-                                    <a 
-                                        href={`/sonic-id/${caseItem.slug}`}
-                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                        data-slug={caseItem.slug}
-                                    >
-                                        <div class="w-35 bg-black border-end border-black">
-                                            <img src={caseItem.thumbnail.url} alt="" class="w-100">
+                                            {#if caseItem.thumbnail.type === 'image'}
+                                                <img src={caseItem.thumbnail.url} alt={'case item'} class="w-100">
+                                            {:else if caseItem.thumbnail.type === 'video'}
+                                                <video 
+                                                    class="w-100 video-feed-item" 
+                                                    src="https://vz-8d625025-b12.b-cdn.net/{caseItem.thumbnail.videoId}/play_360p.mp4"
+                                                    playsinline
+                                                    muted
+                                                >
+                                                </video>
+                                            {/if}
                                         </div>
                                         <div class="w-65 h-100 d-flex flex-column p-3">
                                             <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
