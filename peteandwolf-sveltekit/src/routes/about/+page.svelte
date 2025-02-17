@@ -36,7 +36,7 @@
             {#if block.grid === 1}
               <div class="col-12">
                 {#if block.col_1.type === "text"}
-                  {@html renderBlocks(block.col_1.textContent)}
+                  {@html renderBlocks(block.col_1.textContent, true)}
                 {:else if block.col_1.type === "image"}
                   <img
                     src={block.col_1.imageContent.url}
@@ -48,7 +48,7 @@
             {:else if block.grid === 2}
               <div class="col-lg-6">
                 {#if block.col_1.type === "text"}
-                  {@html renderBlocks(block.col_1.textContent)}
+                  {@html renderBlocks(block.col_1.textContent, true)}
                 {:else if block.col_1.type === "image"}
                   <img
                     src={block.col_1.imageContent.url}
@@ -59,7 +59,7 @@
               </div>
               <div class="col-lg-6">
                 {#if block.col_2.type === "text"}
-                  {@html renderBlocks(block.col_2.textContent)}
+                  {@html renderBlocks(block.col_2.textContent, true)}
                 {:else if block.col_2.type === "image"}
                   <img
                     src={block.col_2.imageContent.url}
@@ -71,7 +71,7 @@
             {:else if block.grid === 3}
               <div class="col-lg-4">
                 {#if block.col_1.type === "text"}
-                  {@html renderBlocks(block.col_1.textContent)}
+                  {@html renderBlocks(block.col_1.textContent, true)}
                 {:else if block.col_1.type === "image"}
                   <img
                     src={block.col_1.imageContent.url}
@@ -82,7 +82,7 @@
               </div>
               <div class="col-lg-4">
                 {#if block.col_2.type === "text"}
-                  {@html renderBlocks(block.col_2.textContent)}
+                  {@html renderBlocks(block.col_2.textContent, true)}
                 {:else if block.col_2.type === "image"}
                   <img
                     src={block.col_2.imageContent.url}
@@ -93,7 +93,7 @@
               </div>
               <div class="col-lg-4">
                 {#if block.col_3.type === "text"}
-                  {@html renderBlocks(block.col_3.textContent)}
+                  {@html renderBlocks(block.col_3.textContent, true)}
                 {:else if block.col_3.type === "image"}
                   <img
                     src={block.col_3.imageContent.url}
