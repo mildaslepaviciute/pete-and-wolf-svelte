@@ -166,12 +166,12 @@
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                         data-slug={caseItem.slug || 'sonic-id'}
                                     >
-                                        <div class="w-35 bg-black border-end border-black">
+                                        <div class="w-35 bg-black border-end border-black ratio ratio-4x3">
                                             {#if caseItem.thumbnail.type === 'image'}
-                                                <img src={caseItem.thumbnail && caseItem.thumbnail.url || ''} alt={'case item'} class="w-100">
+                                                <img src={caseItem.thumbnail && caseItem.thumbnail.url || ''} alt={'case item'} class="w-100 object-fit-cover">
                                             {:else if caseItem.thumbnail.type === 'video'}
                                                 <video 
-                                                    class="w-100 video-feed-item" 
+                                                    class="w-100 video-feed-item object-fit-cover" 
                                                     src="https://vz-8d625025-b12.b-cdn.net/{caseItem.thumbnail.videoId}/play_360p.mp4"
                                                     playsinline
                                                     muted
@@ -179,9 +179,11 @@
                                                 </video>
                                             {/if}
                                         </div>
-                                        <div class="w-65 h-100 d-flex flex-column p-3">
-                                            <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
-                                            <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
+                                        <div class="w-65 h-100 d-flex flex-column px-3">
+                                            <h3 class="font-6 text-black mb-0"><b>{caseItem.title}</b></h3>
+                                            {#if caseItem.description !== ''}
+                                                <p class="font-8 text-truncate-2 text-black mb-0 mt-1">{caseItem.description}</p>
+                                            {/if}
                                         </div>
                                     </a>
                                 </div>
@@ -192,7 +194,7 @@
             </div>
 
             <!-- Main content area -->
-            <div class="col-lg-8 h-100 min-h-100 px-0-mob">
+            <div class="col-lg-8 h-100 min-h-100 pe-0-mob">
                 <div class="max-h-screen min-h-mob-screen h-100 scrolling border border-black p-3">
                     <slot />
                 </div>
@@ -213,12 +215,12 @@
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                         data-slug={caseItem.slug || 'sonic-id'}
                                     >
-                                        <div class="w-35 bg-black border-end border-black">
+                                        <div class="w-35 bg-black border-end border-black ratio ratio-4x3">
                                             {#if caseItem.thumbnail.type === 'image'}
-                                                <img src={caseItem.thumbnail && caseItem.thumbnail.url || ''} alt={'case item'} class="w-100">
+                                                <img src={caseItem.thumbnail && caseItem.thumbnail.url || ''} alt={'case item'} class="w-100 object-fit-cover">
                                             {:else if caseItem.thumbnail.type === 'video'}
                                                 <video 
-                                                    class="w-100 video-feed-item" 
+                                                    class="w-100 video-feed-item object-fit-cover" 
                                                     src="https://vz-8d625025-b12.b-cdn.net/{caseItem.thumbnail.videoId}/play_360p.mp4"
                                                     playsinline
                                                     muted
@@ -226,9 +228,11 @@
                                                 </video>
                                             {/if}
                                         </div>
-                                        <div class="w-65 h-100 d-flex flex-column p-3">
-                                            <h3 class="font-6 text-black"><b>{caseItem.title}</b></h3>
-                                            <p class="font-8 text-truncate-2 text-black mb-0">{caseItem.description}</p>
+                                        <div class="w-65 h-100 d-flex flex-column px-3">
+                                            <h3 class="font-6 text-black mb-0"><b>{caseItem.title}</b></h3>
+                                            {#if caseItem.description !== ''}
+                                                <p class="font-8 text-truncate-2 text-black mb-0 mt-1">{caseItem.description}</p>
+                                            {/if}
                                         </div>
                                     </a>
                                 </div>

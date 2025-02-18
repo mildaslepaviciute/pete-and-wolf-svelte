@@ -224,9 +224,9 @@
                                     <a href="/advertising/{project.slug.current}"
                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                        data-slug={project.slug.current}>
-									   <div class="w-35 bg-black border-end border-black">
+									   <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
 										<video 
-											class="w-100 video-feed-item" 
+											class="w-100 object-fit-cover video-feed-item" 
 											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_360p.mp4"
 											playsinline
 											loop 
@@ -234,7 +234,7 @@
 										>
 										</video>
 									</div>
-                                        <div class="w-65 h-100 d-flex align-items-center font-7 p-3 text-black">
+                                        <div class="w-65 h-100 d-flex align-items-center font-7 px-3 text-black">
                                             {project.title}
                                         </div>
                                     </a>
