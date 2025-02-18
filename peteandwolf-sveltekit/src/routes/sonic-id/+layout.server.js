@@ -22,6 +22,9 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    }
                 },
                 col_2 {
                     type,
@@ -30,6 +33,9 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    }
                 },
                 col_3 {
                     type,
@@ -38,14 +44,61 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    }
                 }
             }
         }
     }`;
 
     const basePageQuery = `*[_type == "sonicIdPage"][0] {
+        title,
+        "slug": null,
+        description,
+        "thumbnail": {
+            "type": thumbnail.type,
+            "url": thumbnail.image.asset->url,
+            "videoId": thumbnail.videoId
+        },
         sections[] {
-            title
+            title,
+            blocks[] {
+                grid,
+                col_1 {
+                    type,
+                    textContent,
+                    "imageContent": {
+                        "url": imageContent.asset->url,
+                        "alt": imageContent.alt
+                    },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    }
+                },
+                col_2 {
+                    type,
+                    textContent,
+                    "imageContent": {
+                        "url": imageContent.asset->url,
+                        "alt": imageContent.alt
+                    },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    }
+                },
+                col_3 {
+                    type,
+                    textContent,
+                    "imageContent": {
+                        "url": imageContent.asset->url,
+                        "alt": imageContent.alt
+                    },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    }
+                }
+            }
         }
     }`;
 

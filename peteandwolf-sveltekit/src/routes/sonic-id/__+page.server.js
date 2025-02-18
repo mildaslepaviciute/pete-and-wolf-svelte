@@ -1,4 +1,3 @@
-// src/routes/sonic-id/+page.server.js
 import { client } from '$lib/sanityClient';
 import groq from 'groq';
 import { error } from '@sveltejs/kit';
@@ -18,6 +17,9 @@ export const load = async () => {
                             "url": imageContent.asset->url,
                             "alt": imageContent.alt
                         },
+                        "audioContent": {
+                            "url": audioContent.asset->url
+                        }
                     },
                     col_2 {
                         type,
@@ -26,6 +28,9 @@ export const load = async () => {
                             "url": imageContent.asset->url,
                             "alt": imageContent.alt
                         },
+                        "audioContent": {
+                            "url": audioContent.asset->url
+                        }
                     },
                     col_3 {
                         type,
@@ -34,6 +39,9 @@ export const load = async () => {
                             "url": imageContent.asset->url,
                             "alt": imageContent.alt
                         },
+                        "audioContent": {
+                            "url": audioContent.asset->url
+                        }
                     }
                 }
             }

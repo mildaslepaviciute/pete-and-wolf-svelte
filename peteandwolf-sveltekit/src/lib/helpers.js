@@ -1,6 +1,7 @@
 export function renderBlocks(blocks, sizeBased = false) {
     const text = blocks?.map(block => {
         if (block._type === 'block') {
+            console.log(sizeBased)
             if (sizeBased) {
                 // Get the block style (h1, h2, p, etc.)
                 const style = block.style || 'normal';

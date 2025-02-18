@@ -27,6 +27,7 @@
         );
 
     function updateActiveSlides(slug) {
+        console.log(slug)
         if (!swiperSonic && !swiperSonicMobile) return;
         
         const allSlideLinks = document.querySelectorAll(".swiper-slide-link");
@@ -36,7 +37,10 @@
         });
 
         allSlideLinks.forEach((link) => {
+            console.log(link.dataset.slug, slug)
             if (link.dataset.slug === slug) {
+                link.classList.add("swiper-slide-link-active");
+            } else if (!slug && link.dataset.slug === 'sonic-id') {
                 link.classList.add("swiper-slide-link-active");
             }
         });
@@ -50,7 +54,7 @@
 
     function goBack() {
         goto('/sonic-id');
-        updateActiveSlides(null);
+        updateActiveSlides('sonic-id');
     }
 
     function startVideoFeed() {
@@ -93,15 +97,18 @@
 
         startVideoFeed()
 
-        updateActiveSlides($page.params.slug);
+        updateActiveSlides($page.params.slug || 'sonic-id');
 
         const offcanvasCasesEl = document.querySelector('#offcanvasCases');
         offcanvasCases = new bootstrap.Offcanvas(offcanvasCasesEl);
     });
 
-    $: if ($page.params.slug) {
-        updateActiveSlides($page.params.slug);
-        hideOffcanvasElements()
+    $: {
+        const slug = $page.params.slug;
+        updateActiveSlides(slug || 'sonic-id');
+        if (slug) {
+            hideOffcanvasElements();
+        }
     }
 </script>
 
@@ -152,16 +159,16 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonicMobile">
                         <div class="swiper-wrapper">
-                            {#each [].concat(...Array(3).fill(caseItems)) as caseItem}
+                            {#each [].concat(...Array(3).fill([sonicIdData, ...caseItems])) as caseItem}
                                 <div class="swiper-slide">
                                     <a 
-                                        href={`/sonic-id/${caseItem.slug}`}
+                                        href={`/sonic-id/${caseItem.slug || ''}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                        data-slug={caseItem.slug}
+                                        data-slug={caseItem.slug || 'sonic-id'}
                                     >
                                         <div class="w-35 bg-black border-end border-black">
                                             {#if caseItem.thumbnail.type === 'image'}
-                                                <img src={caseItem.thumbnail.url} alt={'case item'} class="w-100">
+                                                <img src={caseItem.thumbnail && caseItem.thumbnail.url || ''} alt={'case item'} class="w-100">
                                             {:else if caseItem.thumbnail.type === 'video'}
                                                 <video 
                                                     class="w-100 video-feed-item" 
@@ -199,16 +206,16 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonic">
                         <div class="swiper-wrapper">
-                            {#each [].concat(...Array(3).fill(caseItems)) as caseItem}
+                            {#each [].concat(...Array(3).fill([sonicIdData, ...caseItems])) as caseItem}
                                 <div class="swiper-slide">
                                     <a 
-                                        href={`/sonic-id/${caseItem.slug}`}
+                                        href={`/sonic-id/${caseItem.slug || ''}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                        data-slug={caseItem.slug}
+                                        data-slug={caseItem.slug || 'sonic-id'}
                                     >
                                         <div class="w-35 bg-black border-end border-black">
                                             {#if caseItem.thumbnail.type === 'image'}
-                                                <img src={caseItem.thumbnail.url} alt={'case item'} class="w-100">
+                                                <img src={caseItem.thumbnail && caseItem.thumbnail.url || ''} alt={'case item'} class="w-100">
                                             {:else if caseItem.thumbnail.type === 'video'}
                                                 <video 
                                                     class="w-100 video-feed-item" 

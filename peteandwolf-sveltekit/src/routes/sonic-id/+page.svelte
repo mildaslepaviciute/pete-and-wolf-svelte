@@ -2,6 +2,8 @@
     import { renderBlocks } from "$lib/helpers.js";
     export let data;
 
+    console.log('wtf is going on')
+
     const { sonicIdData } = data;
 </script>
 
@@ -29,6 +31,11 @@
                                 alt={block.col_1.imageContent.alt || ''} 
                                 class="w-100"
                             >
+                        {:else if block.col_1.type === 'audio'}
+                            <audio controls class="w-100">
+                                <source src={block.col_1.audioContent.url} type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
                         {/if}
                     </div>
                 {:else if block.grid === 2}
@@ -41,6 +48,11 @@
                                 alt={block.col_1.imageContent.alt || ''} 
                                 class="w-100"
                             >
+                        {:else if block.col_1.type === 'audio'}
+                            <audio controls class="w-100">
+                                <source src={block.col_1.audioContent.url} type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
                         {/if}
                     </div>
                     <div class="col-lg-6">
@@ -52,6 +64,11 @@
                                 alt={block.col_2.imageContent.alt || ''} 
                                 class="w-100"
                             >
+                        {:else if block.col_2.type === 'audio'}
+                            <audio controls class="w-100">
+                                <source src={block.col_2.audioContent.url} type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
                         {/if}
                     </div>
                 {:else if block.grid === 3}
@@ -64,6 +81,11 @@
                                 alt={block.col_1.imageContent.alt || ''} 
                                 class="w-100"
                             >
+                        {:else if block.col_1.type === 'audio'}
+                            <audio controls class="w-100">
+                                <source src={block.col_1.audioContent.url} type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
                         {/if}
                     </div>
                     <div class="col-lg-4">
@@ -75,6 +97,11 @@
                                 alt={block.col_2.imageContent.alt || ''} 
                                 class="w-100"
                             >
+                        {:else if block.col_2.type === 'audio'}
+                            <audio controls class="w-100">
+                                <source src={block.col_2.audioContent.url} type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
                         {/if}
                     </div>
                     <div class="col-lg-4">
@@ -86,6 +113,11 @@
                                 alt={block.col_3.imageContent.alt || ''} 
                                 class="w-100"
                             >
+                        {:else if block.col_3.type === 'audio'}
+                            <audio controls class="w-100">
+                                <source src={block.col_3.audioContent.url} type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
                         {/if}
                     </div>
                 {/if}
