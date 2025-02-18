@@ -3,6 +3,7 @@ export default {
     name: 'sonicIdPage',
     title: 'Sonic ID Page',
     type: 'document',
+    
     __experimental_actions: ['update', 'publish'],
     initialValue: {
         _id: 'sonicIdPage'
@@ -14,6 +15,47 @@ export default {
             type: 'string',
             validation: Rule => Rule.required()
         },
+        {
+            name: 'description',
+            title: 'Description',
+            type: 'text',
+            validation: Rule => Rule.required()
+          },
+        {
+            name: 'thumbnail',
+            title: 'Thumbnail',
+            type: 'object',
+            fields: [
+              {
+                name: 'type',
+                title: 'Type',
+                type: 'string',
+                options: {
+                  list: [
+                    { title: 'Image', value: 'image' },
+                    { title: 'Video ID', value: 'video' }
+                  ],
+                  layout: 'radio'
+                },
+                validation: Rule => Rule.required()
+              },
+              {
+                name: 'image',
+                title: 'Image',
+                type: 'image',
+                options: {
+                  hotspot: true
+                },
+                hidden: ({ parent }) => parent?.type !== 'image'
+              },
+              {
+                name: 'videoId',
+                title: 'Video ID',
+                type: 'string',
+                hidden: ({ parent }) => parent?.type !== 'video'
+              },
+            ]
+          },
         {
             name: 'sections',
             title: 'Sections',
