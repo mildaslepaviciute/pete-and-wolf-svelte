@@ -20,6 +20,10 @@ export const load = async () => {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    },
+                    videoId,
                 },
                 col_2 {
                     type,
@@ -28,6 +32,10 @@ export const load = async () => {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    },
+                    videoId,
                 },
                 col_3 {
                     type,
@@ -36,6 +44,10 @@ export const load = async () => {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
+                    "audioContent": {
+                        "url": audioContent.asset->url
+                    },
+                    videoId,
                 }
             }
         }`;

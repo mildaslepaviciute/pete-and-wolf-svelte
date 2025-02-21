@@ -1,5 +1,6 @@
 <script>
   import { renderBlocks } from "$lib/helpers.js";
+  import Column from "$lib/components/Column.svelte";
   export let data;
   const { aboutData } = data;
 </script>
