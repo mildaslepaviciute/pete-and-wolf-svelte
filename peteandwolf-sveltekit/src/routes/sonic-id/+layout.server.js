@@ -24,7 +24,8 @@ export async function load() {
                     },
                     "audioContent": {
                         "url": audioContent.asset->url
-                    }
+                    },
+                    videoId,
                 },
                 col_2 {
                     type,
@@ -35,7 +36,8 @@ export async function load() {
                     },
                     "audioContent": {
                         "url": audioContent.asset->url
-                    }
+                    },
+                    videoId,
                 },
                 col_3 {
                     type,
@@ -46,7 +48,8 @@ export async function load() {
                     },
                     "audioContent": {
                         "url": audioContent.asset->url
-                    }
+                    },
+                    videoId,
                 }
             }
         }
@@ -74,7 +77,8 @@ export async function load() {
                     },
                     "audioContent": {
                         "url": audioContent.asset->url
-                    }
+                    },
+                    videoId,
                 },
                 col_2 {
                     type,
@@ -85,7 +89,8 @@ export async function load() {
                     },
                     "audioContent": {
                         "url": audioContent.asset->url
-                    }
+                    },
+                    videoId,
                 },
                 col_3 {
                     type,
@@ -96,7 +101,8 @@ export async function load() {
                     },
                     "audioContent": {
                         "url": audioContent.asset->url
-                    }
+                    },
+                    videoId,
                 }
             }
         }

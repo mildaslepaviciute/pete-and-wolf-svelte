@@ -1,7 +1,7 @@
 export default {
   name: 'column',
   title: 'Column',
-  type: 'object',  // Using 'object' instead of 'document' makes it a subtype
+  type: 'object',
   fields: [
     {
       name: 'type',
@@ -11,7 +11,8 @@ export default {
         list: [
           { title: 'Text', value: 'text' },
           { title: 'Image', value: 'image' },
-          { title: 'Audio', value: 'audio' }
+          { title: 'Audio', value: 'audio' },
+          { title: 'Video', value: 'video' }
         ]
       }
     },
@@ -33,6 +34,12 @@ export default {
       title: 'Audio',
       type: 'file',
       hidden: ({ parent }) => parent?.type !== 'audio'
+    },
+    {
+      name: 'videoId',
+      title: 'Video ID',
+      type: 'string',
+      hidden: ({ parent }) => parent?.type !== 'video',
     }
   ]
 }
