@@ -114,12 +114,6 @@
 		collapseElement.addEventListener('show.bs.collapse', updateToggleButton);
         collapseElement.addEventListener('hide.bs.collapse', updateToggleButton);
 
-        // document.getElementById('main-video').addEventListener('load', () => {
-        //     console.log('loaded')
-        //     document.getElementById('main-video').style.opacity = 1;
-        //         // iframeElement.style.display = 'block';
-        //     });
-
 		return () => {
 			document.removeEventListener("click", closeCollapse);
 		};

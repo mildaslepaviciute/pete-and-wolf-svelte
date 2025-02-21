@@ -27,13 +27,9 @@
         minHeight = 1000;
       }
       minHeight = innerHeight * 0.775
-      console.log('innerWidth' + innerWidth)
-
-      console.log('innerHeight' + innerHeight)
 
       let targetHeight = Math.min(minHeight, innerHeight - minBottomPadding);
       let targetWidth = targetHeight * ratio;
-      console.log(targetWidth, targetHeight);
 
       if (targetWidth > (innerWidth - 96.5)) {
           targetWidth = (innerWidth - 96.5);
@@ -43,9 +39,7 @@
       // Set CSS custom properties at the document root level
       document.documentElement.style.setProperty('--target-width', `${targetWidth}px`);
       document.documentElement.style.setProperty('--target-height', `${targetHeight}px`);
-      console.log('ratio' + innerWidth /innerHeight)
       if (innerWidth > 2200 && (innerHeight - minBottomPadding) > 1000) {
-        console.log('yes')
         let ptNav = 120 * 2.5*(innerHeight / innerWidth);
         document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`); 
       } else if (innerWidth > 1600 ) {

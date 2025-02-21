@@ -15,7 +15,6 @@
  
     export let data;
     const { caseItems, sonicIdData } = data;
-    console.log(sonicIdData)
 
     let swiperSonic, swiperSonicMobile;
     let offcanvasCases;
@@ -27,7 +26,6 @@
         );
 
     function updateActiveSlides(slug) {
-        console.log(slug)
         if (!swiperSonic && !swiperSonicMobile) return;
         
         const allSlideLinks = document.querySelectorAll(".swiper-slide-link");
@@ -37,7 +35,6 @@
         });
 
         allSlideLinks.forEach((link) => {
-            console.log(link.dataset.slug, slug)
             if (link.dataset.slug === slug) {
                 link.classList.add("swiper-slide-link-active");
             } else if (!slug && link.dataset.slug === 'sonic-id') {
@@ -204,7 +201,7 @@
             <div class="col-lg-4 h-100 ps-lg-1 d-none d-lg-block">
                 <div class="h-100 max-h-screen border border-black overflow-hidden">
                     <div class="bg-blue sticky-top">
-                        <h1 class="font-2 text-end text-white p-2 mb-0"><b>Cases</b></h1>
+                        <p class="font-2 text-end text-white p-2 mb-0"><b>Cases</b></p>
                     </div>
                     <div class="swiper-container scrollSwiperSonic">
                         <div class="swiper-wrapper">

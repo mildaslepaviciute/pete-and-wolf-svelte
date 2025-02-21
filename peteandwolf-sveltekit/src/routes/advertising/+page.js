@@ -9,7 +9,6 @@ export async function load() {
 
     try {
         const latestProject = await client.fetch(query);
-        console.log(latestProject)
         if (!latestProject) {
             throw new Error('No advertising projects found');
         }

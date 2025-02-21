@@ -2,8 +2,6 @@
     import { renderBlocks } from "$lib/helpers.js";
     export let data;
 
-    console.log('wtf is going on')
-
     const { sonicIdData } = data;
 </script>
 

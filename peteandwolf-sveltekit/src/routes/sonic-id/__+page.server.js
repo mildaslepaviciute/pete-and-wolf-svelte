@@ -48,7 +48,6 @@ export const load = async () => {
         }`;
 
         const sonicIdData = await client.fetch(query);
-        console.log(sonicIdData)
         
         if (!sonicIdData) {
             throw error(404, {

@@ -3,11 +3,18 @@
     import { goto } from '$app/navigation';
     import { renderBlocks } from "$lib/helpers.js";
     import AudioPlayer from "$lib/components/AudioPlayer.svelte";
+    import { on } from "svelte/events";
+    import { onMount } from "svelte";
 
     export let data;
     const caseItems = data.caseItems;
     
-    $: currentProject = caseItems.find(item => item.slug === $page.params.slug);
+    $: currentProject = caseItems.find(item =>  $page.params.slug && item.slug === $page.params.slug);
+
+    onMount(() => {
+        console.log(currentProject);
+    });
+
 </script>
 
 {#if currentProject}

@@ -2,7 +2,6 @@
   import { renderBlocks } from "$lib/helpers.js";
   export let data;
   const { aboutData } = data;
-  console.log(aboutData.blocks);
 </script>
 
 <svelte:head>
