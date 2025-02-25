@@ -16,6 +16,7 @@ export const load = async () => {
                 col_1 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
@@ -28,6 +29,7 @@ export const load = async () => {
                 col_2 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
@@ -40,6 +42,7 @@ export const load = async () => {
                 col_3 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt

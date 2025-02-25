@@ -608,7 +608,9 @@ a:hover {
     }
 
     .navbar-brand img {
-        width: 170px;
+        width: calc(170px + (80 * ((100vw - 320px) / 1600)));
+        max-width: 250px; /* Maximum width */
+        min-width: 170px; /* Minimum width */
     }
 
     .min-h-lg-screen {
@@ -648,3 +650,15 @@ a:hover {
         font-size: 19px;
     }
 }
+
+@media (min-width: 1440px) {
+    html {
+        font-size: calc(16px + 12 * ((100vw - 1440px) / 960));
+    }
+}
+
+// @media (min-width: 2200) {
+//     html {
+//         font-size: 24px;
+//     }
+// }

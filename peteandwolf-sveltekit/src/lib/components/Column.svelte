@@ -1,5 +1,6 @@
 <script>
     import { renderBlocks } from "$lib/helpers.js";
+    import { onMount } from "svelte";
     import AudioPlayer from "./AudioPlayer.svelte";
 
     export let columnData;
@@ -9,11 +10,22 @@
                   : grid === 2 ? "col-lg-6" 
                   : grid === 3 ? "col-lg-4" 
                   : "col-12";
+
+    $: textAlignClass = columnData.textAlignment === 'right' ? 'text-end' 
+                    : columnData.textAlignment === 'center' ? 'text-center' 
+                    : 'text-start';
+
+
+    onMount(() => {
+        console.log(columnData.textAlignment)
+    });
 </script>
 
 <div class={columnClass}>
     {#if columnData.type === 'text'}
-        {@html renderBlocks(columnData.textContent, true)}
+        <div class={textAlignClass}>
+            {@html renderBlocks(columnData.textContent, true)}
+        </div>
     {:else if columnData.type === 'image'}
         <img 
             src={columnData.imageContent.url} 

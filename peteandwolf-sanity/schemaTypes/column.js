@@ -24,6 +24,19 @@ export default {
       hidden: ({ parent }) => parent?.type !== 'text'
     },
     {
+      name: 'textAlignment',
+      title: 'Text Alignment',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Left', value: 'left' },
+          { title: 'Center', value: 'center' },
+          { title: 'Right', value: 'right' },
+        ]
+      },
+      hidden: ({ parent }) => parent?.type !== 'text',
+    },
+    {
       name: 'imageContent',
       title: 'Image',
       type: 'image',

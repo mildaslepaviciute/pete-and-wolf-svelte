@@ -18,6 +18,7 @@ export async function load() {
                 col_1 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
@@ -30,6 +31,7 @@ export async function load() {
                 col_2 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
@@ -42,6 +44,7 @@ export async function load() {
                 col_3 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
@@ -71,6 +74,7 @@ export async function load() {
                 col_1 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
@@ -83,6 +87,7 @@ export async function load() {
                 col_2 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
@@ -95,6 +100,7 @@ export async function load() {
                 col_3 {
                     type,
                     textContent,
+                    textAlignment,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
