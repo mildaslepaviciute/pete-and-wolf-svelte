@@ -40,7 +40,7 @@
                 <iframe src="https://iframe.mediadelivery.net/embed/372334/{columnData.videoId}?preload=true&loop=false&muted=false&responsive=true"
                     loading="lazy"
                     style="border:0;position:absolute;top:0;height:100%;width:100%;"
-                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+                    allow="accelerometer;gyroscope;encrypted-media;picture-in-picture;"
                     allowfullscreen="true"
                     title="Video Player"
                     id="main-video"></iframe>
