@@ -171,6 +171,8 @@
                                                     class="w-100 video-feed-item object-fit-cover" 
                                                     src="https://vz-8d625025-b12.b-cdn.net/{caseItem.thumbnail.videoId}/play_360p.mp4"
                                                     playsinline
+                                                    loop
+                                                    autoplay
                                                     muted
                                                 >
                                                 </video>
@@ -220,6 +222,8 @@
                                                     class="w-100 video-feed-item object-fit-cover" 
                                                     src="https://vz-8d625025-b12.b-cdn.net/{caseItem.thumbnail.videoId}/play_360p.mp4"
                                                     playsinline
+                                                    loop
+                                                    autoplay
                                                     muted
                                                 >
                                                 </video>
