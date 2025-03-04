@@ -43,10 +43,10 @@ export function renderBlocks(blocks, sizeBased = false) {
                 
                 // Map heading styles to font classes
                 const fontClassMap = {
-                    'h1': 'font-1',
-                    'h2': 'font-2',
-                    'h3': 'font-3',
-                    'h4': 'font-4',
+                    'h1': 'font-1 font-1-mt-negative',
+                    'h2': 'font-2 font-2-mt-negative',
+                    'h3': 'font-3 font-3-mt-negative',
+                    'h4': 'font-4 font-4-mt-negative',
                     'h5': 'font-5',
                     'h6': 'font-6',
                     'normal': 'font-6' // default font size for normal paragraphs

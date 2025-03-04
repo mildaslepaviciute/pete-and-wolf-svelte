@@ -1,6 +1,6 @@
 <!-- src/routes/sonic-id/+layout.svelte -->
 <script>
-    import { onMount } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     import { page } from "$app/stores";
     import { goto } from '$app/navigation';
     import Swiper, { 
@@ -47,6 +47,11 @@
         if (offcanvasCases) {
             offcanvasCases.hide()
         }
+
+        const mainContentArea = document.querySelector(".scrolling");
+        if (mainContentArea) {
+            mainContentArea.scrollTop = 0;
+        }
     }
 
     function goBack() {
@@ -58,7 +63,7 @@
 		const videoFeedItems = document.querySelectorAll(".video-feed-item");
 
 		videoFeedItems.forEach((video) => {
-			video.play()
+			// video.play()
             video.muted = true;
             video.defaultMuted = true;
 		});
@@ -100,13 +105,15 @@
         offcanvasCases = new bootstrap.Offcanvas(offcanvasCasesEl);
     });
 
-    $: {
+    afterUpdate(() => {
         const slug = $page.params.slug;
         updateActiveSlides(slug || 'sonic-id');
+                
         if (slug) {
             hideOffcanvasElements();
         }
-    }
+    });
+
 </script>
 
 <svelte:head>
@@ -145,13 +152,13 @@
                     {/if}
                 </div>
                 <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -27px;">
-                    <div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">Cases</div>
+                    <div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">+ Cases</div>
                 </div>
 
                 <!-- Mobile offcanvas -->
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCases" aria-labelledby="offcanvasCasesLabel">
                     <div class="offcanvas-title-wrapper sticky-top top-0 w-100 bg-blue d-flex justify-content-between align-items-center px-2 py-3">
-                        <h1 class="font-4 text-white mb-0"><b>Cases</b></h1>
+                        <p class="font-4 text-white mb-0"><b>Cases</b></p>
                         <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="swiper-container scrollSwiperSonicMobile">
@@ -170,8 +177,8 @@
                                                 <video 
                                                     class="w-100 video-feed-item object-fit-cover" 
                                                     src="https://vz-8d625025-b12.b-cdn.net/{caseItem.thumbnail.videoId}/play_360p.mp4"
-                                                    playsinline
-                                                    loop
+                                                	playsinline
+                                                    loop 
                                                     autoplay
                                                     muted
                                                 >
@@ -193,7 +200,7 @@
             </div>
 
             <!-- Main content area -->
-            <div class="col-lg-8 h-100 min-h-100 pe-0-mob">
+            <div class="col-lg-8 h-100 min-h-100 ps-1 ps-lg-2 pe-0-mob">
                 <div class="max-h-screen min-h-mob-screen h-100 scrolling border border-black p-3">
                     <slot />
                 </div>
@@ -222,7 +229,7 @@
                                                     class="w-100 video-feed-item object-fit-cover" 
                                                     src="https://vz-8d625025-b12.b-cdn.net/{caseItem.thumbnail.videoId}/play_360p.mp4"
                                                     playsinline
-                                                    loop
+                                                    loop 
                                                     autoplay
                                                     muted
                                                 >

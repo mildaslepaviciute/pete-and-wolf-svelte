@@ -44,13 +44,13 @@
 		});
 	}
 
-    // Function to update active states for all slides including clones
 	function startVideoFeed() {
 		const videFeedItems = swiper.el.querySelectorAll(".video-feed-item");
 
-		// Remove bg-primary from all links
 		videFeedItems.forEach((video) => {
-			video.play()
+			// video.play()
+            video.muted = true;
+            video.defaultMuted = true;
 		});
 	}
 
@@ -59,6 +59,18 @@
 		swiper.params.simulateTouch = isMobile;
 		swiper.update();
 	}
+
+    function setupVideoDimensions() {
+        const mainVideoContainer = document.querySelector('#main-video-container'); // Adjust selector as needed
+        
+        if (!mainVideoContainer) return;
+
+        console.log(mainVideoContainer.offsetWidth)
+        
+        // Set CSS variables once
+        document.documentElement.style.setProperty('--video-width', `${mainVideoContainer.offsetWidth}px`);
+        document.documentElement.style.setProperty('--video-height', `${mainVideoContainer.offsetHeight}px`);
+    }
 
 	onMount(() => {
         swiper = new Swiper(".scrollSwiperAdvertising", {
@@ -80,16 +92,6 @@
 		updateActiveSlides($page.params.slug);
 
         startVideoFeed();
-
-		// Force mute all videos
-		document
-			.querySelectorAll(".scrollSwiperAdvertising video")
-			.forEach((video) => {
-				// Set multiple muting properties
-				video.muted = true;
-				video.defaultMuted = true;
-				//video.volume = 0;
-			});
 
 		// COLLAPSE CLOSING
 		const closeCollapse = (event) => {
@@ -114,6 +116,8 @@
 		collapseElement.addEventListener('show.bs.collapse', updateToggleButton);
         collapseElement.addEventListener('hide.bs.collapse', updateToggleButton);
 
+        setupVideoDimensions();
+
 		return () => {
 			document.removeEventListener("click", closeCollapse);
 		};
@@ -130,10 +134,10 @@
     <div class="container h-100 d-flex flex-column" id="advertisingContainer">
         <div class="row align-items-stretch max-h-screen h-100" id="advertisingRow">
             <!-- Main Content Column -->
-            <div class="col-lg-8 d-flex flex-column px-0-mob" bind:this={leftColumn}>
+            <div class="col-lg-8 d-flex flex-column px-0-mob h-lg-100" bind:this={leftColumn}>
                 <div class="position-relative">
                     <!-- Collapse toggle button -->
-                    <div class="position-absolute dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
+                    <div class="position-absolute z-3 dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
                         <div class="bg-blue font-5 fw-bold text-white py-4" 
                              id="toggleButton"
                              data-bs-toggle="collapse"
@@ -145,13 +149,13 @@
                     </div>
 
                     <!-- Mobile credits panel -->
-                    <div class="position-absolute z-2" style="right: 28px; top: 1px; display: flex; justify-content: flex-end;">
-                        <div class="collapse collapse-horizontal collapse-right"
-                             id="collapseWidthExample"
-                             bind:this={collapseElement}>
-                            <div class="card card-body border-0 rounded-0 font-9 p-3" id="cardCredits" style="width: calc(100vw - 28px)">
+                    <div class="position-absolute z-2" style="top: 1px; display: flex; justify-content: flex-end;">
+                        <div class="collapse collapse-horizontal collapse-right" id="collapseWidthExample" bind:this={collapseElement}>
+                            <div class="card card-body border-0 rounded-0 font-9 p-3" id="cardCredits">
                                 <h2 class="font-7 text-underline" fm-fade-in>{currentProject?.title}</h2>
-                                <p fm-fade-in>{currentProject.description}</p>
+                                <div class="mb-0" fm-fade-in style="max-width:75%">
+                                    {@html renderBlocks(currentProject.description)}
+                                </div>
                                 <p fm-fade-in>{currentProject.type}</p>
                                 <p class="mb-0" fm-fade-in>
                                     {@html renderBlocks(currentProject.credits)}
@@ -159,42 +163,38 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <!-- Video Container -->
-                <div class="border border-black border-x-0-mob bg-black">
+                <div class="border border-black border-x-0-mob bg-black" id="main-video-container">
                     <div style="position:relative;padding-top:56.25%;">
-                        <!-- <video 
-                            class="w-100 video-feed-item" 
-                            src="https://vz-8d625025-b12.b-cdn.net/{currentProject.videoId}/play_360p.mp4"
-                            playsinline
-                            autoplay
-                             
-                            
-                        > -->
                         <iframe src="https://iframe.mediadelivery.net/embed/372334/{currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=false&preload=true&responsive=true"
-                                loading="lazy"
-                                style="border:0;position:absolute;top:0;height:100%;width:100%;"
-                                allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
-                                allowfullscreen="true"
-                                title="Video Player"
-                                id="main-video"></iframe>
-                                
+                            loading="lazy"
+                            style="border:0;position:absolute;top:0;height:100%;width:100%;"
+                            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+                            allowfullscreen="true"
+                            title="Video Player"
+                            id="main-video">
+                        </iframe>
                     </div>
                 </div>
+
+                <div class="flex-lg-grow-1"></div>
+
 
                 <!-- Desktop credits section -->
                 <div class="d-none d-lg-block font-8 pt-3">
                     <div class="row justify-content-between align-items-start mb-3">
-                        <div class="col-lg-4">
-                            <h2 class="font-5 text-underline mb-0" fm-fade-in>{currentProject.title}</h2>
+                        <div class="col-lg-6">
+                            <h2 class="font-5 font-3-mt-negative text-underline mb-0" fm-fade-in>{currentProject.title}</h2>
                         </div>
                         <div class="col-lg-4 text-lg-end">
                             <p class="mb-0" fm-fade-in>{currentProject.type}</p>
                         </div>
                     </div>
                     <div class="row justify-content-between align-items-end">
-                        <div class="col-lg-4">
+                        <div class="col-lg-5">
                             <div class="mb-0" fm-fade-in>
                                 {@html renderBlocks(currentProject.description)}
                             </div>
@@ -224,6 +224,7 @@
 											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_360p.mp4"
 											playsinline
 											loop 
+                                            autoplay
 											muted
 										>
 										</video>

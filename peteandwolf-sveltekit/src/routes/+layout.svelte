@@ -9,48 +9,25 @@
   function adjustContentHeight() {
     const innerHeight = window.innerHeight;
     const innerWidth = window.innerWidth;
-    const minBottomPadding = 180;
-    let ratio, minHeight;
+    let ratio, minHeight, perfectWidth, perfectHeight, targetHeight, targetWidth;
 
     if (innerWidth > 992) {
-      if (innerWidth < 1500) {
-        ratio = 2.12;
-        minHeight = 750;
-      } else if (innerWidth < 1800) {
-        ratio = 2.2;
-        minHeight = 700;
-      } else if (innerWidth < 2000) {
-        ratio = 2.26;
-        minHeight = 800;
-      } else {
-        ratio = 2.26;
-        minHeight = 1000;
-      }
-      minHeight = innerHeight * 0.775
+      perfectHeight = innerHeight * 0.75;
+      perfectWidth = innerWidth * 0.9;
+      ratio = 2;
 
-      let targetHeight = Math.min(minHeight, innerHeight - minBottomPadding);
-      let targetWidth = targetHeight * ratio;
+      targetWidth = perfectHeight * ratio;
+      targetHeight = perfectHeight;
 
-      if (targetWidth > (innerWidth - 96.5)) {
-          targetWidth = (innerWidth - 96.5);
-          targetHeight = targetWidth / ratio;
-      }
+      if (targetWidth > perfectWidth) {
+        targetWidth = perfectWidth;
+        targetHeight = targetWidth / ratio;
+      } 
 
-      // Set CSS custom properties at the document root level
+      let ptNav = Math.max(innerHeight * 0.15, 110);
+      document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`);
       document.documentElement.style.setProperty('--target-width', `${targetWidth}px`);
       document.documentElement.style.setProperty('--target-height', `${targetHeight}px`);
-      if (innerWidth > 2200 && (innerHeight - minBottomPadding) > 1000) {
-        let ptNav = 120 * 2.5*(innerHeight / innerWidth);
-        document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`); 
-      } else if (innerWidth > 1600 ) {
-        let ptNav = 120 * 2*(innerHeight / innerWidth);
-        document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`); 
-      } else {
-        let ptNav = 120
-        document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`);
-      }
-
-    
     }
 }
 

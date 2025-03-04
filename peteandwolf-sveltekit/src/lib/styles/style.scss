@@ -67,16 +67,32 @@ b {
     font-size: $fs-1;
 }
 
+.font-1-mt-negative {
+    margin-top: -1rem
+}
+
 .font-2 {
     font-size: $fs-2;
+}
+
+.font-2-mt-negative {
+    margin-top: -0.75rem
 }
 
 .font-3 {
     font-size: $fs-3;
 }
 
+.font-3-mt-negative {
+    margin-top: -0.5rem
+}
+
 .font-4 {
     font-size: $fs-4;
+}
+
+.font-3-mt-negative {
+    margin-top: -0.25rem
 }
 
 .font-5 {
@@ -320,7 +336,8 @@ video {
 }
 
 #cardCredits {
-    width: var(--card-credit-width);
+    width: var(--video-width);
+    min-height: calc(var(--video-height) - 2px);
 }
 
 .scrolling {
@@ -535,10 +552,6 @@ a:hover {
         width: 50%;
     }
 
-    .pt-below-nav {
-        padding-top: var(--pt-below-nav);
-    }
-
     .position-md-absolute {
         position: absolute;
     }
@@ -550,6 +563,10 @@ a:hover {
 
 // Large devices
 @media (min-width: 992px) {
+
+    .pt-below-nav {
+        padding-top: var(--pt-below-nav);
+    }
     .container {
         min-width: var(--target-width);
         max-width: var(--target-width);
