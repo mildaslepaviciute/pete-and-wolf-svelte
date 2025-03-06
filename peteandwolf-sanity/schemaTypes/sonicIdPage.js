@@ -70,6 +70,18 @@ export default {
                         validation: Rule => Rule.required()
                     },
                     {
+                      name: 'titleAlignment',
+                      title: 'Title Alignment',
+                      type: 'string',
+                      options: {
+                        list: [
+                          { title: 'Left', value: 'left' },
+                          { title: 'Center', value: 'center' },
+                          { title: 'Right', value: 'right' },
+                        ]
+                      },
+                    },
+                    {
                         name: 'blocks',
                         title: 'Content Blocks',
                         type: 'array',

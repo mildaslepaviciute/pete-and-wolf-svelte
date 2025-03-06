@@ -106,6 +106,7 @@
     });
 
     afterUpdate(() => {
+        console.log(currentProject);
         const slug = $page.params.slug;
         updateActiveSlides(slug || 'sonic-id');
                 
@@ -134,13 +135,15 @@
                 {/if}
                 <div class="position-absolute d-flex text-rotate top-0 text-end" style="left: -20px;">
                     {#if currentProject}
-                        {#each [...currentProject.sections].reverse() as section}
-                            <div class="fw-bold mt-4">
-                                <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">
-                                    {section.title}
-                                </a>
-                            </div>
-                        {/each}
+                        {#if currentProject.sections !== null}
+                            {#each [...currentProject.sections].reverse() as section}
+                                <div class="fw-bold mt-4">
+                                    <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">
+                                        {section.title}
+                                    </a>
+                                </div>
+                            {/each}
+                        {/if}
                     {:else}
                         {#each [...sonicIdData.sections].reverse() as section}
                             <div class="fw-bold mt-4">

@@ -2,6 +2,7 @@
     import { renderBlocks } from "$lib/helpers.js";
     import { onMount } from "svelte";
     import AudioPlayer from "./AudioPlayer.svelte";
+    import VideoPlayer from "./VideoPlayer.svelte";
 
     export let columnData;
     export let grid;
@@ -36,15 +37,10 @@
         {:else if columnData.type === 'audio'}
             <AudioPlayer audioUrl={columnData.audioContent.url} />
         {:else if columnData.type === 'video'}
-            <div style="position:relative;padding-top:56.25%;" class="w-100">
-                <iframe src="https://iframe.mediadelivery.net/embed/372334/{columnData.videoId}?preload=true&loop=false&muted=false&responsive=true"
-                    loading="lazy"
-                    style="border:0;position:absolute;top:0;height:100%;width:100%;"
-                    allow="accelerometer;gyroscope;encrypted-media;picture-in-picture;"
-                    allowfullscreen="true"
-                    title="Video Player"
-                    id="main-video"></iframe>
-            </div>
+            <VideoPlayer 
+                videoId={columnData.videoId} 
+                poster={columnData.videoPoster?.url || ""}
+            />
         {/if}
     </div>
 {/if}

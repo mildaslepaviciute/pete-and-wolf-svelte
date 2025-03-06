@@ -1,9 +1,5 @@
 <script>
     import { page } from "$app/stores";
-    import { goto } from '$app/navigation';
-    import { renderBlocks } from "$lib/helpers.js";
-    import AudioPlayer from "$lib/components/AudioPlayer.svelte";
-    import { on } from "svelte/events";
     import { onMount } from "svelte";
     import Column from "$lib/components/Column.svelte";
 
@@ -12,6 +8,17 @@
     
     $: currentProject = caseItems.find(item =>  $page.params.slug && item.slug === $page.params.slug);
 
+    function getTitleAlignmentClass(alignment) {
+        switch(alignment) {
+            case 'center':
+                return 'text-center';
+            case 'right':
+                return 'text-end';
+            case 'left':
+            default:
+                return 'text-start';
+        }
+    }
 </script>
 
 {#if currentProject}
@@ -19,9 +26,9 @@
         {#each currentProject.sections as section, index}
             <div id={section.title.replace(/\s+/g, '-').toLowerCase()} class="mb-4 mb-last-0">
                 {#if index === 0}
-                    <h1 class="font-2 mb-3 fw-bold">{section.title}</h1>
+                    <h1 class="font-2 mb-3 fw-bold {getTitleAlignmentClass(section.titleAlignment)}">{section.title}</h1>
                 {:else}
-                    <h2 class="font-2 mb-3 fw-bold">{section.title}</h2>
+                    <h2 class="font-2 mb-3 fw-bold {getTitleAlignmentClass(section.titleAlignment)}">{section.title}</h2>
                 {/if}
                 {#each section.blocks as block}
                     <div class="row gy-3 gy-lg-0 mb-4">

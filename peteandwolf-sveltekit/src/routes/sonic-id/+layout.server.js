@@ -13,6 +13,7 @@ export async function load() {
         },
         sections[] {
             title,
+            titleAlignment,
             blocks[] {
                 grid,
                 col_1 {
@@ -69,6 +70,7 @@ export async function load() {
         },
         sections[] {
             title,
+            titleAlignment,
             blocks[] {
                 grid,
                 col_1 {

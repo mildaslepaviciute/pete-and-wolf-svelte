@@ -180,12 +180,11 @@
                     </div>
                 </div>
 
-                <div class="flex-lg-grow-1"></div>
 
 
                 <!-- Desktop credits section -->
-                <div class="d-none d-lg-block font-8 pt-3">
-                    <div class="row justify-content-between align-items-start mb-3">
+                <div class="d-none d-lg-flex font-8 pt-3 flex-column h-100">
+                    <div class="row justify-content-between align-items-start">
                         <div class="col-lg-6">
                             <h2 class="font-5 font-3-mt-negative text-underline mb-0" fm-fade-in>{currentProject.title}</h2>
                         </div>
@@ -193,6 +192,9 @@
                             <p class="mb-0" fm-fade-in>{currentProject.type}</p>
                         </div>
                     </div>
+
+                    <div class="flex-grow-1"></div>
+
                     <div class="row justify-content-between align-items-end">
                         <div class="col-lg-5">
                             <div class="mb-0" fm-fade-in>
@@ -206,6 +208,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
 
             <!-- Projects List Column -->

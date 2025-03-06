@@ -90,6 +90,18 @@ export default {
               type: 'string'
             },
             {
+              name: 'titleAlignment',
+              title: 'Section Title Alignment',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Left', value: 'left' },
+                  { title: 'Center', value: 'center' },
+                  { title: 'Right', value: 'right' },
+                ]
+              },
+            },
+            {
               name: 'blocks',
               title: 'Content Blocks',
               type: 'array',
