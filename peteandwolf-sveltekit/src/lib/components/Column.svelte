@@ -38,8 +38,8 @@
             <AudioPlayer audioUrl={columnData.audioContent.url} />
         {:else if columnData.type === 'video'}
             <VideoPlayer 
-                videoId={columnData.videoId} 
-                poster={columnData.videoPoster?.url || ""}
+                videoId={columnData.videoId || ""} 
+                poster={columnData.videoPosterImage || ""}
             />
         {/if}
     </div>

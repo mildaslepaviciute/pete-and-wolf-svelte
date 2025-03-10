@@ -13,7 +13,7 @@
             case 'center':
                 return 'text-center';
             case 'right':
-                return 'text-end';
+                return 'offset-md-6 text-start ps-md-23';
             case 'left':
             default:
                 return 'text-start';

@@ -53,6 +53,15 @@ export default {
       title: 'Video ID',
       type: 'string',
       hidden: ({ parent }) => parent?.type !== 'video',
-    }
+    },
+    {
+      name: 'videoPosterImage',
+      title: 'Video Poster Image',
+      type: 'image',
+      options: {
+        hotspot: true
+      },
+      hidden: ({ parent }) => parent?.type !== 'video'
+    },
   ]
 }

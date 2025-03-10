@@ -28,6 +28,10 @@ export async function load() {
                         "url": audioContent.asset->url
                     },
                     videoId,
+                    "videoPosterImage": {
+                        "url": videoPosterImage.asset->url,
+                        "alt": videoPosterImage.alt
+                    },
                 },
                 col_2 {
                     type,
@@ -41,6 +45,10 @@ export async function load() {
                         "url": audioContent.asset->url
                     },
                     videoId,
+                    "videoPosterImage": {
+                        "url": videoPosterImage.asset->url,
+                        "alt": videoPosterImage.alt
+                    },
                 },
                 col_3 {
                     type,
@@ -54,6 +62,10 @@ export async function load() {
                         "url": audioContent.asset->url
                     },
                     videoId,
+                    "videoPosterImage": {
+                        "url": videoPosterImage.asset->url,
+                        "alt": videoPosterImage.alt
+                    },
                 }
             }
         }
@@ -85,6 +97,10 @@ export async function load() {
                         "url": audioContent.asset->url
                     },
                     videoId,
+                    "videoPosterImage": {
+                        "url": videoPosterImage.asset->url,
+                        "alt": videoPosterImage.alt
+                    },
                 },
                 col_2 {
                     type,
@@ -98,6 +114,10 @@ export async function load() {
                         "url": audioContent.asset->url
                     },
                     videoId,
+                    "videoPosterImage": {
+                        "url": videoPosterImage.asset->url,
+                        "alt": videoPosterImage.alt
+                    },
                 },
                 col_3 {
                     type,
@@ -111,6 +131,10 @@ export async function load() {
                         "url": audioContent.asset->url
                     },
                     videoId,
+                    "videoPosterImage": {
+                        "url": videoPosterImage.asset->url,
+                        "alt": videoPosterImage.alt
+                    },
                 }
             }
         }
