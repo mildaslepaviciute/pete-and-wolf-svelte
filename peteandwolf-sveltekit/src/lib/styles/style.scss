@@ -134,6 +134,11 @@ b {
     text-decoration-color: #000 !important;
 }
 
+hr {
+    color: black;
+    opacity:50%
+}
+
 .u-offset-n1 {
     text-underline-offset: -1px;
 }
@@ -630,7 +635,7 @@ a:hover {
 
     .navbar-brand img {
         width: calc(170px + (80 * ((100vw - 320px) / 1600)));
-        max-width: 250px; /* Maximum width */
+        max-width: 200px; /* Maximum width */
         min-width: 170px; /* Minimum width */
     }
 
@@ -670,12 +675,17 @@ a:hover {
     body {
         font-size: 19px;
     }
+
+    .navbar {
+        padding-top: 2%;
+    }
 }
 
 @media (min-width: 1440px) {
     html {
         font-size: calc(16px + 12 * ((100vw - 1440px) / 960));
     }
+  
 }
 
 // @media (min-width: 2200) {

@@ -31,7 +31,7 @@
                     <h2 class="font-2 mb-3 fw-bold {getTitleAlignmentClass(section.titleAlignment)}">{section.title}</h2>
                 {/if}
         {#each section.blocks as block}
-            <div class="row gy-3 gy-lg-0 mb-4">
+            <div class="row gy-3 gy-lg-0 mb-4 border-bottom">
                 {#if block.grid === 1}
                     <Column columnData={block.col_1} grid={block.grid} />
                 {:else if block.grid === 2}

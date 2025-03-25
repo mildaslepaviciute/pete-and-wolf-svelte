@@ -184,28 +184,36 @@
 
                 <!-- Desktop credits section -->
                 <div class="d-none d-lg-flex font-8 pt-3 flex-column h-100">
-                    <div class="row justify-content-between align-items-start">
-                        <div class="col-lg-6">
-                            <h2 class="font-5 font-3-mt-negative text-underline mb-0" fm-fade-in>{currentProject.title}</h2>
+                    <div>
+                        <hr class="mt-0 mb-2">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-lg-8">
+                                <h2 class="font-5 font-3-mt-negative mb-0" fm-fade-in>{currentProject.title}</h2>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <p class="mb-0" fm-fade-in>{currentProject.type}</p>
+                            </div>
                         </div>
-                        <div class="col-lg-4 text-lg-end">
-                            <p class="mb-0" fm-fade-in>{currentProject.type}</p>
-                        </div>
+                        <hr class="mt-2 mb-0 border-black">
                     </div>
+                   
 
                     <div class="flex-grow-1"></div>
 
-                    <div class="row justify-content-between align-items-end">
-                        <div class="col-lg-5">
-                            <div class="mb-0" fm-fade-in>
-                                {@html renderBlocks(currentProject.description)}
+                    <div>
+                        <div class="row justify-content-between align-items-end">
+                            <div class="col-lg-5">
+                                <div class="mb-0" fm-fade-in>
+                                    {@html renderBlocks(currentProject.description)}
+                                </div>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <div class="mb-0" fm-fade-in>
+                                    {@html renderBlocks(currentProject.credits)}
+                                </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 text-lg-end">
-                            <div class="mb-0" fm-fade-in>
-                                {@html renderBlocks(currentProject.credits)}
-                            </div>
-                        </div>
+                        <hr class="mt-2 mb-0">
                     </div>
                 </div>
                 
@@ -246,3 +254,17 @@
     </div>
 </section>
 
+
+<style>
+    .border-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 0 15%; /* Adjust this percentage to control how wide the border is */
+    }
+    
+    .border-line {
+        width: 100%;
+        border-bottom: 1px solid black;
+    }
+</style>

@@ -30,8 +30,9 @@
                 {:else}
                     <h2 class="font-2 mb-3 fw-bold {getTitleAlignmentClass(section.titleAlignment)}">{section.title}</h2>
                 {/if}
+                <hr>
                 {#each section.blocks as block}
-                    <div class="row gy-3 gy-lg-0 mb-4">
+                    <div class="row gy-3 gy-lg-0 pb-3 mb-3">
                         {#if block.grid === 1}
                             <Column columnData={block.col_1} grid={block.grid} />
                         {:else if block.grid === 2}
@@ -43,8 +44,25 @@
                             <Column columnData={block.col_3} grid={block.grid} />
                         {/if}
                     </div>
+                    <hr>
                 {/each}
             </div>
         {/each}
     </div>
 {/if}
+
+
+<style>
+    .custom-border {
+        position: relative;
+    }
+    
+    .custom-border::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 3%; /* Start border 15% from the left */
+        right: 3%; /* End border 15% from the right */
+        border-bottom: 1px solid black;
+    }
+</style>
