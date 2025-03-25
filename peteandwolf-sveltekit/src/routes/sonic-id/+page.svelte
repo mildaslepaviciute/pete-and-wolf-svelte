@@ -32,7 +32,7 @@
         {/if}
         <hr class="my-3">
         {#each section.blocks as block}
-            <div class="row gy-3 gy-lg-0 mb-4 border-bottom">
+            <div class="row gy-3 gy-lg-0 mb-4">
                 {#if block.grid === 1}
                     <Column columnData={block.col_1} grid={block.grid} />
                 {:else if block.grid === 2}
