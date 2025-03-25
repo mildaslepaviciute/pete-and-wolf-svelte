@@ -1,20 +1,29 @@
 <script>
+    import { onMount } from 'svelte';
+    import { audioPlayerActive } from '$lib/store.js';
+    
     export let audioUrl;
     export let title = ""; // Adding a title prop with default empty string
     
     let audio;
     let isPlaying = false;
     let progress = 0;
+    let playerId = Date.now() + Math.random().toString(16).slice(2); // Generate unique ID for this player instance
     
     function togglePlay() {
         if (!audio) return;
         
         if (audio.paused) {
+            // Set this player as the active one
+            $audioPlayerActive = playerId;
             audio.play();
             isPlaying = true;
         } else {
             audio.pause();
             isPlaying = false;
+            if ($audioPlayerActive === playerId) {
+                $audioPlayerActive = null;
+            }
         }
     }
     
@@ -26,7 +35,24 @@
     function handleEnded() {
         isPlaying = false;
         progress = 0;
+        if ($audioPlayerActive === playerId) {
+            $audioPlayerActive = null;
+        }
     }
+    
+    // Subscribe to the audioPlayerActive store to respond when another player starts
+    onMount(() => {
+        const unsubscribe = audioPlayerActive.subscribe((currentId) => {
+            // If another player started (not this one) and this one is playing, pause it
+            if (currentId !== null && currentId !== playerId && isPlaying && audio) {
+                audio.pause();
+                isPlaying = false;
+            }
+        });
+        
+        // Return the unsubscribe function for cleanup
+        return unsubscribe;
+    });
 </script>
 
 <div class="audio-player-container">
