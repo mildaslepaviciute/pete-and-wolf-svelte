@@ -1,4 +1,3 @@
-// src/routes/sonic-id/+layout.server.js
 import { client } from '$lib/sanityClient';
 
 export async function load() {
@@ -24,8 +23,11 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
-                    "audioContent": {
-                        "url": audioContent.asset->url
+                    "audioContents": audioContents[] {
+                        "audioFile": {
+                            "url": audioFile.asset->url
+                        },
+                        title
                     },
                     videoId,
                     "videoPosterImage": {
@@ -41,8 +43,11 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
-                    "audioContent": {
-                        "url": audioContent.asset->url
+                    "audioContents": audioContents[] {
+                        "audioFile": {
+                            "url": audioFile.asset->url
+                        },
+                        title
                     },
                     videoId,
                     "videoPosterImage": {
@@ -58,8 +63,11 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
-                    "audioContent": {
-                        "url": audioContent.asset->url
+                    "audioContents": audioContents[] {
+                        "audioFile": {
+                            "url": audioFile.asset->url
+                        },
+                        title
                     },
                     videoId,
                     "videoPosterImage": {
@@ -93,8 +101,11 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
-                    "audioContent": {
-                        "url": audioContent.asset->url
+                    "audioContents": audioContents[] {
+                        "audioFile": {
+                            "url": audioFile.asset->url
+                        },
+                        title
                     },
                     videoId,
                     "videoPosterImage": {
@@ -110,8 +121,11 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
-                    "audioContent": {
-                        "url": audioContent.asset->url
+                    "audioContents": audioContents[] {
+                        "audioFile": {
+                            "url": audioFile.asset->url
+                        },
+                        title
                     },
                     videoId,
                     "videoPosterImage": {
@@ -127,8 +141,11 @@ export async function load() {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
                     },
-                    "audioContent": {
-                        "url": audioContent.asset->url
+                    "audioContents": audioContents[] {
+                        "audioFile": {
+                            "url": audioFile.asset->url
+                        },
+                        title
                     },
                     videoId,
                     "videoPosterImage": {

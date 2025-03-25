@@ -1,5 +1,6 @@
 <script>
     export let audioUrl;
+    export let title = ""; // Adding a title prop with default empty string
     
     let audio;
     let isPlaying = false;
@@ -28,65 +29,87 @@
     }
 </script>
 
-<div class="audio-player">
-    <button 
-        class="player-button" 
-        class:playing={isPlaying}
-        on:click={togglePlay}
-        aria-label={isPlaying ? 'Pause' : 'Play'}
-    >
-        <div class="progress-ring">
-            <svg viewBox="0 0 100 100">
-                <circle
-                    class="progress-ring__circle-bg"
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                />
-                <circle
-                    class="progress-ring__circle"
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                    style="stroke-dashoffset: {283 - (283 * progress) / 100}px"
-                />
-            </svg>
-        </div>
-        <div class="icon-container">
-            {#if isPlaying}
-                <div class="pause-icon">
-                    <span></span>
-                    <span></span>
-                </div>
-            {:else}
-                <div class="play-icon">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="12" />
-                    </svg>
-                </div>
-            {/if}
-        </div>
-    </button>
+<div class="audio-player-container">
+    <div class="audio-player">
+        <button 
+            class="player-button" 
+            class:playing={isPlaying}
+            on:click={togglePlay}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+        >
+            <div class="progress-ring">
+                <svg viewBox="0 0 100 100">
+                    <circle
+                        class="progress-ring__circle-bg"
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="none"
+                    />
+                    <circle
+                        class="progress-ring__circle"
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="none"
+                        style="stroke-dashoffset: {283 - (283 * progress) / 100}px"
+                    />
+                </svg>
+            </div>
+            <div class="icon-container">
+                {#if isPlaying}
+                    <div class="pause-icon">
+                        <span></span>
+                        <span></span>
+                    </div>
+                {:else}
+                    <div class="play-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="12" />
+                        </svg>
+                    </div>
+                {/if}
+            </div>
+        </button>
 
-    <audio
-        bind:this={audio}
-        src={audioUrl}
-        on:timeupdate={handleTimeUpdate}
-        on:ended={handleEnded}
-        preload="metadata"
-    >
-        <track kind="captions" />
-    </audio>
+        <audio
+            bind:this={audio}
+            src={audioUrl}
+            on:timeupdate={handleTimeUpdate}
+            on:ended={handleEnded}
+            preload="metadata"
+        >
+            <track kind="captions" />
+        </audio>
+    </div>
+    
+    {#if title}
+        <div class="audio-title font-6">
+            <span><b>{title}</b></span>
+        </div>
+    {/if}
 </div>
 
 <style>
+    .audio-player-container {
+        display: flex;
+        align-items: center;
+        margin: 1rem auto;
+    }
+
     .audio-player {
         width: 80px;
         height: 80px;
+        min-width: 80px;
+        min-height: 80px;
         position: relative;
-        margin: 1rem auto;
+    }
+
+    .audio-title {
+        margin-left: 20px;
+        display: flex;
+        align-items: center;
+        height: 80px;
     }
 
     .player-button {

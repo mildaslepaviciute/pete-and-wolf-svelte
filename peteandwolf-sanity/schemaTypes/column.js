@@ -43,9 +43,30 @@ export default {
       hidden: ({ parent }) => parent?.type !== 'image'
     },
     {
-      name: 'audioContent',
-      title: 'Audio',
-      type: 'file',
+      name: 'audioContents',
+      title: 'Audio Files',
+      type: 'array',
+      of: [{
+        type: 'object',
+        fields: [
+          {
+            name: 'audioFile',
+            title: 'Audio File',
+            type: 'file'
+          },
+          {
+            name: 'title',
+            title: 'Title',
+            type: 'string'
+          }
+        ],
+        preview: {
+          select: {
+            title: 'title',
+            media: 'audioFile'
+          }
+        }
+      }],
       hidden: ({ parent }) => parent?.type !== 'audio'
     },
     {

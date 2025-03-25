@@ -16,9 +16,8 @@
                     : columnData && columnData.textAlignment === 'center' ? 'text-center' 
                     : 'text-start';
 
-
     onMount(() => {
-        console.log(columnData)
+        console.log(columnData);
     });
 </script>
 
@@ -35,7 +34,12 @@
                 class="w-100"
             >
         {:else if columnData.type === 'audio'}
-            <AudioPlayer audioUrl={columnData.audioContent.url} />
+            {#each columnData.audioContents as audio}
+                <AudioPlayer 
+                    audioUrl={audio.audioFile.url} 
+                    title={audio.title || ""} 
+                />
+            {/each}
         {:else if columnData.type === 'video'}
             <VideoPlayer 
                 videoId={columnData.videoId || ""} 
