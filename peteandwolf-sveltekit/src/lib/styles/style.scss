@@ -634,9 +634,7 @@ a:hover {
     }
 
     .navbar-brand img {
-        width: calc(170px + (80 * ((100vw - 320px) / 1600)));
-        max-width: 200px; /* Maximum width */
-        min-width: 170px; /* Minimum width */
+        width: 150px;
     }
 
     .min-h-lg-screen {
@@ -678,6 +676,10 @@ a:hover {
 
     .navbar {
         padding-top: 2%;
+    }
+
+    .navbar-brand img {
+        width: 175px;
     }
 }
 
