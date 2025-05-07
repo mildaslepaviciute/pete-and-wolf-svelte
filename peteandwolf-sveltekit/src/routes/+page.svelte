@@ -1,10 +1,12 @@
+
 <script>
-  import { onMount } from 'svelte';
+  export let data;
+  const { homeData } = data;
 </script>
 
 <svelte:head>
-<title>Pete & Wolf</title>
-<meta name="description" content="We help you to unmute your brand">
+  <title>Pete & Wolf - {homeData.title}</title>
+  <meta name="description" content="We help you to unmute your brand">
 </svelte:head>
 
 <style>
@@ -25,14 +27,15 @@
 
 <section class="h-100vh overflow-hidden" >
   <div class="container h-100 d-flex flex-column justify-content-center" >
-    <h1 class="w-lg-80 font-1 fw-bold">We help you to unmute your brand</h1>
-    <div class="d-flex mt-5rem">
+    <h1 class="w-lg-80 font-1 fw-bold">{homeData.title}</h1>
+    <!-- commented links remain here -->
+        <!-- <div class="d-flex mt-5rem">
       <a href="/advertising" class="pill-link font-3 fw-bold text-black me-4">Advertising</a>
       <a href="/sonic-id" class="pill-link font-3 fw-bold text-black">Sonic-ID</a>
     </div>
     <div class="d-flex mt-5">
       <a href="/advertising" class="pill-link rounded-pill font-3 fw-bold text-black me-4">Advertising</a>
       <a href="/sonic-id" class="pill-link rounded-pill font-3 fw-bold text-black">Sonic-ID</a>
-    </div>
+    </div> -->
   </div>
 </section>

@@ -4,7 +4,7 @@ export const structure = (S) =>
     .title('Content')
     .items([
       // Regular document types
-      ...S.documentTypeListItems().filter(item => !['aboutUs', 'sonicIdPage'].includes(item.getId())),
+      ...S.documentTypeListItems().filter(item => !['aboutUs', 'sonicIdPage', 'homePage'].includes(item.getId())),
       
       // Singleton - About Us
       S.listItem()
@@ -16,6 +16,17 @@ export const structure = (S) =>
             .schemaType('aboutUs')
             .documentId('aboutUs')
         ),
+
+      // Singleton - Home
+      S.listItem()
+      .title('Home Page')
+      .id('homePage')
+      .child(
+        S.editor()
+          .id('homePage')
+          .schemaType('homePage')
+          .documentId('homePage')
+      ),
 
       // Singleton - Sonic ID
       S.listItem()

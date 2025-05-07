@@ -3,11 +3,13 @@ import advertising from './advertising'
 import sonicId from './sonicId'
 import column from './column'
 import sonicIdPage from './sonicIdPage'
+import home from './homePage'
 
 export const schemaTypes = [
   aboutUs,
   advertising,
   sonicId,
   column,
-  sonicIdPage
+  sonicIdPage,
+  home,
 ]

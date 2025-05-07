@@ -6,6 +6,7 @@ import { error } from '@sveltejs/kit';
 export const load = async () => {
     try {
         const homeData = await client.fetch(`*[_type == "homePage"][0]{
+            title,
             "backgroundImage": {
                 "url": backgroundImage.asset->url,
                 "alt": backgroundImage.alt
