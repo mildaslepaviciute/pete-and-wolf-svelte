@@ -1,15 +1,21 @@
-<!-- src/routes/+layout.svelte -->
 <script>
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
   import Navbar from '$lib/components/Navbar.svelte';
   import '../lib/styles/style.scss';
-  
+
+  export let data;
   let mounted = false;
+
+  const bgUrl = data.homeData.backgroundImage.url;
+
+  // Determine if current URL is root
+  $: isHome = $page.url.pathname === '/';
 
   function adjustContentHeight() {
     const innerHeight = window.innerHeight;
     const innerWidth = window.innerWidth;
-    let ratio, minHeight, perfectWidth, perfectHeight, targetHeight, targetWidth;
+    let ratio, perfectWidth, perfectHeight, targetHeight, targetWidth;
 
     if (innerWidth > 992) {
       perfectHeight = innerHeight * 0.75;
@@ -29,38 +35,40 @@
       document.documentElement.style.setProperty('--target-width', `${targetWidth}px`);
       document.documentElement.style.setProperty('--target-height', `${targetHeight}px`);
     }
-}
+  }
 
-onMount(() => {
+  onMount(() => {
     mounted = true;
     adjustContentHeight();
     window.addEventListener('resize', adjustContentHeight);
     return () => window.removeEventListener('resize', adjustContentHeight);
-});
-  
+  });
 </script>
 
 <svelte:head>
   <style>
-      /* Hide content until styles are loaded */
-      .content-wrapper:not(.mounted) {
-          opacity: 0;
-      }
-      .content-wrapper.mounted {
-          opacity: 1;
-          transition: opacity 0.2s;
-      }
+    .content-wrapper:not(.mounted) {
+      opacity: 0;
+    }
+    .content-wrapper.mounted {
+      opacity: 1;
+      transition: opacity 0.2s;
+    }
   </style>
 </svelte:head>
 
-<!-- Wrap your content -->
-<div class="content-wrapper {mounted ? 'mounted' : ''}">
+<div
+  class="content-wrapper {mounted ? 'mounted' : ''}"
+  style="
+    {isHome ? `background-image: url(${bgUrl}); background-size: cover; background-position: center;` : ''}
+  "
+>
   <Navbar />
   <slot />
 </div>
 
 <style>
-    :global(.container) {
-        transition: padding 0.3s ease-out;
-    }
+  :global(.container) {
+    transition: padding 0.3s ease-out;
+  }
 </style>

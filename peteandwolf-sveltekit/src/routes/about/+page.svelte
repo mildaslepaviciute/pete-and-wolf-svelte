@@ -21,7 +21,7 @@
           <img
             src={aboutData.mainImage.url}
             alt={aboutData.mainImage.alt || ""}
-            class="object-fit-contain bg-for-image"
+            class="object-fit-contain"
           />
         </div>
       </div>

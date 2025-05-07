@@ -2,7 +2,7 @@
     import { page } from '$app/stores';
   </script>
   
-  <nav class="navbar navbar-expand position-absolute sticky-top w-100 bg-white">
+  <nav class="navbar navbar-expand position-absolute w-100 bg-white" style="z-index: 0!important;">
     <div class="container pb-2">
       <a href="/" class="navbar-brand">
         <img src="/img/logo.svg" alt="Pete & Wolf">
