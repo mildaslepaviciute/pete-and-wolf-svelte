@@ -90,6 +90,21 @@ export default {
               type: 'string'
             },
             {
+              name: 'titleSize',
+              title: 'Title Size',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Font 1', value: 'font-1' },
+                  { title: 'Font 2', value: 'font-2' },
+                  { title: 'Font 3', value: 'font-3' },
+                  { title: 'Font 4', value: 'font-4' },
+                  { title: 'Font 5', value: 'font-5' },
+                  { title: 'Font 6', value: 'font-6' },
+                ]
+              },
+            },
+            {
               name: 'titleAlignment',
               title: 'Section Title Alignment',
               type: 'string',

@@ -110,8 +110,8 @@
     </div>
     
     {#if title}
-        <div class="audio-title font-6">
-            <span><b>{title}</b></span>
+        <div class="audio-title">
+            <span>{title}</span>
         </div>
     {/if}
 </div>

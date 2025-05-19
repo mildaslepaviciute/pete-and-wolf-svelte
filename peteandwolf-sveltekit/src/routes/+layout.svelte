@@ -4,10 +4,7 @@
   import Navbar from '$lib/components/Navbar.svelte';
   import '../lib/styles/style.scss';
 
-  export let data;
   let mounted = false;
-
-  const bgUrl = data.homeData.backgroundImage.url;
 
   // Determine if current URL is root
   $: isHome = $page.url.pathname === '/';
@@ -57,15 +54,13 @@
   </style>
 </svelte:head>
 
-<div
-  class="content-wrapper {mounted ? 'mounted' : ''}"
-  style="
-    {isHome ? `background-image: url(${bgUrl}); background-size: cover; background-position: center;` : ''}
-  "
->
-  <Navbar />
+<div class="content-wrapper {mounted ? 'mounted' : ''}">
+  {#if !isHome}
+    <Navbar />
+  {/if} 
   <slot />
 </div>
+
 
 <style>
   :global(.container) {

@@ -37,6 +37,12 @@ export default {
       hidden: ({ parent }) => parent?.type !== 'text',
     },
     {
+      name: 'includeNavigation',
+      title: 'Include in Navigation?',
+      type: 'boolean',
+      hidden: ({ parent }) => parent?.type !== 'text',
+    },
+    {
       name: 'imageContent',
       title: 'Image',
       type: 'image',

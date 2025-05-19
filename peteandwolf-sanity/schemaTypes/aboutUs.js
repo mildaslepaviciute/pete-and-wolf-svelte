@@ -29,43 +29,34 @@ export default {
             ]
         },
         {
-            name: 'blocks',
-            title: 'Content Blocks',
+            name: 'textContent',
+            title: 'Text Content',
             type: 'array',
-            of: [{
-                type: 'object',
-                fields: [
-                    {
-                        name: 'grid',
-                        title: 'Grid Layout',
-                        type: 'number',
-                        options: {
-                            list: [
-                                { title: 'Single Column', value: 1 },
-                                { title: 'Two Columns', value: 2 },
-                                { title: 'Three Columns', value: 3 }
-                            ]
-                        }
-                    },
-                    {
-                        name: 'col_1',
-                        title: 'Column 1',
-                        type: 'column'
-                    },
-                    {
-                        name: 'col_2',
-                        title: 'Column 2',
-                        type: 'column',
-                        hidden: ({ parent }) => parent?.grid === 1
-                    },
-                    {
-                        name: 'col_3',
-                        title: 'Column 3',
-                        type: 'column',
-                        hidden: ({ parent }) => parent?.grid !== 3
-                    }
-                ]
-            }]
-        }
+            of: [{ type: 'block' }],
+        },
+        {
+            name: 'col_1',
+            title: 'Column 1',
+            type: 'array',
+            of: [{ type: 'block' }],
+        },
+        {
+            name: 'col_2',
+            title: 'Column 2',
+            type: 'array',
+            of: [{ type: 'block' }],
+        },
+        {
+            name: 'col_3',
+            title: 'Column 3',
+            type: 'array',
+            of: [{ type: 'block' }],
+        },
+        {
+            name: 'col_4',
+            title: 'Column 4',
+            type: 'array',
+            of: [{ type: 'block' }],
+        },
     ]
 }

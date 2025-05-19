@@ -6,7 +6,9 @@
 
     export let columnData;
     export let grid;
-    
+    export let block_id;
+
+
     $: columnClass = grid === 1 ? "col-12" 
                   : grid === 2 ? "col-lg-6" 
                   : grid === 3 ? "col-lg-4" 
@@ -22,7 +24,7 @@
 </script>
 
 {#if columnData}
-    <div class={columnClass}>
+    <div id={block_id} class={columnClass}>
         {#if columnData.type === 'text'}
             <div class={textAlignClass}>
                 {@html renderBlocks(columnData.textContent, true)}

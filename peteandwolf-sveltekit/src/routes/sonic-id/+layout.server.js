@@ -13,12 +13,14 @@ export async function load() {
         sections[] {
             title,
             titleAlignment,
+            titleSize,
             blocks[] {
                 grid,
                 col_1 {
                     type,
                     textContent,
                     textAlignment,
+                    includeNavigation,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt
@@ -97,6 +99,7 @@ export async function load() {
                     type,
                     textContent,
                     textAlignment,
+                    includeNavigation,
                     "imageContent": {
                         "url": imageContent.asset->url,
                         "alt": imageContent.alt

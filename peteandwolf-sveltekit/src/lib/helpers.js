@@ -1,4 +1,4 @@
-export function renderBlocks(blocks, sizeBased = false) {
+export function renderBlocks(blocks, sizeBased = false, smallFont = false) {
     const text = blocks?.map(block => {
         if (block._type === 'block') {
             if (sizeBased) {
@@ -49,7 +49,7 @@ export function renderBlocks(blocks, sizeBased = false) {
                     'h4': 'font-4 font-4-mt-negative',
                     'h5': 'font-5',
                     'h6': 'font-6',
-                    'normal': 'font-6' // default font size for normal paragraphs
+                    'normal': smallFont ? 'font-7' : 'font-6' // default font size for normal paragraphs
                 };
 
                 // Get the appropriate font class

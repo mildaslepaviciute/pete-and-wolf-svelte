@@ -1,5 +1,6 @@
 <!-- src/routes/sonic-id/+layout.svelte -->
 <script>
+    import { renderBlocks } from "$lib/helpers.js";
     import { onMount, afterUpdate } from "svelte";
     import { page } from "$app/stores";
     import { goto } from '$app/navigation';
@@ -7,14 +8,13 @@
         Mousewheel, 
         FreeMode, 
     } from 'swiper';
-    // import 'swiper/css';
-    // import 'swiper/css/free-mode';
-    // import 'swiper/css/mousewheel';
 
     Swiper.use([Mousewheel, FreeMode]);
  
     export let data;
     const { caseItems, sonicIdData } = data;
+
+    $: navSections = currentProject ? currentProject.sections : sonicIdData.sections;
 
     let swiperSonic, swiperSonicMobile;
     let offcanvasCases;
@@ -106,13 +106,13 @@
     });
 
     afterUpdate(() => {
-        console.log(currentProject);
         const slug = $page.params.slug;
         updateActiveSlides(slug || 'sonic-id');
                 
-        if (slug) {
+        // if (slug) {
             hideOffcanvasElements();
-        }
+        // }
+
     });
 
 </script>
@@ -133,7 +133,7 @@
                         <div type="button" class="back-button" on:click|preventDefault={goBack}>&larr; About Sonic ID</div>
                     </div>
                 {/if}
-                <div class="position-absolute d-flex text-rotate top-0 text-end" style="left: -20px;">
+                <!-- <div class="position-absolute d-flex text-rotate top-0 text-end" style="left: -20px;">
                     {#if currentProject}
                         {#if currentProject.sections !== null}
                             {#each [...currentProject.sections].reverse() as section}
@@ -151,6 +151,30 @@
                                     {section.title}
                                 </a>
                             </div>
+                        {/each}
+                    {/if}
+                </div> -->
+                <div class="position-absolute d-flex flex-row-reverse text-rotate top-0 text-end" style="left: -20px;">
+                    {#if navSections !== null}
+                        {#each navSections as section, sectionIndex}
+                            <div class="fw-bold mt-4">
+                                <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">
+                                    {section.title}
+                                </a>
+                            </div>
+                            {#if section.blocks}
+                                {#each section.blocks as block, blockIndex}
+                                    {#each ['col_1', 'col_2', 'col_3'] as colKey, colIdx}
+                                        {#if block[colKey] && block[colKey].includeNavigation}
+                                            <div class="fw-bold mt-4">
+                                                <a href={`#${sectionIndex}_${blockIndex}_${colIdx + 1}`} class="case-title u-offset-n1 text-black">
+                                                    {@html renderBlocks(block[colKey].textContent, true)}
+                                                </a>
+                                            </div>
+                                        {/if}
+                                    {/each}
+                                {/each}
+                            {/if}
                         {/each}
                     {/if}
                 </div>
