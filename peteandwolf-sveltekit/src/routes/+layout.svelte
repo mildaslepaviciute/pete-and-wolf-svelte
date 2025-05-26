@@ -26,8 +26,8 @@
         targetWidth = perfectWidth;
         targetHeight = targetWidth / ratio;
       } 
-
-      let ptNav = Math.max(innerHeight * 0.15, 110);
+      
+      let ptNav = Math.max(innerHeight * (innerWidth > 1600 ? 0.13 : 0.15), 110);
       document.documentElement.style.setProperty('--pt-below-nav', `${ptNav}px`);
       document.documentElement.style.setProperty('--target-width', `${targetWidth}px`);
       document.documentElement.style.setProperty('--target-height', `${targetHeight}px`);

@@ -133,32 +133,11 @@
                         <div type="button" class="back-button" on:click|preventDefault={goBack}>&larr; About Sonic ID</div>
                     </div>
                 {/if}
-                <!-- <div class="position-absolute d-flex text-rotate top-0 text-end" style="left: -20px;">
-                    {#if currentProject}
-                        {#if currentProject.sections !== null}
-                            {#each [...currentProject.sections].reverse() as section}
-                                <div class="fw-bold mt-4">
-                                    <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">
-                                        {section.title}
-                                    </a>
-                                </div>
-                            {/each}
-                        {/if}
-                    {:else}
-                        {#each [...sonicIdData.sections].reverse() as section}
-                            <div class="fw-bold mt-4">
-                                <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">
-                                    {section.title}
-                                </a>
-                            </div>
-                        {/each}
-                    {/if}
-                </div> -->
                 <div class="position-absolute d-flex flex-row-reverse text-rotate top-0 text-end" style="left: -20px;">
                     {#if navSections !== null}
                         {#each navSections as section, sectionIndex}
-                            <div class="fw-bold mt-4">
-                                <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black">
+                            <div class="fw-bold mt-4 fs-9">
+                                <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black font-7">
                                     {section.title}
                                 </a>
                             </div>
@@ -166,9 +145,9 @@
                                 {#each section.blocks as block, blockIndex}
                                     {#each ['col_1', 'col_2', 'col_3'] as colKey, colIdx}
                                         {#if block[colKey] && block[colKey].includeNavigation}
-                                            <div class="fw-bold mt-4">
-                                                <a href={`#${sectionIndex}_${blockIndex}_${colIdx + 1}`} class="case-title u-offset-n1 text-black">
-                                                    {@html renderBlocks(block[colKey].textContent, true)}
+                                            <div class="fw-bold mt-4 fs-9">
+                                                <a href={`#${sectionIndex}_${blockIndex}_${colIdx + 1}`} class="case-title u-offset-n1 text-black font-7">
+                                                    {block[colKey].textContent[0]?.children?.map(child => child.text).join('')}
                                                 </a>
                                             </div>
                                         {/if}
@@ -178,8 +157,8 @@
                         {/each}
                     {/if}
                 </div>
-                <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -27px;">
-                    <div class="bg-blue font-5 fw-bold text-white py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases">+ Cases</div>
+                <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -30px;">
+                    <div class="bg-blue font-5 fw-bold text-white text-center py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases" style="width:30px;min-height:150px;">+ Cases</div>
                 </div>
 
                 <!-- Mobile offcanvas -->
@@ -190,7 +169,7 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonicMobile">
                         <div class="swiper-wrapper">
-                            {#each [].concat(...Array(3).fill([sonicIdData, ...caseItems])) as caseItem}
+                            {#each [].concat(...Array(1).fill([sonicIdData, ...caseItems])) as caseItem}
                                 <div class="swiper-slide">
                                     <a 
                                         href={`/sonic-id/${caseItem.slug || ''}`}
@@ -241,7 +220,7 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonic">
                         <div class="swiper-wrapper">
-                            {#each [].concat(...Array(3).fill([sonicIdData, ...caseItems])) as caseItem}
+                            {#each [].concat(...Array(1).fill([sonicIdData, ...caseItems])) as caseItem}
                                 <div class="swiper-slide">
                                     <a 
                                         href={`/sonic-id/${caseItem.slug || ''}`}

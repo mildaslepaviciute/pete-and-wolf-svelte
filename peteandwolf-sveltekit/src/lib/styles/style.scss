@@ -335,15 +335,26 @@ video {
 .collapse-right {
     transform-origin: right;
 }
-  
-#collapseWidthExample:not(.show) {
-    margin-left: auto;
+
+.collapse-left {
+    transform-origin: left;
 }
 
-#cardCredits {
-    width: var(--video-width);
-    min-height: calc(var(--video-height) - 2px);
+#collapseWidthExample {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.35s ease;
+  display: flex;
+  justify-content: flex-end;
+  height: calc(var(--video-height) - 2px); /* ⬅️ lock height to prevent vertical growth */
 }
+
+#collapseWidthExample.show {
+  width: 100%; /* Or any full width you want */
+}
+
+
+
 
 .scrolling {
     overflow: scroll;
@@ -537,6 +548,10 @@ a:hover {
         .offcanvas-title-wrapper {
             transform: translateY(-90px);
         }
+    }
+
+    .font-3-mob {
+        font-size: 2rem;
     }
 
     // .nav-item:first-child .nav-link {

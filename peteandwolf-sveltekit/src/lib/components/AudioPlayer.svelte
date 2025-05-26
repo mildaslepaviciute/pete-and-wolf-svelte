@@ -124,10 +124,10 @@
     }
 
     .audio-player {
-        width: 80px;
-        height: 80px;
-        min-width: 80px;
-        min-height: 80px;
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        min-height: 50px;
         position: relative;
     }
 
@@ -135,7 +135,7 @@
         margin-left: 20px;
         display: flex;
         align-items: center;
-        height: 80px;
+        height: 50px;
     }
 
     .player-button {
@@ -190,14 +190,14 @@
         width: 0;
         height: 0;
         border-style: solid;
-        border-width: 12px 0 12px 20px;
+        border-width: 9px 0 9px 15px;
         border-color: transparent transparent transparent #0022f7;
         margin-left: 4px;
     }
 
     .pause-icon {
-        width: 24px;
-        height: 24px;
+        width: 16px;
+        height: 16px;
         position: relative;
         display: flex;
         justify-content: space-between;
@@ -206,7 +206,7 @@
 
     .pause-icon span {
         width: 8px;
-        height: 24px;
+        height: 16px;
         background-color: #0022f7;
         border-radius: 4px;
     }

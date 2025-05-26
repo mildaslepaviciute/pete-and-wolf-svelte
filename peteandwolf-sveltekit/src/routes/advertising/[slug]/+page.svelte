@@ -138,11 +138,12 @@
                 <div class="position-relative">
                     <!-- Collapse toggle button -->
                     <div class="position-absolute z-3 dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
-                        <div class="bg-blue font-5 fw-bold text-white py-4" 
+                        <div class="bg-blue font-5 fw-bold text-white text-center py-4" 
                              id="toggleButton"
                              data-bs-toggle="collapse"
                              data-bs-target="#collapseWidthExample"
                              aria-controls="offcanvasCredits"
+                             style="width: 30px; min-height: 150px;"
                              bind:this={collapseToggleButton}>
                             + Credits
                         </div>
@@ -150,8 +151,8 @@
 
                     <!-- Mobile credits panel -->
                     <div class="position-absolute z-2" style="top: 1px; display: flex; justify-content: flex-end;">
-                        <div class="collapse collapse-horizontal collapse-right" id="collapseWidthExample" bind:this={collapseElement}>
-                            <div class="card card-body border-0 rounded-0 font-9 p-3" id="cardCredits">
+                        <div class="collapse collapse-horizontal collapse-left" id="collapseWidthExample" bind:this={collapseElement}>
+                            <div class="card card-body border-0 rounded-0 font-9 p-3 collapse-rtl" id="cardCredits">
                                 <h2 class="font-7 text-underline" fm-fade-in>{currentProject?.title}</h2>
                                 <div class="mb-0" fm-fade-in style="max-width:75%">
                                     {@html renderBlocks(currentProject.description)}

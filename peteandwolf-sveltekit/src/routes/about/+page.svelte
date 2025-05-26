@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="col-lg-6 h-lg-100 d-flex flex-column scrolling-lg">
-        <h1 class="w-100 sticky-top bg-white font-2 pb-3 mb-0">
+        <h1 class="w-100 sticky-top bg-white font-2 font-3-mob pb-3 mb-0">
           <b>{aboutData.title}</b>
         </h1>
         <div class="col-12 mb-4">
@@ -27,18 +27,27 @@
         </div>
         <div class="flex-grow-1 d-flex flex-column justify-content-end">
         <div class="row">
-          <div class="col-6 col-lg-4 d-flex flex-column text-center justify-content-end mb-4 mb-lg-0">
+                      <hr class="my-4 d-lg-none">
+
+          <div class="col-lg-4 d-flex flex-column  justify-content-end ">
               {@html renderBlocks(aboutData.col_1, true, true)}
           </div>
-          <div class="col-6 col-lg-3 d-flex flex-column text-center justify-content-end mb-4 mb-lg-0">
+            <hr class="my-4 d-lg-none">
+          <div class="col-lg-3 d-flex flex-column  justify-content-end ">
               {@html renderBlocks(aboutData.col_2, true, true)}
           </div>
-          <div class="col-6 col-lg-3 d-flex flex-column text-center justify-content-end">
+                      <hr class="my-4 d-lg-none">
+
+          <div class="col-lg-3 d-flex flex-column  justify-content-end ">
               {@html renderBlocks(aboutData.col_3, true, true)}
           </div>
-          <div class="col-6 col-lg-2 d-flex flex-column text-center justify-content-end">
+                      <hr class="my-4 d-lg-none">
+
+          <div class="col-lg-2 d-flex flex-column  justify-content-end">
               {@html renderBlocks(aboutData.col_4, true, true)}
           </div>
+                      <hr class="my-4 d-lg-none">
+
         </div>
       </div>
 

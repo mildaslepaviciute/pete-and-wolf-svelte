@@ -26,9 +26,9 @@
         {#each currentProject.sections as section, sectionIndex}
             <div id={section.title.replace(/\s+/g, '-').toLowerCase()} class=" mb-last-0">
                 {#if sectionIndex === 0}
-                    <h1 class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold {getTitleAlignmentClass(section.titleAlignment)}">{section.title}</h1>
+                    <h1 class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold pt-2 {getTitleAlignmentClass(section.titleAlignment)}">{section.title}</h1>
                 {:else}
-                    <h2 class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold {getTitleAlignmentClass(section.titleAlignment)}">{section.title}</h2>
+                    <h2 class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold pt-2 {getTitleAlignmentClass(section.titleAlignment)}">{section.title}</h2>
                 {/if}
                 <hr class="my-4">
                 {#each section.blocks as block, blockIndex}
