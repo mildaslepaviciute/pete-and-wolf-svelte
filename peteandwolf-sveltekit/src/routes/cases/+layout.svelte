@@ -8,6 +8,8 @@
         Mousewheel, 
         FreeMode, 
     } from 'swiper';
+    import { tick } from 'svelte';
+    import { gsap } from 'gsap';
 
     Swiper.use([Mousewheel, FreeMode]);
  
@@ -19,11 +21,48 @@
     let swiperSonic, swiperSonicMobile;
     let offcanvasCases;
 
-    $: currentProject = $page.url.pathname === '/sonic-id' 
+    let mainContent;
+    let previousSlug;
+    let isContentFirstLoad = true;
+
+    $: if ($page.params.slug !== previousSlug) {
+    //animateMainContentTransition();
+    previousSlug = $page.params.slug;
+    }
+
+    async function animateMainContentTransition() {
+        if (isContentFirstLoad) {
+            isContentFirstLoad = false;
+            gsap.set(mainContent, { opacity: 1, filter: 'blur(0px)' });
+            return;
+        }
+
+        await gsap.to(mainContent, {
+            opacity: 0,
+            filter: 'blur(20px)',
+            duration: 2,
+            ease: 'power2.inOut',
+        });
+
+        await tick(); // wait for slot to update
+
+        gsap.fromTo(mainContent,
+            { opacity: 0, filter: 'blur(20px)' },
+            {
+            opacity: 1,
+            filter: 'blur(0px)',
+            duration: 0.5,
+            ease: 'power2.out'
+            }
+        );
+    }   
+
+    $: currentProject = $page.url.pathname === '/cases' 
         ? null 
         : caseItems.find(item => 
             $page.params.slug && item.slug === $page.params.slug
         );
+
 
     function updateActiveSlides(slug) {
         if (!swiperSonic && !swiperSonicMobile) return;
@@ -36,8 +75,6 @@
 
         allSlideLinks.forEach((link) => {
             if (link.dataset.slug === slug) {
-                link.classList.add("swiper-slide-link-active");
-            } else if (!slug && link.dataset.slug === 'sonic-id') {
                 link.classList.add("swiper-slide-link-active");
             }
         });
@@ -55,7 +92,7 @@
     }
 
     function goBack() {
-        goto('/sonic-id');
+        goto('/cases/sonic-id');
         updateActiveSlides('sonic-id');
     }
 
@@ -99,7 +136,7 @@
 
         startVideoFeed()
 
-        updateActiveSlides($page.params.slug || 'sonic-id');
+        updateActiveSlides($page.params.slug);
 
         const offcanvasCasesEl = document.querySelector('#offcanvasCases');
         offcanvasCases = new bootstrap.Offcanvas(offcanvasCasesEl);
@@ -107,18 +144,14 @@
 
     afterUpdate(() => {
         const slug = $page.params.slug;
-        updateActiveSlides(slug || 'sonic-id');
-                
-        // if (slug) {
-            hideOffcanvasElements();
-        // }
-
+        updateActiveSlides(slug);
+        hideOffcanvasElements();
     });
 
 </script>
 
 <svelte:head>
-    <title>Pete & Wolf</title>
+    <title>{currentProject?.title ?? 'Sonic ID'} - Pete & Wolf</title>
     <meta name="description" content="We help you to unmute your brand">
 </svelte:head>
 
@@ -126,7 +159,7 @@
     <div class="container h-100 d-flex flex-column">
         <div class="row align-items-stretch no-gutters px-screen-mob" id="sonicRow">
             <div class="position-relative">
-                {#if currentProject}
+                {#if currentProject?.slug !== 'sonic-id'}
                     <div class="back-button-wrapper position-absolute">
                         <!-- svelte-ignore a11y_click_events_have_key_events -->
                         <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -169,12 +202,12 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonicMobile">
                         <div class="swiper-wrapper">
-                            {#each [].concat(...Array(1).fill([sonicIdData, ...caseItems])) as caseItem}
+                            {#each [].concat(...Array(1).fill([...caseItems])) as caseItem}
                                 <div class="swiper-slide">
                                     <a 
-                                        href={`/sonic-id/${caseItem.slug || ''}`}
+                                        href={`/cases/${caseItem.slug || ''}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                        data-slug={caseItem.slug || 'sonic-id'}
+                                        data-slug={caseItem.slug}
                                     >
                                         <div class="w-35 bg-black border-end border-black ratio ratio-4x3">
                                             {#if caseItem.thumbnail.type === 'image'}
@@ -207,8 +240,10 @@
 
             <!-- Main content area -->
             <div class="col-lg-8 h-100 min-h-100 ps-1 ps-lg-2 pe-0-mob">
-                <div class="max-h-screen min-h-mob-screen h-100 scrolling border border-black p-3">
-                    <slot />
+               <div class="max-h-screen min-h-mob-screen h-100 scrolling border border-black p-3">
+                    <div bind:this={mainContent}>
+                        <slot />
+                    </div>
                 </div>
             </div>
 
@@ -220,12 +255,12 @@
                     </div>
                     <div class="swiper-container scrollSwiperSonic">
                         <div class="swiper-wrapper">
-                            {#each [].concat(...Array(1).fill([sonicIdData, ...caseItems])) as caseItem}
+                            {#each [].concat(...Array(1).fill([...caseItems])) as caseItem}
                                 <div class="swiper-slide">
                                     <a 
-                                        href={`/sonic-id/${caseItem.slug || ''}`}
+                                        href={`/cases/${caseItem.slug || ''}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                        data-slug={caseItem.slug || 'sonic-id'}
+                                        data-slug={caseItem.slug}
                                     >
                                         <div class="w-35 bg-black border-end border-black ratio ratio-4x3">
                                             {#if caseItem.thumbnail.type === 'image'}

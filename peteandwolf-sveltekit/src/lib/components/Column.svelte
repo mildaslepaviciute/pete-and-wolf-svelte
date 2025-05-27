@@ -8,7 +8,6 @@
     export let grid;
     export let block_id;
 
-
     $: columnClass = grid === 1 ? "col-12" 
                   : grid === 2 ? "col-lg-6" 
                   : grid === 3 ? "col-lg-4" 
@@ -17,10 +16,6 @@
     $: textAlignClass = columnData && columnData.textAlignment === 'right' ? 'text-end' 
                     : columnData && columnData.textAlignment === 'center' ? 'text-center' 
                     : 'text-start';
-
-    onMount(() => {
-        console.log(columnData);
-    });
 </script>
 
 {#if columnData}

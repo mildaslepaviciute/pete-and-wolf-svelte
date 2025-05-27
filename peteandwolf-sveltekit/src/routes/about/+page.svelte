@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-  <title>Pete & Wolf - {aboutData.title}</title>
+  <title>{aboutData.title} - Pete & Wolf</title>
   <meta name="description" content="We help you to unmute your brand" />
 </svelte:head>
 

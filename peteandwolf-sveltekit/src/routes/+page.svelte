@@ -37,7 +37,7 @@
     <!-- commented links remain here -->
       <div class="d-flex mt-5rem d-none">
         <a href="/advertising" class="pill-link bg-blue font-3 fw-bold text-white me-4">Advertising</a>
-        <a href="/sonic-id" class="pill-link font-3 fw-bold bg-blue text-white text-black">Sonic-ID</a>
+        <a href="/cases/sonic-id" class="pill-link font-3 fw-bold bg-blue text-white text-black">Sonic-ID</a>
       </div>
   </div>
 </section>

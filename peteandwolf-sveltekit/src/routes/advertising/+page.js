@@ -13,8 +13,6 @@ export async function load() {
             throw new Error('No advertising projects found');
         }
 
-        console.log('Redirecting to latest advertising project:', latestProject.slug);
-        
         redirect(307, `/advertising/${latestProject.slug}`);
     } catch (err) {
         console.error('Error loading latest advertising project:', err);

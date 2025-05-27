@@ -4,15 +4,11 @@
         Mousewheel, 
         FreeMode, 
     } from 'swiper';
-    // import 'swiper/css';
-    // import 'swiper/css/free-mode';
-    // import 'swiper/css/mousewheel';
-
     Swiper.use([Mousewheel, FreeMode]);
-
     import { page } from "$app/stores";
     import { gsap } from "gsap";
 	import { renderBlocks } from "$lib/helpers.js";
+    import { tick } from 'svelte';
 
     export let data;
 
@@ -24,6 +20,108 @@
     let collapseElement;
     let collapseToggleButton;
 
+    let desktopCredits;
+    let previousSlug;
+    let isFirstLoad = true;
+
+    $: if ($page.params.slug && desktopCredits) {
+        if (previousSlug !== $page.params.slug) {
+        animateProjectTransition();
+        previousSlug = $page.params.slug;
+        }
+    }
+
+    async function animateProjectTransition() {
+        if (isFirstLoad) {
+            isFirstLoad = false;
+            gsap.set(".fade-text", { y: 0 });
+            return;
+        }
+
+        const oldEls = desktopCredits.querySelectorAll(".fade-text");
+
+        await gsap.to(oldEls, {
+            y: '120%', // Slide down under hr
+            duration: 0.4,
+            stagger: 0.05,
+            ease: 'power2.inOut',
+        });
+
+        await tick();
+
+        const newEls = desktopCredits.querySelectorAll(".fade-text");
+
+        gsap.fromTo(
+            newEls,
+            { y: '-120%' }, // Slide in from above
+            {
+            y: 0,
+            duration: 0.5,
+            stagger: 0.05,
+            ease: 'power2.out',
+            }
+        );
+    }
+
+    let currentVideoId = '';
+    let isVideoFirstLoad = true;
+
+    let videoLayerA;
+    let videoLayerB;
+
+    // Detect video ID change
+    $: if (currentProject.videoId && currentProject.videoId !== currentVideoId) {
+        crossfadeVideo(currentProject.videoId);
+        currentVideoId = currentProject.videoId;
+    }
+
+    // Animate and swap videos
+    async function crossfadeVideo(newVideoId) {
+        if (isVideoFirstLoad) {
+            isVideoFirstLoad = false;
+            return;
+        }
+
+        // Load new video into layer B
+     videoLayerB.innerHTML = `
+  <iframe
+    src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
+    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+    allowfullscreen
+    title="Video Player"
+    style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;"
+    onload="this.style.opacity='1'; this.previousElementSibling?.remove();"
+  ></iframe>
+`;
+
+        // Animate old (A) out
+        gsap.to(videoLayerA, {
+            opacity: 0,
+            filter: 'blur(20px)',
+            duration: .6,
+            ease: 'power2.out'
+        });
+
+        await tick(); // wait for DOM update
+
+        // Animate new (B) in
+        gsap.fromTo(videoLayerB, {
+            opacity: 0,
+            filter: 'blur(20px)'
+            }, {
+            opacity: 1,
+            filter: 'blur(0px)',
+            duration: 0.6,
+            ease: 'power2.out',
+            onComplete: () => {
+                videoLayerA.innerHTML = videoLayerB.innerHTML;
+                videoLayerB.innerHTML = '';
+                gsap.set(videoLayerA, { opacity: 1, filter: 'blur(0px)' });
+            }
+        });
+    }
+
+  
 	// Function to update active states for all slides including clones
 	function updateActiveSlides(slug) {
 		if (!swiper) return;
@@ -59,18 +157,6 @@
 		swiper.params.simulateTouch = isMobile;
 		swiper.update();
 	}
-
-    function setupVideoDimensions() {
-        const mainVideoContainer = document.querySelector('#main-video-container'); // Adjust selector as needed
-        
-        if (!mainVideoContainer) return;
-
-        console.log(mainVideoContainer.offsetWidth)
-        
-        // Set CSS variables once
-        document.documentElement.style.setProperty('--video-width', `${mainVideoContainer.offsetWidth}px`);
-        document.documentElement.style.setProperty('--video-height', `${mainVideoContainer.offsetHeight}px`);
-    }
 
 	onMount(() => {
         swiper = new Swiper(".scrollSwiperAdvertising", {
@@ -116,8 +202,6 @@
 		collapseElement.addEventListener('show.bs.collapse', updateToggleButton);
         collapseElement.addEventListener('hide.bs.collapse', updateToggleButton);
 
-        setupVideoDimensions();
-
 		return () => {
 			document.removeEventListener("click", closeCollapse);
 		};
@@ -129,6 +213,11 @@
 	}
 
 </script>
+
+<svelte:head>
+    <title>{currentProject?.title ?? 'Advertising'} - Pete & Wolf</title>
+    <meta name="description" content="{currentProject?.description ?? ''}">
+</svelte:head>
 
 <section class="h-100vh pt-below-nav overflow-hidden">
     <div class="container h-100 d-flex flex-column" id="advertisingContainer">
@@ -169,53 +258,62 @@
 
                 <!-- Video Container -->
                 <div class="border border-black border-x-0-mob bg-black" id="main-video-container">
-                    <div style="position:relative;padding-top:56.25%;">
-                        <iframe src="https://iframe.mediadelivery.net/embed/372334/{currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=false&preload=true&responsive=true"
+                    <div class="video-wrapper">
+                        <!-- Video A (initial + persistent layer) -->
+                        <div class="video-layer" bind:this={videoLayerA}>
+                        <iframe
+                            src={`https://iframe.mediadelivery.net/embed/372334/${currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true`}
                             loading="lazy"
-                            style="border:0;position:absolute;top:0;height:100%;width:100%;"
-                            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
-                            allowfullscreen="true"
+                            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+                            allowfullscreen
                             title="Video Player"
-                            id="main-video">
+                            style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;z-index: 2;">
                         </iframe>
+                        </div>
+
+                        <!-- Video B (animated in) -->
+                        <div class="video-layer" bind:this={videoLayerB}></div>
                     </div>
                 </div>
 
 
 
                 <!-- Desktop credits section -->
-                <div class="d-none d-lg-flex font-8 pt-3 flex-column h-100">
-                    <div>
+                <div class="d-none d-lg-flex font-8 pt-3 flex-column h-100" bind:this={desktopCredits}>
                         <hr class="mt-0 mb-2">
+                    
+                    <div class="position-relative overflow-hidden">
                         <div class="row justify-content-between align-items-center">
                             <div class="col-lg-8">
-                                <h2 class="font-5 font-3-mt-negative mb-0" fm-fade-in>{currentProject.title}</h2>
+                                <h2 class="font-5 font-3-mt-negative mb-0 fade-text" >{currentProject.title}</h2>
                             </div>
                             <div class="col-lg-4 text-lg-end">
-                                <p class="mb-0" fm-fade-in>{currentProject.type}</p>
+                                <p class="mb-0 fade-text" >{currentProject.type}</p>
                             </div>
                         </div>
-                        <hr class="mt-2 mb-0 border-black">
                     </div>
+                        <hr class="mt-2 mb-0 border-black">
+
                    
 
                     <div class="flex-grow-1"></div>
 
-                    <div>
+                    <div class="position-relative overflow-hidden">
                         <div class="row justify-content-between align-items-end">
                             <div class="col-lg-5">
-                                <div class="mb-0" fm-fade-in>
+                                <div class="mb-0 fade-text">
                                     {@html renderBlocks(currentProject.description)}
                                 </div>
                             </div>
                             <div class="col-lg-4 text-lg-end">
-                                <div class="mb-0" fm-fade-in>
+                                <div class="mb-0 fade-text">
                                     {@html renderBlocks(currentProject.credits)}
                                 </div>
                             </div>
                         </div>
-                        <hr class="mt-2 mb-0">
                     </div>
+                        <hr class="mt-2 mb-0">
+
                 </div>
                 
             </div>
@@ -255,17 +353,25 @@
     </div>
 </section>
 
-
 <style>
-    .border-container {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 0 15%; /* Adjust this percentage to control how wide the border is */
+    .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
     }
-    
-    .border-line {
-        width: 100%;
-        border-bottom: 1px solid black;
+
+    .video-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
     }
+
+    .video-layer + .video-layer {
+  pointer-events: none;
+}
+
 </style>

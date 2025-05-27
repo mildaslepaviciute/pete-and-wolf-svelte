@@ -2,7 +2,6 @@ import aboutUs from './aboutUs'
 import advertising from './advertising'
 import sonicId from './sonicId'
 import column from './column'
-import sonicIdPage from './sonicIdPage'
 import home from './homePage'
 
 export const schemaTypes = [
@@ -10,6 +9,5 @@ export const schemaTypes = [
   advertising,
   sonicId,
   column,
-  sonicIdPage,
   home,
 ]

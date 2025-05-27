@@ -15,7 +15,6 @@ export function renderBlocks(blocks, sizeBased = false, smallFont = false) {
                 
                         // Add formatting based on marks
                         child.marks.forEach(mark => {
-                            console.log(mark)
                             switch (mark) {
                                 case 'strong':
                                     text = `<strong>${text}</strong>`;
