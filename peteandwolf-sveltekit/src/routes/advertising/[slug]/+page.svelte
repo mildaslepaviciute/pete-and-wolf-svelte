@@ -172,6 +172,9 @@
             gsap.set(currentLayer, { pointerEvents: 'none' });
             gsap.set(newLayer, { pointerEvents: 'auto' });
             
+            // IMPORTANT: Remove the old iframe to stop audio/video playback
+            currentLayer.innerHTML = '';
+            
             // Update active layer for next transition
             activeLayer = activeLayer === 'A' ? 'B' : 'A';
         });
