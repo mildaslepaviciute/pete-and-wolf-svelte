@@ -9,7 +9,6 @@
     import { gsap } from "gsap";
 	import { renderBlocks } from "$lib/helpers.js";
     import { tick } from 'svelte';
-
     export let data;
 
 	$: currentProject = data.advertisingProjects.find((p) => p.slug.current === $page.params.slug) || data.advertisingProjects[0];
@@ -65,63 +64,138 @@
 
     let currentVideoId = '';
     let isVideoFirstLoad = true;
-
     let videoLayerA;
     let videoLayerB;
+    let activeLayer = 'A'; // Track which layer is currently active
 
     // Detect video ID change
+    let videoTransitionPromise = Promise.resolve();
+
     $: if (currentProject.videoId && currentProject.videoId !== currentVideoId) {
-        crossfadeVideo(currentProject.videoId);
-        currentVideoId = currentProject.videoId;
+        videoTransitionPromise = videoTransitionPromise.then(async () => {
+            await crossfadeVideo(currentProject.videoId);
+            currentVideoId = currentProject.videoId;
+        });
     }
+
 
     // Animate and swap videos
     async function crossfadeVideo(newVideoId) {
+        // Ensure both layers exist
+        if (!videoLayerA || !videoLayerB) return;
+
         if (isVideoFirstLoad) {
             isVideoFirstLoad = false;
+            
+            // On first load, ensure videoLayerA has the current video and proper state
+            const initialIframeHTML = `
+                <iframe
+                    src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
+                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+                    allowfullscreen
+                    title="Video Player"
+                    style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;"
+                ></iframe>
+            `;
+            
+            videoLayerA.innerHTML = initialIframeHTML;
+            gsap.set(videoLayerA, {
+                opacity: 1,
+                filter: 'blur(0px)',
+                zIndex: 1,
+                pointerEvents: 'auto'
+            });
+            
+            gsap.set(videoLayerB, {
+                opacity: 0,
+                filter: 'blur(20px)',
+                zIndex: 2,
+                pointerEvents: 'none'
+            });
+            
             return;
         }
 
-        // Load new video into layer B
-     videoLayerB.innerHTML = `
-  <iframe
-    src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
-    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-    allowfullscreen
-    title="Video Player"
-    style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;"
-    onload="this.style.opacity='1'; this.previousElementSibling?.remove();"
-  ></iframe>
-`;
+        // Determine which layer to use for the new video
+        const currentLayer = activeLayer === 'A' ? videoLayerA : videoLayerB;
+        const newLayer = activeLayer === 'A' ? videoLayerB : videoLayerA;
 
-        // Animate old (A) out
-        gsap.to(videoLayerA, {
-            opacity: 0,
-            filter: 'blur(20px)',
-            duration: .6,
-            ease: 'power2.out'
-        });
+        // Create new iframe HTML
+        const newIframeHTML = `
+            <iframe
+                src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
+                allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+                allowfullscreen
+                title="Video Player"
+                style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;"
+            ></iframe>
+        `;
 
-        await tick(); // wait for DOM update
-
-        // Animate new (B) in
-        gsap.fromTo(videoLayerB, {
-            opacity: 0,
-            filter: 'blur(20px)'
-            }, {
+        // Ensure current layer is visible and interactive
+        gsap.set(currentLayer, {
             opacity: 1,
             filter: 'blur(0px)',
-            duration: 0.6,
-            ease: 'power2.out',
-            onComplete: () => {
-                videoLayerA.innerHTML = videoLayerB.innerHTML;
-                videoLayerB.innerHTML = '';
-                gsap.set(videoLayerA, { opacity: 1, filter: 'blur(0px)' });
-            }
+            zIndex: 1,
+            pointerEvents: 'auto'
         });
+
+        // Set up new layer with new video (hidden initially)
+        newLayer.innerHTML = newIframeHTML;
+        gsap.set(newLayer, { 
+            opacity: 0, 
+            filter: 'blur(20px)',
+            zIndex: 2,
+            pointerEvents: 'none'
+        });
+
+        // Wait for iframe to load
+        await new Promise(resolve => setTimeout(resolve, 700));
+
+        // Create animation timeline
+        const tl = gsap.timeline();
+
+        // Animate current video out and new video in simultaneously
+        tl.to(currentLayer, {
+            opacity: 0,
+            filter: 'blur(20px)',
+            duration: 1.5,
+            ease: 'power2.inOut'
+        })
+        .to(newLayer, {
+            opacity: 1,
+            filter: 'blur(0px)',
+            duration: 1,
+            ease: 'power2.inOut'
+        }, 0) // Start at the same time
+        .call(() => {
+            // Switch interaction states
+            gsap.set(currentLayer, { pointerEvents: 'none' });
+            gsap.set(newLayer, { pointerEvents: 'auto' });
+            
+            // Update active layer for next transition
+            activeLayer = activeLayer === 'A' ? 'B' : 'A';
+        });
+
+        return tl;
     }
 
-  
+    let isPanelOpen = false;
+
+    // Replace the Bootstrap collapse logic with this custom function
+    function toggleCreditsPanel() {
+        isPanelOpen = !isPanelOpen;
+        
+        if (isPanelOpen) {
+            // Show panel - slide in from right
+            collapseElement.style.transform = 'translateX(0)';
+            collapseToggleButton.textContent = '— Credits';
+        } else {
+            // Hide panel - slide out to right
+            collapseElement.style.transform = 'translateX(100%)';
+            collapseToggleButton.textContent = '+ Credits';
+        }
+    }
+    
 	// Function to update active states for all slides including clones
 	function updateActiveSlides(slug) {
 		if (!swiper) return;
@@ -179,31 +253,18 @@
 
         startVideoFeed();
 
+        saveVideoSize();
+
 		// COLLAPSE CLOSING
 		const closeCollapse = (event) => {
-			if (collapseElement && collapseElement.classList.contains("show")) {
-				const bsCollapse =
-					bootstrap.Collapse.getInstance(collapseElement);
-				if (!collapseElement.contains(event.target)) {
-					bsCollapse?.hide();
-				}
-			}
-		};
-		document.addEventListener("click", closeCollapse);
-
-		const updateToggleButton = () => {
-            if (collapseElement.classList.contains('show')) {
-                collapseToggleButton.textContent = '+ Credits';
-            } else {
-                collapseToggleButton.textContent = '— Credits';
+            if (isPanelOpen && collapseElement && !collapseElement.contains(event.target) && !collapseToggleButton.contains(event.target)) {
+                toggleCreditsPanel();
             }
         };
-
-		collapseElement.addEventListener('show.bs.collapse', updateToggleButton);
-        collapseElement.addEventListener('hide.bs.collapse', updateToggleButton);
-
+        document.addEventListener("click", closeCollapse);
+	
 		return () => {
-			document.removeEventListener("click", closeCollapse);
+            document.removeEventListener("click", closeCollapse);
 		};
 	});
 
@@ -211,6 +272,18 @@
 	$: if ($page.params.slug) {
 		updateActiveSlides($page.params.slug);
 	}
+
+    function saveVideoSize() {
+        const mainVideoContainer = document.querySelector('#main-video-container'); // Adjust selector as needed
+        
+        if (!mainVideoContainer) return;
+
+        console.log(mainVideoContainer.offsetWidth)
+        
+        // Set CSS variables once
+        document.documentElement.style.setProperty('--video-width', `${mainVideoContainer.offsetWidth}px`);
+        document.documentElement.style.setProperty('--video-height', `${mainVideoContainer.offsetHeight}px`);
+    }
 
 </script>
 
@@ -226,34 +299,34 @@
             <div class="col-lg-8 d-flex flex-column px-0-mob h-lg-100" bind:this={leftColumn}>
                 <div class="position-relative">
                     <!-- Collapse toggle button -->
-                    <div class="position-absolute z-3 dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end z-1">
-                        <div class="bg-blue font-5 fw-bold text-white text-center py-4" 
-                             id="toggleButton"
-                             data-bs-toggle="collapse"
-                             data-bs-target="#collapseWidthExample"
-                             aria-controls="offcanvasCredits"
-                             style="width: 30px; min-height: 150px;"
-                             bind:this={collapseToggleButton}>
+                    <div class="position-absolute dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end" style="z-index: 15;">
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
+                        <!-- svelte-ignore a11y_no_static_element_interactions -->
+                        <div class="bg-blue font-5 fw-bold text-white text-center py-4 credits-toggle" 
+                            style="width: 30px; min-height: 150px; cursor: pointer;"
+                            bind:this={collapseToggleButton}
+                            on:click={toggleCreditsPanel}>
                             + Credits
                         </div>
                     </div>
 
-                    <!-- Mobile credits panel -->
-                    <div class="position-absolute z-2" style="top: 1px; display: flex; justify-content: flex-end;">
-                        <div class="collapse collapse-horizontal collapse-left" id="collapseWidthExample" bind:this={collapseElement}>
-                            <div class="card card-body border-0 rounded-0 font-9 p-3 collapse-rtl" id="cardCredits">
-                                <h2 class="font-7 text-underline" fm-fade-in>{currentProject?.title}</h2>
-                                <div class="mb-0" fm-fade-in style="max-width:75%">
-                                    {@html renderBlocks(currentProject.description)}
-                                </div>
-                                <p fm-fade-in>{currentProject.type}</p>
-                                <p class="mb-0" fm-fade-in>
-                                    {@html renderBlocks(currentProject.credits)}
-                                </p>
+                    <!-- Mobile credits panel - Custom implementation -->
+                    <div class="position-absolute credits-panel" 
+                        style="top: 1px; right: 0; z-index: 10; transform: translateX(100%); transition: transform 0.3s ease-in-out;"
+                        bind:this={collapseElement}>
+                        <div class="card card-body border-0 rounded-0 font-9 p-3" 
+                            id="cardCredits"
+                            style="width: 100%">
+                            <h2 class="font-7 text-underline" fm-fade-in>{currentProject?.title}</h2>
+                            <div class="mb-0" fm-fade-in style="max-width:75%">
+                                {@html renderBlocks(currentProject.description)}
                             </div>
+                            <p fm-fade-in>{currentProject.type}</p>
+                            <p class="mb-0" fm-fade-in>
+                                {@html renderBlocks(currentProject.credits)}
+                            </p>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Video Container -->
@@ -261,14 +334,14 @@
                     <div class="video-wrapper">
                         <!-- Video A (initial + persistent layer) -->
                         <div class="video-layer" bind:this={videoLayerA}>
-                        <iframe
-                            src={`https://iframe.mediadelivery.net/embed/372334/${currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true`}
-                            loading="lazy"
-                            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-                            allowfullscreen
-                            title="Video Player"
-                            style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;z-index: 2;">
-                        </iframe>
+                            <iframe
+                                src={`https://iframe.mediadelivery.net/embed/372334/${currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true`}
+                                loading="lazy"
+                                allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+                                allowfullscreen
+                                title="Video Player"
+                                style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;z-index: 2;">
+                            </iframe>
                         </div>
 
                         <!-- Video B (animated in) -->
@@ -276,12 +349,9 @@
                     </div>
                 </div>
 
-
-
                 <!-- Desktop credits section -->
                 <div class="d-none d-lg-flex font-8 pt-3 flex-column h-100" bind:this={desktopCredits}>
-                        <hr class="mt-0 mb-2">
-                    
+                    <hr class="mt-0 mb-2">
                     <div class="position-relative overflow-hidden">
                         <div class="row justify-content-between align-items-center">
                             <div class="col-lg-8">
@@ -292,12 +362,8 @@
                             </div>
                         </div>
                     </div>
-                        <hr class="mt-2 mb-0 border-black">
-
-                   
-
+                    <hr class="mt-2 mb-0 border-black">
                     <div class="flex-grow-1"></div>
-
                     <div class="position-relative overflow-hidden">
                         <div class="row justify-content-between align-items-end">
                             <div class="col-lg-5">
@@ -312,10 +378,8 @@
                             </div>
                         </div>
                     </div>
-                        <hr class="mt-2 mb-0">
-
+                    <hr class="mt-2 mb-0">
                 </div>
-                
             </div>
 
             <!-- Projects List Column -->
@@ -361,17 +425,23 @@
     height: 0;
     }
 
+
     .video-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
+      position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        /* Ensure smooth transitions */
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        /* Allow interactions by default */
+        pointer-events: auto;
     }
 
     .video-layer + .video-layer {
-  pointer-events: none;
-}
-
+       pointer-events: none;
+        z-index: 2; /* Second layer should be on top initially */
+    }
 </style>

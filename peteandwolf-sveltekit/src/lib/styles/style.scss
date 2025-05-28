@@ -340,19 +340,9 @@ video {
     transform-origin: left;
 }
 
-#collapseWidthExample {
-  width: 0;
-  overflow: hidden;
-  transition: width 0.35s ease;
-  display: flex;
-  justify-content: flex-end;
+#cardCredits {
   height: calc(var(--video-height) - 2px); /* ⬅️ lock height to prevent vertical growth */
 }
-
-#collapseWidthExample.show {
-  width: 100%; /* Or any full width you want */
-}
-
 
 
 
