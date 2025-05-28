@@ -104,13 +104,8 @@
         if (!videoLayerA || !videoLayerB) return;
 
         if (isVideoFirstLoad) {
+            console.log('First video load, initializing player');
             isVideoFirstLoad = false;
-            
-            // Ensure Plyr is loaded
-            if (typeof Plyr === 'undefined') {
-                setTimeout(() => crossfadeVideo(newVideoId), 100);
-                return;
-            }
             
             // Create video element for Plyr
             videoLayerA.innerHTML = '<video id="player-a" playsinline style="width:100%;height:100%;"></video>';
@@ -124,22 +119,11 @@
                 return;
             }
             
-            gsap.set(videoLayerA, {
-                opacity: 1,
-                filter: 'blur(0px)',
-                zIndex: 1,
-                pointerEvents: 'auto'
-            });
-            
-            gsap.set(videoLayerB, {
-                opacity: 0,
-                filter: 'blur(20px)',
-                zIndex: 2,
-                pointerEvents: 'none'
-            });
-            
             return;
         }
+
+        console.log('Not first video load, crossfading to new video:', newVideoId);
+
 
         // Determine which layer to use for the new video
         const currentLayer = activeLayer === 'A' ? videoLayerA : videoLayerB;
@@ -162,7 +146,7 @@
         // Set up new layer with new video player (hidden initially)
         newLayer.innerHTML = `<video id="${newPlayerId}" playsinline style="width:100%;height:100%;"></video>`;
         const newVideoElement = newLayer.querySelector(`#${newPlayerId}`);
-        
+
         gsap.set(newLayer, { 
             opacity: 0, 
             filter: 'blur(20px)',
@@ -174,6 +158,7 @@
         let newPlayer;
         try {
             newPlayer = createPlayer(newVideoElement, newVideoId);
+            newPlayer.muted = false; // Unmute new player
         } catch (error) {
             console.error('Error creating new player:', error);
             return;
@@ -214,12 +199,7 @@
             gsap.set(currentLayer, { pointerEvents: 'none' });
             gsap.set(newLayer, { pointerEvents: 'auto' });
             
-            currentPlayer.muted = false; // Ensure current player is muted
 
-            // Pause the old player to save resources
-            if (currentPlayer && currentPlayer.pause) {
-                currentPlayer.pause();
-            }
             // Update active layer for next transition
             activeLayer = activeLayer === 'A' ? 'B' : 'A';
         });
@@ -305,11 +285,11 @@
         saveVideoSize();
 
         // Initialize the first video after a short delay to ensure DOM is ready
-        setTimeout(() => {
-            if (currentProject?.videoId) {
-                crossfadeVideo(currentProject.videoId);
-            }
-        }, 100);
+        // setTimeout(() => {
+        //     if (currentProject?.videoId) {
+        //         crossfadeVideo(currentProject.videoId);
+        //     }
+        // }, 100);
 
 		// COLLAPSE CLOSING
 		const closeCollapse = (event) => {
