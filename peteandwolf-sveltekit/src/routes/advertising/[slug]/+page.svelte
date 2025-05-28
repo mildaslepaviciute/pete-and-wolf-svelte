@@ -67,6 +67,8 @@
     let videoLayerA;
     let videoLayerB;
     let activeLayer = 'A'; // Track which layer is currently active
+    let playerA; // Plyr instance for layer A
+    let playerB; // Plyr instance for layer B
 
     // Detect video ID change
     let videoTransitionPromise = Promise.resolve();
@@ -78,6 +80,23 @@
         });
     }
 
+    // Create Plyr instance
+    function createPlayer(videoElement, videoId) {
+        // Set video source
+        videoElement.src = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
+        
+        // Create Plyr instance
+        const player = new Plyr(videoElement, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+            autoplay: true,
+            muted: true,
+            loop: { active: false },
+            quality: { default: 720 },
+            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
+        });
+
+        return player;
+    }
 
     // Animate and swap videos
     async function crossfadeVideo(newVideoId) {
@@ -87,18 +106,24 @@
         if (isVideoFirstLoad) {
             isVideoFirstLoad = false;
             
-            // On first load, ensure videoLayerA has the current video and proper state
-            const initialIframeHTML = `
-                <iframe
-                    src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
-                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-                    allowfullscreen
-                    title="Video Player"
-                    style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;"
-                ></iframe>
-            `;
+            // Ensure Plyr is loaded
+            if (typeof Plyr === 'undefined') {
+                setTimeout(() => crossfadeVideo(newVideoId), 100);
+                return;
+            }
             
-            videoLayerA.innerHTML = initialIframeHTML;
+            // Create video element for Plyr
+            videoLayerA.innerHTML = '<video id="player-a" playsinline style="width:100%;height:100%;"></video>';
+            const videoElementA = videoLayerA.querySelector('#player-a');
+            
+            // Initialize first player
+            try {
+                playerA = createPlayer(videoElementA, newVideoId);
+            } catch (error) {
+                console.error('Error creating player:', error);
+                return;
+            }
+            
             gsap.set(videoLayerA, {
                 opacity: 1,
                 filter: 'blur(0px)',
@@ -119,17 +144,12 @@
         // Determine which layer to use for the new video
         const currentLayer = activeLayer === 'A' ? videoLayerA : videoLayerB;
         const newLayer = activeLayer === 'A' ? videoLayerB : videoLayerA;
+        const currentPlayer = activeLayer === 'A' ? playerA : playerB;
 
-        // Create new iframe HTML
-        const newIframeHTML = `
-            <iframe
-                src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
-                allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-                allowfullscreen
-                title="Video Player"
-                style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;"
-            ></iframe>
-        `;
+        currentPlayer.muted = true; // Ensure current player is muted
+        
+        // Create unique player ID
+        const newPlayerId = activeLayer === 'A' ? 'player-b' : 'player-a';
 
         // Ensure current layer is visible and interactive
         gsap.set(currentLayer, {
@@ -139,8 +159,10 @@
             pointerEvents: 'auto'
         });
 
-        // Set up new layer with new video (hidden initially)
-        newLayer.innerHTML = newIframeHTML;
+        // Set up new layer with new video player (hidden initially)
+        newLayer.innerHTML = `<video id="${newPlayerId}" playsinline style="width:100%;height:100%;"></video>`;
+        const newVideoElement = newLayer.querySelector(`#${newPlayerId}`);
+        
         gsap.set(newLayer, { 
             opacity: 0, 
             filter: 'blur(20px)',
@@ -148,8 +170,28 @@
             pointerEvents: 'none'
         });
 
-        // Wait for iframe to load
-        await new Promise(resolve => setTimeout(resolve, 700));
+        // Create new player instance
+        let newPlayer;
+        try {
+            newPlayer = createPlayer(newVideoElement, newVideoId);
+        } catch (error) {
+            console.error('Error creating new player:', error);
+            return;
+        }
+        
+        // Store reference to new player
+        if (activeLayer === 'A') {
+            playerB = newPlayer;
+        } else {
+            playerA = newPlayer;
+        }
+
+        // Wait for player to be ready
+        await new Promise(resolve => {
+            newPlayer.on('ready', () => {
+                setTimeout(resolve, 300); // Additional buffer for loading
+            });
+        });
 
         // Create animation timeline
         const tl = gsap.timeline();
@@ -172,14 +214,12 @@
             gsap.set(currentLayer, { pointerEvents: 'none' });
             gsap.set(newLayer, { pointerEvents: 'auto' });
             
-            // Keep the old layer completely hidden and non-interactive
-            gsap.set(currentLayer, { 
-                opacity: 0, 
-                pointerEvents: 'none',
-                zIndex: -10, // Far behind everything
-                visibility: 'hidden' // Extra hiding
-            });
-            
+            currentPlayer.muted = false; // Ensure current player is muted
+
+            // Pause the old player to save resources
+            if (currentPlayer && currentPlayer.pause) {
+                currentPlayer.pause();
+            }
             // Update active layer for next transition
             activeLayer = activeLayer === 'A' ? 'B' : 'A';
         });
@@ -241,7 +281,8 @@
 	}
 
 	onMount(() => {
-        swiper = new Swiper(".scrollSwiperAdvertising", {
+        
+       swiper = new Swiper(".scrollSwiperAdvertising", {
             direction: "vertical",
             slidesPerView: "auto",
             freeMode: {
@@ -263,6 +304,13 @@
 
         saveVideoSize();
 
+        // Initialize the first video after a short delay to ensure DOM is ready
+        setTimeout(() => {
+            if (currentProject?.videoId) {
+                crossfadeVideo(currentProject.videoId);
+            }
+        }, 100);
+
 		// COLLAPSE CLOSING
 		const closeCollapse = (event) => {
             if (isPanelOpen && collapseElement && !collapseElement.contains(event.target) && !collapseToggleButton.contains(event.target)) {
@@ -270,11 +318,21 @@
             }
         };
         document.addEventListener("click", closeCollapse);
-	
-		return () => {
-            document.removeEventListener("click", closeCollapse);
-		};
-	});
+
+        // Return cleanup function
+        return () => {
+            if (closeCollapse) {
+                document.removeEventListener("click", closeCollapse);
+            }
+            // Clean up players
+            if (playerA && playerA.destroy) {
+                playerA.destroy();
+            }
+            if (playerB && playerB.destroy) {
+                playerB.destroy();
+            }
+        };
+    });
 
 	// Watch for URL changes
 	$: if ($page.params.slug) {
@@ -282,7 +340,7 @@
 	}
 
     function saveVideoSize() {
-        const mainVideoContainer = document.querySelector('#main-video-container'); // Adjust selector as needed
+        const mainVideoContainer = document.querySelector('#main-video-container');
         
         if (!mainVideoContainer) return;
 
@@ -342,14 +400,7 @@
                     <div class="video-wrapper">
                         <!-- Video A (initial + persistent layer) -->
                         <div class="video-layer" bind:this={videoLayerA}>
-                            <iframe
-                                src={`https://iframe.mediadelivery.net/embed/372334/${currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=true&responsive=true`}
-                                loading="lazy"
-                                allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-                                allowfullscreen
-                                title="Video Player"
-                                style="border:0;position:absolute;top:0;left:0;width:100%;height:100%;z-index: 2;">
-                            </iframe>
+                            <!-- Plyr video will be inserted here -->
                         </div>
 
                         <!-- Video B (animated in) -->
@@ -427,15 +478,14 @@
 
 <style>
     .video-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
     }
 
-
     .video-layer {
-      position: absolute;
+        position: absolute;
         top: 0;
         left: 0;
         width: 100%;
@@ -449,7 +499,32 @@
     }
 
     .video-layer + .video-layer {
-       pointer-events: none;
+        pointer-events: none;
         z-index: 2; /* Second layer should be on top initially */
+    }
+
+    /* Plyr custom styling */
+    :global(.plyr) {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    :global(.plyr__video-wrapper) {
+        height: 100% !important;
+    }
+
+    :global(.plyr video) {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover;
+    }
+
+    /* Custom Plyr control styling to match your design */
+    :global(.plyr--video .plyr__controls) {
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+    }
+
+    :global(.plyr__control--overlaid) {
+        background: rgba(0, 0, 0, 0.8);
     }
 </style>
