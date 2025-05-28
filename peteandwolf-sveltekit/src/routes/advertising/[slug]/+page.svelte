@@ -90,7 +90,7 @@
             // On first load, ensure videoLayerA has the current video and proper state
             const initialIframeHTML = `
                 <iframe
-                    src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=true&responsive=true"
+                    src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
                     allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
                     allowfullscreen
                     title="Video Player"
@@ -123,7 +123,7 @@
         // Create new iframe HTML
         const newIframeHTML = `
             <iframe
-                src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=true&responsive=true"
+                src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
                 allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
                 allowfullscreen
                 title="Video Player"
@@ -158,7 +158,7 @@
         tl.to(currentLayer, {
             opacity: 0,
             filter: 'blur(20px)',
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.inOut'
         })
         .to(newLayer, {
@@ -168,12 +168,17 @@
             ease: 'power2.inOut'
         }, 0) // Start at the same time
         .call(() => {
-            // Switch interaction states
+            // Switch interaction states immediately when animation completes
             gsap.set(currentLayer, { pointerEvents: 'none' });
             gsap.set(newLayer, { pointerEvents: 'auto' });
             
-            // IMPORTANT: Remove the old iframe to stop audio/video playback
-            currentLayer.innerHTML = '';
+            // Keep the old layer completely hidden and non-interactive
+            gsap.set(currentLayer, { 
+                opacity: 0, 
+                pointerEvents: 'none',
+                zIndex: -10, // Far behind everything
+                visibility: 'hidden' // Extra hiding
+            });
             
             // Update active layer for next transition
             activeLayer = activeLayer === 'A' ? 'B' : 'A';
