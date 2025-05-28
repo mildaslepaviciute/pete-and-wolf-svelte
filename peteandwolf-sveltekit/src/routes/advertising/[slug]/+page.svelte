@@ -297,9 +297,9 @@
         <div class="row align-items-stretch max-h-screen h-100" id="advertisingRow">
             <!-- Main Content Column -->
             <div class="col-lg-8 d-flex flex-column px-0-mob h-lg-100" bind:this={leftColumn}>
-                <div class="position-relative">
+                <div class="position-relative d-flex d-lg-none">
                     <!-- Collapse toggle button -->
-                    <div class="position-absolute dropstart d-flex d-lg-none text-rotate top-0 end-0 text-end" style="z-index: 15;">
+                    <div class="position-absolute dropstart text-rotate top-0 end-0 text-end" style="z-index: 15;">
                         <!-- svelte-ignore a11y_click_events_have_key_events -->
                         <!-- svelte-ignore a11y_no_static_element_interactions -->
                         <div class="bg-blue font-5 fw-bold text-white text-center py-4 credits-toggle" 
