@@ -158,7 +158,7 @@
         tl.to(currentLayer, {
             opacity: 0,
             filter: 'blur(20px)',
-            duration: 1.5,
+            duration: 1,
             ease: 'power2.inOut'
         })
         .to(newLayer, {
