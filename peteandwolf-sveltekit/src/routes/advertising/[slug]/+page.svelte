@@ -90,7 +90,7 @@
             // On first load, ensure videoLayerA has the current video and proper state
             const initialIframeHTML = `
                 <iframe
-                    src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
+                    src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=true&responsive=true"
                     allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
                     allowfullscreen
                     title="Video Player"
@@ -123,7 +123,7 @@
         // Create new iframe HTML
         const newIframeHTML = `
             <iframe
-                src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true"
+                src="https://iframe.mediadelivery.net/embed/372334/${newVideoId}?autoplay=true&preload=true&loop=false&muted=true&responsive=true"
                 allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
                 allowfullscreen
                 title="Video Player"
@@ -338,7 +338,7 @@
                         <!-- Video A (initial + persistent layer) -->
                         <div class="video-layer" bind:this={videoLayerA}>
                             <iframe
-                                src={`https://iframe.mediadelivery.net/embed/372334/${currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=false&responsive=true`}
+                                src={`https://iframe.mediadelivery.net/embed/372334/${currentProject.videoId}?autoplay=true&preload=true&loop=false&muted=true&responsive=true`}
                                 loading="lazy"
                                 allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
                                 allowfullscreen
