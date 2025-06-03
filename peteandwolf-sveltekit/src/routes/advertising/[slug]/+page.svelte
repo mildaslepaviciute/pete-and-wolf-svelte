@@ -23,54 +23,146 @@
     let previousSlug;
     let isFirstLoad = true;
 
+    // Store previous project for animation
+    let previousProject = null;
+    let shadowCredits = null;
+
     $: if ($page.params.slug && desktopCredits) {
         if (previousSlug !== $page.params.slug) {
-        animateProjectTransition();
-        previousSlug = $page.params.slug;
+            // Store current project as previous before it changes
+            previousProject = data.advertisingProjects.find((p) => p.slug.current === previousSlug);
+            animateProjectTransition();
+            previousSlug = $page.params.slug;
         }
     }
 
-    async function animateProjectTransition() {
+   async function animateProjectTransition() {
         if (isFirstLoad) {
             isFirstLoad = false;
             gsap.set(".fade-text", { y: 0 });
             return;
         }
 
-        const oldEls = desktopCredits.querySelectorAll(".fade-text");
+        if (!previousProject) return;
 
-        await gsap.to(oldEls, {
-            y: '120%', // Slide down under hr
-            duration: 0.4,
-            stagger: 0.05,
-            ease: 'power2.inOut',
+        // Create shadow element with previous project content
+        if (!shadowCredits) {
+            shadowCredits = document.createElement('div');
+            shadowCredits.className = 'credits-shadow d-none d-lg-flex font-8 pt-3 flex-column h-100';
+            // Insert shadow as a child of desktopCredits container, not as a sibling
+            desktopCredits.appendChild(shadowCredits);
+        }
+
+        // Populate shadow with previous project content
+        shadowCredits.innerHTML = `
+            <hr class="mt-0 mb-2">
+            <div class="position-relative overflow-hidden">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-8">
+                        <h2 class="font-5 font-3-mt-negative mb-0 fade-text">${previousProject.title}</h2>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <p class="mb-0 fade-text">${previousProject.type}</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-2 mb-0 border-black">
+            <div class="flex-grow-1"></div>
+            <div class="position-relative overflow-hidden">
+                <div class="row justify-content-between align-items-end">
+                    <div class="col-lg-5">
+                        <div class="mb-0 fade-text">
+                            ${renderBlocks(previousProject.description)}
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <div class="mb-0 fade-text">
+                            ${renderBlocks(previousProject.credits)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-2 mb-0">
+        `;
+
+        // Position shadow to cover exactly the same area as the main content
+        gsap.set(shadowCredits, {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 2,
+            opacity: 1,
+            pointerEvents: 'none',
+            background: 'inherit' // Inherit background from parent
         });
+
+        // Hide main credits content (but keep container visible for positioning)
+        const mainCreditsContent = desktopCredits.children;
+        Array.from(mainCreditsContent).forEach(child => {
+            if (child !== shadowCredits) {
+                gsap.set(child, { opacity: 0 });
+            }
+        });
+
+        // Set initial positions for shadow fade-text elements
+        const shadowFadeElements = shadowCredits.querySelectorAll(".fade-text");
+        gsap.set(shadowFadeElements, { y: 0 });
 
         await tick();
 
-        const newEls = desktopCredits.querySelectorAll(".fade-text");
+        // Show main credits content and set initial positions for new elements
+        Array.from(mainCreditsContent).forEach(child => {
+            if (child !== shadowCredits) {
+                gsap.set(child, { opacity: 1 });
+                const fadeElements = child.querySelectorAll(".fade-text");
+                gsap.set(fadeElements, { y: '-120%' });
+            }
+        });
 
-        gsap.fromTo(
-            newEls,
-            { y: '-120%' }, // Slide in from above
-            {
+        // Animate shadow elements out (slide down)
+        await gsap.to(shadowFadeElements, {
+            y: '120%',
+            duration: 0.4,
+            // stagger: 0.05,
+            ease: 'power2.inOut',
+        });
+
+        // Get new fade elements from the main content (not shadow)
+        const newFadeElements = [];
+        Array.from(mainCreditsContent).forEach(child => {
+            if (child !== shadowCredits) {
+                const fadeElements = child.querySelectorAll(".fade-text");
+                newFadeElements.push(...fadeElements);
+            }
+        });
+
+        // Animate new elements in (slide up from above)
+        gsap.to(newFadeElements, {
             y: 0,
             duration: 0.5,
-            stagger: 0.05,
             ease: 'power2.out',
-            }
-        );
-    }
+        });
 
+        // Clean up shadow after animation
+        setTimeout(() => {
+            if (shadowCredits && shadowCredits.parentNode) {
+                shadowCredits.remove();
+                shadowCredits = null;
+            }
+        }, 600);
+    }
+    // ... rest of your existing code remains the same ...
+    
     let currentVideoId = '';
     let isVideoFirstLoad = true;
     let videoLayerA;
     let videoLayerB;
-    let activeLayer = 'A'; // Track which layer is currently active
-    let playerA; // Plyr instance for layer A
-    let playerB; // Plyr instance for layer B
+    let activeLayer = 'A';
+    let playerA;
+    let playerB;
 
-    // Detect video ID change
     let videoTransitionPromise = Promise.resolve();
 
     $: if (currentProject.videoId && currentProject.videoId !== currentVideoId) {
@@ -80,10 +172,10 @@
         });
     }
 
-    // Create Plyr instance
-    function createPlayer(videoElement, videoId) {
-        // Set video source
+ function createPlayer(videoElement, videoId) {
+        // Set video source with preload
         videoElement.src = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
+        videoElement.preload = 'auto';
         
         // Create Plyr instance
         const player = new Plyr(videoElement, {
@@ -92,14 +184,20 @@
             muted: true,
             loop: { active: false },
             quality: { default: 720 },
-            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
+            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+            // Add loading options
+            // loadSprite: false,
+            //iconUrl: '',
+            
         });
+
+        // Force load the video
+        videoElement.load();
 
         return player;
     }
 
-    // Animate and swap videos
-    async function crossfadeVideo(newVideoId) {
+       async function crossfadeVideo(newVideoId) {
         // Ensure both layers exist
         if (!videoLayerA || !videoLayerB) return;
 
@@ -124,7 +222,6 @@
 
         console.log('Not first video load, crossfading to new video:', newVideoId);
 
-
         // Determine which layer to use for the new video
         const currentLayer = activeLayer === 'A' ? videoLayerA : videoLayerB;
         const newLayer = activeLayer === 'A' ? videoLayerB : videoLayerA;
@@ -144,7 +241,7 @@
         });
 
         // Set up new layer with new video player (hidden initially)
-        newLayer.innerHTML = `<video id="${newPlayerId}" playsinline style="width:100%;height:100%;"></video>`;
+        newLayer.innerHTML = `<video id="${newPlayerId}" playsinline preload="auto" style="width:100%;height:100%;"></video>`;
         const newVideoElement = newLayer.querySelector(`#${newPlayerId}`);
 
         gsap.set(newLayer, { 
@@ -171,12 +268,46 @@
             playerA = newPlayer;
         }
 
-        // Wait for player to be ready
-        await new Promise(resolve => {
+        // Wait for video to be properly loaded and ready to play
+        await new Promise((resolve) => {
+            let isResolved = false;
+            
+            const resolveOnce = () => {
+                if (!isResolved) {
+                    isResolved = true;
+                    resolve();
+                }
+            };
+
+            // Multiple event listeners to catch when video is ready
             newPlayer.on('ready', () => {
-                setTimeout(resolve, 300); // Additional buffer for loading
+                console.log('Player ready');
+                // Wait for video to actually load some data
+                if (newVideoElement.readyState >= 3) { // HAVE_FUTURE_DATA
+                    console.log('Video has enough data');
+                    resolveOnce();
+                } else {
+                    // Wait for canplay event
+                    newVideoElement.addEventListener('canplay', resolveOnce, { once: true });
+                    // Fallback timeout
+                    setTimeout(resolveOnce, 2000);
+                }
             });
+
+            // Additional safety nets
+            newVideoElement.addEventListener('loadeddata', () => {
+                console.log('Video loadeddata');
+                setTimeout(resolveOnce, 100); // Small delay to ensure readiness
+            });
+
+            // Fallback timeout to prevent infinite waiting
+            setTimeout(() => {
+                console.log('Video loading timeout, proceeding anyway');
+                resolveOnce();
+            }, 3000);
         });
+
+        console.log('Starting video crossfade animation');
 
         // Create animation timeline
         const tl = gsap.timeline();
@@ -199,7 +330,6 @@
             gsap.set(currentLayer, { pointerEvents: 'none' });
             gsap.set(newLayer, { pointerEvents: 'auto' });
             
-
             // Update active layer for next transition
             activeLayer = activeLayer === 'A' ? 'B' : 'A';
         });
@@ -209,34 +339,27 @@
 
     let isPanelOpen = false;
 
-    // Replace the Bootstrap collapse logic with this custom function
     function toggleCreditsPanel() {
         isPanelOpen = !isPanelOpen;
         
         if (isPanelOpen) {
-            // Show panel - slide in from right
             collapseElement.style.transform = 'translateX(0)';
             collapseToggleButton.textContent = '— Credits';
         } else {
-            // Hide panel - slide out to right
             collapseElement.style.transform = 'translateX(100%)';
             collapseToggleButton.textContent = '+ Credits';
         }
     }
     
-	// Function to update active states for all slides including clones
 	function updateActiveSlides(slug) {
 		if (!swiper) return;
 
-		// Get all link elements inside slides including clones
 		const allSlideLinks = swiper.el.querySelectorAll(".swiper-slide-link");
 
-		// Remove bg-primary from all links
 		allSlideLinks.forEach((link) => {
 			link.classList.remove("swiper-slide-link-active");
 		});
 
-		// Add bg-primary to links in slides matching the slug
 		allSlideLinks.forEach((link) => {
 			if (link.dataset.slug === slug) {
 				link.classList.add("swiper-slide-link-active");
@@ -248,9 +371,9 @@
 		const videFeedItems = swiper.el.querySelectorAll(".video-feed-item");
 
 		videFeedItems.forEach((video) => {
-			// video.play()
             video.muted = true;
             video.defaultMuted = true;
+			video.play()
 		});
 	}
 
@@ -284,14 +407,6 @@
 
         saveVideoSize();
 
-        // Initialize the first video after a short delay to ensure DOM is ready
-        // setTimeout(() => {
-        //     if (currentProject?.videoId) {
-        //         crossfadeVideo(currentProject.videoId);
-        //     }
-        // }, 100);
-
-		// COLLAPSE CLOSING
 		const closeCollapse = (event) => {
             if (isPanelOpen && collapseElement && !collapseElement.contains(event.target) && !collapseToggleButton.contains(event.target)) {
                 toggleCreditsPanel();
@@ -299,12 +414,10 @@
         };
         document.addEventListener("click", closeCollapse);
 
-        // Return cleanup function
         return () => {
             if (closeCollapse) {
                 document.removeEventListener("click", closeCollapse);
             }
-            // Clean up players
             if (playerA && playerA.destroy) {
                 playerA.destroy();
             }
@@ -314,7 +427,6 @@
         };
     });
 
-	// Watch for URL changes
 	$: if ($page.params.slug) {
 		updateActiveSlides($page.params.slug);
 	}
@@ -326,13 +438,13 @@
 
         console.log(mainVideoContainer.offsetWidth)
         
-        // Set CSS variables once
         document.documentElement.style.setProperty('--video-width', `${mainVideoContainer.offsetWidth}px`);
         document.documentElement.style.setProperty('--video-height', `${mainVideoContainer.offsetHeight}px`);
     }
 
 </script>
 
+<!-- Rest of your template remains the same -->
 <svelte:head>
     <title>{currentProject?.title ?? 'Advertising'} - Pete & Wolf</title>
     <meta name="description" content="{currentProject?.description ?? ''}">
@@ -389,7 +501,7 @@
                 </div>
 
                 <!-- Desktop credits section -->
-                <div class="d-none d-lg-flex font-8 pt-3 flex-column h-100" bind:this={desktopCredits}>
+                <div class="d-none d-lg-flex font-8 pt-3 flex-column h-100" bind:this={desktopCredits} style="position: relative;">
                     <hr class="mt-0 mb-2">
                     <div class="position-relative overflow-hidden">
                         <div class="row justify-content-between align-items-center">
@@ -434,7 +546,7 @@
 									   <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
 										<video 
 											class="w-100 object-fit-cover video-feed-item" 
-											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_360p.mp4"
+											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4"
 											playsinline
 											loop 
                                             autoplay
@@ -456,11 +568,12 @@
     </div>
 </section>
 
+<!-- Same styles as before -->
 <style>
     .video-wrapper {
         position: relative;
         width: 100%;
-        padding-top: 56.25%; /* 16:9 aspect ratio */
+        padding-top: 56.25%;
         height: 0;
     }
 
@@ -471,19 +584,16 @@
         width: 100%;
         height: 100%;
         z-index: 1;
-        /* Ensure smooth transitions */
         backface-visibility: hidden;
         transform: translateZ(0);
-        /* Allow interactions by default */
         pointer-events: auto;
     }
 
     .video-layer + .video-layer {
         pointer-events: none;
-        z-index: 2; /* Second layer should be on top initially */
+        z-index: 2;
     }
 
-    /* Plyr custom styling */
     :global(.plyr) {
         width: 100% !important;
         height: 100% !important;
@@ -499,12 +609,17 @@
         object-fit: cover;
     }
 
-    /* Custom Plyr control styling to match your design */
     :global(.plyr--video .plyr__controls) {
         background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
     }
 
     :global(.plyr__control--overlaid) {
         background: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Shadow credits styling */
+    :global(.credits-shadow) {
+        backface-visibility: hidden;
+        transform: translateZ(0);
     }
 </style>
