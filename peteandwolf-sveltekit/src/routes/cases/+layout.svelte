@@ -16,53 +16,16 @@
     export let data;
     const { caseItems, sonicIdData } = data;
 
-    $: navSections = currentProject ? currentProject.sections : sonicIdData.sections;
-
-    let swiperSonic, swiperSonicMobile;
-    let offcanvasCases;
-
-    let mainContent;
-    let previousSlug;
-    let isContentFirstLoad = true;
-
-    $: if ($page.params.slug !== previousSlug) {
-    //animateMainContentTransition();
-    previousSlug = $page.params.slug;
-    }
-
-    async function animateMainContentTransition() {
-        if (isContentFirstLoad) {
-            isContentFirstLoad = false;
-            gsap.set(mainContent, { opacity: 1, filter: 'blur(0px)' });
-            return;
-        }
-
-        await gsap.to(mainContent, {
-            opacity: 0,
-            filter: 'blur(20px)',
-            duration: 2,
-            ease: 'power2.inOut',
-        });
-
-        await tick(); // wait for slot to update
-
-        gsap.fromTo(mainContent,
-            { opacity: 0, filter: 'blur(20px)' },
-            {
-            opacity: 1,
-            filter: 'blur(0px)',
-            duration: 0.5,
-            ease: 'power2.out'
-            }
-        );
-    }   
-
     $: currentProject = $page.url.pathname === '/cases' 
         ? null 
         : caseItems.find(item => 
             $page.params.slug && item.slug === $page.params.slug
         );
 
+    $: navSections = currentProject ? currentProject.sections : sonicIdData.sections;
+
+    let swiperSonic, swiperSonicMobile;
+    let offcanvasCases;
 
     function updateActiveSlides(slug) {
         if (!swiperSonic && !swiperSonicMobile) return;
@@ -241,7 +204,7 @@
             <!-- Main content area -->
             <div class="col-lg-8 h-100 min-h-100 ps-1 ps-lg-2 pe-0-mob">
                <div class="max-h-screen min-h-mob-screen h-100 scrolling border border-black p-3">
-                    <div bind:this={mainContent}>
+                    <div>
                         <slot />
                     </div>
                 </div>
