@@ -586,6 +586,11 @@ a:hover {
         max-width: var(--target-width);
     }
 
+    .container-original {
+        min-width: 85%;
+        max-width: 85%;
+    }
+
     #advertisingRow,
     #sonicRow,
     #aboutRow {

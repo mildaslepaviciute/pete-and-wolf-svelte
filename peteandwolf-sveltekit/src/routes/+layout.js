@@ -7,7 +7,8 @@ export const load = async () => {
     try {
         const homeData = await client.fetch(`*[_type == "homePage"][0]{
             title,
-            "backgroundImage": {
+            description,
+            "image": {
                 "url": backgroundImage.asset->url,
                 "alt": backgroundImage.alt
             }
