@@ -23,10 +23,19 @@
           <img src={homeData.image.url} alt={homeData.image.alt} class="w-100"/>
         </div> 
         <hr class="mt-5 mb-0">
-        <a href="/advertising" class="pill-link font-2 fw-bold text-black">Advertising</a>
-        <hr class="mt-0 mb-0">
-        <a href="/cases/sonic-id" class="pill-link font-2 fw-bold  text-black">Cases</a>
-        <hr class="mt-0 mb-4">
+          <a href="/advertising" class="pill-link font-2 fw-bold text-black">
+            Advertising 
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-right ms-1 pulse-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+          </a>
+          <hr class="mt-0 mb-0">
+          <a href="/cases/sonic-id" class="pill-link font-2 fw-bold  text-black">
+            Cases
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-right ms-1 pulse-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+          </a>
+          <hr class="mt-0 mb-4">
         <div class="font-6 fw-bold">
           {@html renderBlocks(homeData.description, true)}
         </div>
@@ -65,7 +74,7 @@
             Cases
             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-right ms-1 pulse-right" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-            </a>
+          </a>
           <hr class="mt-1 mb-0">
         </div>
       </div>
