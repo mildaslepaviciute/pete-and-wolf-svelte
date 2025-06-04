@@ -9,17 +9,24 @@ export default {
     },
     fields: [
         {
+            name: 'image',
+            title: 'Image',
+            type: 'image',
+            options: {
+                hotspot: true
+            }
+        },
+        {
             name: 'title',
             title: 'Title',
             type: 'string',
         },
         {
-            name: 'backgroundImage',
-            title: 'Background Image',
-            type: 'image',
-            options: {
-                hotspot: true
-            }
-        }
+            name: 'description',
+            title: 'Description',
+            type: 'array',
+            of: [{ type: 'block' }],
+        },
+        
     ]
 }
