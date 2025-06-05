@@ -625,7 +625,7 @@
 									   <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
 										<video 
 											class="w-100 object-fit-cover video-feed-item" 
-											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240pp.mp4"
+											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4"
 											playsinline
 											loop 
                                             autoplay
