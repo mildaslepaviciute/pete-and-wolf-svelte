@@ -213,7 +213,7 @@
             <!-- Desktop sidebar -->
             <div class="col-lg-4 h-100 ps-lg-1 d-none d-lg-block">
                 <div class="h-100 max-h-screen border border-black overflow-hidden">
-                    <div class="bg-blue sticky-top">
+                    <div class="bg-blue sticky-top border-bottom border-black">
                         <p class="font-2 text-end text-white p-2 mb-0"><b>Cases</b></p>
                     </div>
                     <div class="swiper-container scrollSwiperSonic">
