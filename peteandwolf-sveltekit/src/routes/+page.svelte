@@ -18,7 +18,7 @@
           <img src="/img/logo.svg" alt="Pete & Wolf">
         </a>
         <hr class="mt-3 mb-2">
-        <h1 class="w-100 font-5 fw-bold pb-3 mb-3">{homeData.title}</h1>
+        <h1 class="w-100 font-6 fw-bold pb-3 mb-3">{homeData.title}</h1>
         <div class="w-100">
           <img src={homeData.image.url} alt={homeData.image.alt} class="w-100"/>
         </div> 
@@ -57,7 +57,7 @@
           <img src="/img/logo.svg" alt="Pete & Wolf">
         </a>
         <hr class="mt-3 mb-3">
-        <h1 class="w-100 font-5 fw-bold font-3-mob pb-3 mb-0">{homeData.title}</h1>
+        <h1 class="w-100 font-6 fw-bold font-3-mob pb-3 mb-0">{homeData.title}</h1>
         <div class="d-flex flex-column flex-grow-1 justify-content-end">
           <div class="font-6 fw-bold">
             {@html renderBlocks(homeData.description, true)}
