@@ -44,7 +44,7 @@
     
     if (!shadowElement) return;
 
-    // Position shadow content on top
+    // Position shadow content on top and visible
     gsap.set(shadowElement, {
       position: 'absolute',
       top: 0,
@@ -56,32 +56,32 @@
       pointerEvents: 'none'
     });
 
-    // Set main content below and hidden initially
+    // Hide main content initially
     gsap.set(mainContent, {
       opacity: 0,
-      filter: 'blur(20px)',
+      filter: 'blur(10px)',
       zIndex: 1
     });
 
-    await tick(); // Wait for new content to render
-
-    // Animate shadow content out and main content in
+    // Create timeline for sequential animation
     const tl = gsap.timeline();
     
+    // Step 1: Fade out shadow content completely
     tl.to(shadowElement, {
       opacity: 0,
-      filter: 'blur(20px)',
-      duration: 1.5,
-      ease: 'power2.inOut'
+      filter: 'blur(10px)',
+      duration: 0.3,
+      ease: 'none'
     })
+    // Step 2: Wait a moment then fade in main content
     .to(mainContent, {
       opacity: 1,
       filter: 'blur(0px)',
-      duration: 1,
-      ease: 'power2.inOut'
-    }, 0)
+      duration: 0.3,
+      ease: 'none'
+    }, "+=0.1") // Small delay after fade out completes
     .call(() => {
-      // Hide shadow content
+      // Clean up shadow content after animation
       showShadow = false;
       shadowProject = null;
     });

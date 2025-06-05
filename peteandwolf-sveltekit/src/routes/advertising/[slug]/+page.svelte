@@ -617,7 +617,7 @@
                 <div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden">
                     <div class="swiper-container scrollSwiperAdvertising">
                         <div class="swiper-wrapper h-100">
-                            {#each data.advertisingProjects as project}
+                             {#each data.advertisingProjects as project}
                                 <div class="swiper-slide">
                                     <a href="/advertising/{project.slug.current}"
                                        class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
@@ -625,7 +625,7 @@
 									   <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
 										<video 
 											class="w-100 object-fit-cover video-feed-item" 
-											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4"
+											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240pp.mp4"
 											playsinline
 											loop 
                                             autoplay

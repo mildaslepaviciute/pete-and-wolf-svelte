@@ -23,22 +23,20 @@
           <img src={homeData.image.url} alt={homeData.image.alt} class="w-100"/>
         </div> 
         <hr class="mt-5 mb-0">
-          <a href="/advertising" class="pill-link font-2 fw-bold text-black">
-            Advertising 
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-right ms-1 pulse-right" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+          <a href="/advertising" class="d-flex justify-content-between align-items-center pill-link font-2 fw-bold text-black text-decoration-none arrow-link-hover">
+            <span>Advertising</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left ms-1 font-3 arrow-move" viewBox="0 0 16 16" style="width: 1em; height: 1em;">
+              <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 .5-.5z"/>
             </svg>
           </a>
           <hr class="mt-0 mb-0">
-          <a href="/cases/sonic-id" class="pill-link font-2 fw-bold  text-black">
-            Cases
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-right ms-1 pulse-right" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+          <a href="/cases/sonic-id" class="d-flex justify-content-between align-items-center pill-link font-2 fw-bold text-black text-decoration-none arrow-link-hover">
+            <span>Cases</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left ms-1 font-3 arrow-move" viewBox="0 0 16 16" style="width: 1em; height: 1em;">
+              <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 .5-.5z"/>
+            </svg>
           </a>
           <hr class="mt-0 mb-4">
-        <div class="font-6 fw-bold">
-          {@html renderBlocks(homeData.description, true)}
-        </div>
     </div>
   </div>
 </section>
@@ -62,19 +60,25 @@
           <div class="font-6 fw-bold">
             {@html renderBlocks(homeData.description, true)}
           </div>
+
           <hr class="mt-2 mb-0">
-          <a href="/advertising" class="pill-link font-2 fw-bold text-black">
-            Advertising 
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-right ms-1 pulse-right" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+
+          <a href="/advertising" class="d-flex justify-content-between align-items-center pill-link font-2 fw-bold text-black text-decoration-none arrow-link-hover">
+            <span>Advertising</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left ms-1 font-3 arrow-move" viewBox="0 0 16 16" style="width: 1em; height: 1em;">
+              <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 .5-.5z"/>
             </svg>
           </a>
+        
           <hr class="mt-1 mb-1">
-          <a href="/cases/sonic-id" class="pill-link font-2 fw-bold  text-black">
-            Cases
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-right ms-1 pulse-right" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+
+          <a href="/cases/sonic-id" class="d-flex justify-content-between align-items-center pill-link font-2 fw-bold text-black text-decoration-none arrow-link-hover">
+            <span>Cases</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left ms-1 font-3 arrow-move" viewBox="0 0 16 16" style="width: 1em; height: 1em;">
+              <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 .5-.5z"/>
+            </svg>
           </a>
+
           <hr class="mt-1 mb-0">
         </div>
       </div>
@@ -83,13 +87,11 @@
 </section>
 
 <style>
-  @keyframes pulse-right {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(5px); }
-    100% { transform: translateX(0); }
+  .arrow-move {
+    transition: transform 0.3s ease;
   }
 
-  .pulse-right {
-    animation: pulse-right 1.5s infinite ease-in-out;
+  .arrow-link-hover:hover .arrow-move {
+    transform: translateX(-0.25rem);
   }
 </style>

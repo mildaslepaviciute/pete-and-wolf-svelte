@@ -123,13 +123,13 @@
         <div class="row align-items-stretch no-gutters px-screen-mob" id="sonicRow">
             <div class="position-relative">
                 {#if currentProject?.slug !== 'sonic-id'}
-                    <div class="back-button-wrapper position-absolute">
+                    <div class="back-button-wrapper position-absolute d-none d-lg-flex">
                         <!-- svelte-ignore a11y_click_events_have_key_events -->
                         <!-- svelte-ignore a11y_no_static_element_interactions -->
                         <div type="button" class="back-button" on:click|preventDefault={goBack}>&larr; About Sonic ID</div>
                     </div>
                 {/if}
-                <div class="position-absolute d-flex flex-row-reverse text-rotate top-0 text-end" style="left: -20px;">
+                <div class="position-absolute d-none d--lgflex flex-row-reverse text-rotate top-0 text-end" style="left: -20px;">
                     {#if navSections !== null}
                         {#each navSections as section, sectionIndex}
                             <div class="fw-bold mt-4 fs-9">
@@ -203,7 +203,7 @@
 
             <!-- Main content area -->
             <div class="col-lg-8 h-100 min-h-100 ps-1 ps-lg-2 pe-0-mob">
-               <div class="max-h-screen min-h-mob-screen h-100 scrolling border border-black p-3">
+               <div class="max-h-screen min-h-mob-screen h-100 scrolling border-lg border-black px-3">
                     <div>
                         <slot />
                     </div>

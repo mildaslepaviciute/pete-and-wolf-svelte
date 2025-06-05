@@ -468,7 +468,7 @@ a:hover {
 
 @media (max-width: 991px) {
     .px-screen-mob {
-        padding-left: 30px;
+        // padding-left: 30px;
         padding-right: 30px;
     }
 
@@ -629,6 +629,10 @@ a:hover {
     .py-sec {
         padding-top: 90px;
         padding-bottom: 90px;
+    }
+
+    .border-lg {
+        border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
     }
 
     // .max-h-screen {

@@ -19,36 +19,38 @@
         </div>
       </div>
       <div class="col-lg-6 h-lg-100 d-flex flex-column scrolling-lg">
-        <h1 class="w-100 sticky-top bg-white font-2 font-3-mob pb-3 mb-0">
+        <hr class="mb-2 mb-lg-0">
+        <h1 class="w-100 sticky-top bg-white font-2 font-3-mob mb-0 pb-0">
           <b>{aboutData.title}</b>
         </h1>
+        <hr class="mb-3 mt-2 mt-lg-0">
+
         <div class="col-12 mb-4">
           {@html renderBlocks(aboutData.textContent, true)}
         </div>
         <div class="flex-grow-1 d-flex flex-column justify-content-end">
+        <hr class="mb-2 d-none d-lg-block">
         <div class="row">
-                      <hr class="my-4 d-lg-none">
-
+          <hr class="my-2 d-lg-none">
           <div class="col-lg-4 d-flex flex-column  justify-content-end ">
               {@html renderBlocks(aboutData.col_1, true, true)}
+
           </div>
-            <hr class="my-4 d-lg-none">
+          <hr class="my-2 d-lg-none">
           <div class="col-lg-3 d-flex flex-column  justify-content-end ">
               {@html renderBlocks(aboutData.col_2, true, true)}
           </div>
-                      <hr class="my-4 d-lg-none">
-
+          <hr class="my-2 d-lg-none">
           <div class="col-lg-3 d-flex flex-column  justify-content-end ">
               {@html renderBlocks(aboutData.col_3, true, true)}
           </div>
-                      <hr class="my-4 d-lg-none">
-
+          <hr class="my-2 d-lg-none">
           <div class="col-lg-2 d-flex flex-column  justify-content-end">
               {@html renderBlocks(aboutData.col_4, true, true)}
           </div>
-                      <hr class="my-4 d-lg-none">
-
+          <hr class="my-2 d-lg-none">
         </div>
+        <hr class="d-none d-lg-block mt-2 mb-0">
       </div>
 
 
