@@ -417,36 +417,15 @@
 		});
 	}
 
-	// Optimized video feed with intersection observer
-    let videoObserver;
-
-	function startVideoFeed() {
-		const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
-
-        // Use intersection observer for better performance
-        if (videoObserver) {
-            videoObserver.disconnect();
-        }
-
-        videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target;
-                if (entry.isIntersecting) {
-                    video.muted = true;
-                    video.defaultMuted = true;
-                    video.play().catch(e => console.log('Video play failed:', e));
-                } else {
-                    video.pause();
-                }
-            });
-        }, {
-            threshold: 0.5 // Play when 50% visible
-        });
+    function startVideoFeed() {
+        const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
 
         videoFeedItems.forEach((video) => {
-            videoObserver.observe(video);
+            video.muted = true;
+            video.defaultMuted = true;
+            video.play().catch(e => console.log('Video play failed:', e));
         });
-	}
+    }
 
 	function updateSwiperTouch() {
 		const isMobile = window.innerWidth < 992;
