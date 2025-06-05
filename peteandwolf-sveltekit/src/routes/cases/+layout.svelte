@@ -203,7 +203,7 @@
 
             <!-- Main content area -->
             <div class="col-lg-8 h-100 min-h-100 ps-1 ps-lg-2 pe-0-mob">
-               <div class="max-h-screen min-h-mob-screen h-100 scrolling border-lg border-black px-3">
+               <div class="max-h-screen min-h-mob-screen h-100 scrolling border-lg border-black px-3 py-lg-3">
                     <div>
                         <slot />
                     </div>
