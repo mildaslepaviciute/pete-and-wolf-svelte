@@ -308,9 +308,7 @@ button:focus {
     transition: background-color 0.2s ease-out;
 }
 
-.swiper-slide-link:not(.swiper-slide-link-active):hover {
-    background-color: rgba(#0022f7, 0.3);
-}
+
 
 .swiper-slide-link-active {
     background-color: #0022f7;
@@ -673,6 +671,10 @@ a:hover {
     .back-button-wrapper {
         top: -26px;
         padding-left: 0.75rem;
+    }
+
+    .swiper-slide-link:not(.swiper-slide-link-active):hover {
+        background-color: rgba(#0022f7, 0.3);
     }
 }
 

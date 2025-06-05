@@ -418,35 +418,63 @@
 	}
 
 	// Optimized video feed with intersection observer
-    let videoObserver;
+let videoObserver;
+let videoIntervals = new Map(); // Track intervals for cleanup
 
-	function startVideoFeed() {
-		const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
+function startVideoFeed() {
+    const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
 
-        // Use intersection observer for better performance
-        if (videoObserver) {
-            videoObserver.disconnect();
-        }
+    if (videoObserver) {
+        videoObserver.disconnect();
+    }
 
-        videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target;
-                if (entry.isIntersecting) {
-                    video.muted = true;
-                    video.defaultMuted = true;
-                    video.play().catch(e => console.log('Video play failed:', e));
-                } else {
-                    video.pause();
+    // Clear existing intervals
+    videoIntervals.forEach((intervalId) => {
+        clearInterval(intervalId);
+    });
+    videoIntervals.clear();
+
+    videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const video = entry.target;
+            if (entry.isIntersecting) {
+                video.muted = true;
+                video.defaultMuted = true;
+                video.currentTime = 0;
+                
+                video.play().catch(e => console.log('Video play failed:', e));
+                
+                // Repeat every 15 seconds
+                const intervalId = setInterval(() => {
+                    if (!video.paused) {
+                        video.currentTime = 0; // Reset to beginning
+                        video.play().catch(e => console.log('Video restart failed:', e));
+                    }
+                }, 10000);
+                
+                // Store interval ID for cleanup
+                videoIntervals.set(video, intervalId);
+                
+            } else {
+                video.pause();
+                video.currentTime = 0;
+                
+                // Clear interval when video goes out of view
+                const intervalId = videoIntervals.get(video);
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    videoIntervals.delete(video);
                 }
-            });
-        }, {
-            threshold: 0.5 // Play when 50% visible
+            }
         });
+    }, {
+        threshold: 0.3
+    });
 
-        videoFeedItems.forEach((video) => {
-            videoObserver.observe(video);
-        });
-	}
+    videoFeedItems.forEach((video) => {
+        videoObserver.observe(video);
+    });
+}
 
 	function updateSwiperTouch() {
 		const isMobile = window.innerWidth < 992;
