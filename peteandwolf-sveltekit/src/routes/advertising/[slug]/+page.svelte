@@ -120,15 +120,15 @@
             if (child !== shadowCredits) {
                 gsap.set(child, { opacity: 1 });
                 const fadeElements = child.querySelectorAll(".fade-text");
-                gsap.set(fadeElements, { y: '-120%' });
+                gsap.set(fadeElements, { y: '-150%' });
             }
         });
 
         // Animate shadow elements out (slide down)
         await gsap.to(shadowFadeElements, {
             y: '120%',
-            duration: 0.4,
-            ease: 'power2.inOut',
+            duration: 0.5,
+            ease: 'none',
         });
 
         // Get new fade elements from the main content (not shadow)
@@ -144,7 +144,7 @@
         gsap.to(newFadeElements, {
             y: 0,
             duration: 0.5,
-            ease: 'power2.out',
+            ease: 'none',
         });
 
         // Clean up shadow after animation
