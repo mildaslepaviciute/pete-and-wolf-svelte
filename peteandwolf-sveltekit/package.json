@@ -20,6 +20,7 @@
 		"@sveltejs/adapter-vercel": "^5.5.3",
 		"groq": "^3.72.1",
 		"gsap": "^3.12.5",
+		"hls.js": "^1.6.5",
 		"svelte": "^5.19.5",
 		"swiper": "^8.4.7"
 	}

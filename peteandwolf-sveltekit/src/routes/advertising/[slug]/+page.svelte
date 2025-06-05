@@ -9,6 +9,9 @@
     import { gsap } from "gsap";
 	import { renderBlocks } from "$lib/helpers.js";
     import { tick } from 'svelte';
+    // Import HLS.js for better video streaming
+    import Hls from 'hls.js';
+    
     export let data;
 
 	$: currentProject = data.advertisingProjects.find((p) => p.slug.current === $page.params.slug) || data.advertisingProjects[0];
@@ -125,7 +128,6 @@
         await gsap.to(shadowFadeElements, {
             y: '120%',
             duration: 0.4,
-            // stagger: 0.05,
             ease: 'power2.inOut',
         });
 
@@ -153,7 +155,6 @@
             }
         }, 600);
     }
-    // ... rest of your existing code remains the same ...
     
     let currentVideoId = '';
     let isVideoFirstLoad = true;
@@ -162,6 +163,8 @@
     let activeLayer = 'A';
     let playerA;
     let playerB;
+    let hlsA;
+    let hlsB;
 
     let videoTransitionPromise = Promise.resolve();
 
@@ -172,10 +175,43 @@
         });
     }
 
- function createPlayer(videoElement, videoId) {
-        // Set video source with preload
-        videoElement.src = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
-        videoElement.preload = 'auto';
+    // Optimized video creation with HLS support
+    function createPlayer(videoElement, videoId) {
+        const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
+        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_480p.mp4`; // Upgraded to 480p
+        
+        let hls = null;
+        
+        // Try HLS first for better streaming performance
+        if (Hls.isSupported()) {
+            hls = new Hls({
+                startLevel: 1, // Start with medium quality
+                maxLoadingDelay: 4,
+                maxBufferLength: 10,
+                maxBufferSize: 60 * 1000 * 1000, // 60MB
+                maxBufferLength: 30, // 30 seconds
+                liveSyncDurationCount: 3,
+            });
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(videoElement);
+            
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                console.error('HLS error:', data);
+                // Fallback to MP4 on HLS error
+                if (data.fatal) {
+                    videoElement.src = mp4Url;
+                }
+            });
+        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            // Native HLS support (Safari)
+            videoElement.src = hlsUrl;
+        } else {
+            // Fallback to MP4
+            videoElement.src = mp4Url;
+        }
+
+        videoElement.preload = 'metadata';
+        videoElement.load();
         
         // Create Plyr instance
         const player = new Plyr(videoElement, {
@@ -183,21 +219,14 @@
             autoplay: true,
             muted: true,
             loop: { active: false },
-            quality: { default: 720 },
             speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
-            // Add loading options
-            // loadSprite: false,
-            //iconUrl: '',
-            
         });
 
-        // Force load the video
-        videoElement.load();
-
-        return player;
+        return { player, hls };
     }
 
-       async function crossfadeVideo(newVideoId) {
+    // Optimized crossfade with better loading detection
+    async function crossfadeVideo(newVideoId) {
         // Ensure both layers exist
         if (!videoLayerA || !videoLayerB) return;
 
@@ -211,7 +240,9 @@
             
             // Initialize first player
             try {
-                playerA = createPlayer(videoElementA, newVideoId);
+                const result = createPlayer(videoElementA, newVideoId);
+                playerA = result.player;
+                hlsA = result.hls;
             } catch (error) {
                 console.error('Error creating player:', error);
                 return;
@@ -220,14 +251,16 @@
             return;
         }
 
-        console.log('Not first video load, crossfading to new video:', newVideoId);
+        console.log('Crossfading to new video:', newVideoId);
 
         // Determine which layer to use for the new video
         const currentLayer = activeLayer === 'A' ? videoLayerA : videoLayerB;
         const newLayer = activeLayer === 'A' ? videoLayerB : videoLayerA;
         const currentPlayer = activeLayer === 'A' ? playerA : playerB;
 
-        currentPlayer.muted = true; // Ensure current player is muted
+        if (currentPlayer) {
+            currentPlayer.muted = true; // Ensure current player is muted
+        }
         
         // Create unique player ID
         const newPlayerId = activeLayer === 'A' ? 'player-b' : 'player-a';
@@ -241,34 +274,38 @@
         });
 
         // Set up new layer with new video player (hidden initially)
-        newLayer.innerHTML = `<video id="${newPlayerId}" playsinline preload="auto" style="width:100%;height:100%;"></video>`;
+        newLayer.innerHTML = `<video id="${newPlayerId}" playsinline preload="metadata" style="width:100%;height:100%;"></video>`;
         const newVideoElement = newLayer.querySelector(`#${newPlayerId}`);
 
         gsap.set(newLayer, { 
             opacity: 0, 
-            filter: 'blur(20px)',
+            filter: 'blur(10px)', // Reduced blur for better performance
             zIndex: 2,
             pointerEvents: 'none'
         });
 
         // Create new player instance
-        let newPlayer;
+        let newPlayer, newHls;
         try {
-            newPlayer = createPlayer(newVideoElement, newVideoId);
+            const result = createPlayer(newVideoElement, newVideoId);
+            newPlayer = result.player;
+            newHls = result.hls;
             newPlayer.muted = false; // Unmute new player
         } catch (error) {
             console.error('Error creating new player:', error);
             return;
         }
         
-        // Store reference to new player
+        // Store reference to new player and HLS instance
         if (activeLayer === 'A') {
             playerB = newPlayer;
+            hlsB = newHls;
         } else {
             playerA = newPlayer;
+            hlsA = newHls;
         }
 
-        // Wait for video to be properly loaded and ready to play
+        // Improved loading detection - wait for video to be ready
         await new Promise((resolve) => {
             let isResolved = false;
             
@@ -279,56 +316,69 @@
                 }
             };
 
-            // Multiple event listeners to catch when video is ready
+            // Wait for player to be ready and video to have enough data
             newPlayer.on('ready', () => {
                 console.log('Player ready');
-                // Wait for video to actually load some data
+                // Check if video has enough data to play
                 if (newVideoElement.readyState >= 3) { // HAVE_FUTURE_DATA
                     console.log('Video has enough data');
                     resolveOnce();
                 } else {
-                    // Wait for canplay event
-                    newVideoElement.addEventListener('canplay', resolveOnce, { once: true });
-                    // Fallback timeout
-                    setTimeout(resolveOnce, 2000);
+                    // Wait for canplaythrough for smoother playback
+                    newVideoElement.addEventListener('canplaythrough', resolveOnce, { once: true });
+                    // Fallback to canplay if canplaythrough takes too long
+                    setTimeout(() => {
+                        newVideoElement.addEventListener('canplay', resolveOnce, { once: true });
+                    }, 1000);
                 }
             });
 
             // Additional safety nets
             newVideoElement.addEventListener('loadeddata', () => {
                 console.log('Video loadeddata');
-                setTimeout(resolveOnce, 100); // Small delay to ensure readiness
+                setTimeout(resolveOnce, 100);
             });
 
-            // Fallback timeout to prevent infinite waiting
+            // Reduced timeout for faster transitions
             setTimeout(() => {
                 console.log('Video loading timeout, proceeding anyway');
                 resolveOnce();
-            }, 3000);
+            }, 2000); // Reduced from 3000ms
         });
 
-        console.log('Starting video crossfade animation');
+        console.log('Starting optimized video crossfade animation');
 
-        // Create animation timeline
+        // Faster crossfade animation
         const tl = gsap.timeline();
 
-        // Animate current video out and new video in simultaneously
+        // Simultaneous fade out/in with reduced duration
         tl.to(currentLayer, {
             opacity: 0,
-            filter: 'blur(20px)',
-            duration: 1.5,
+            filter: 'blur(10px)',
+            duration: 0.5, // Reduced from 1.5s
             ease: 'power2.inOut'
         })
         .to(newLayer, {
             opacity: 1,
             filter: 'blur(0px)',
-            duration: 1,
-            ease: 'power2.inOut'
-        }, 0) // Start at the same time
+            duration: 0.4, // Faster fade in
+            ease: 'power2.out'
+        }, 0.1) // Small overlap for smoother transition
         .call(() => {
-            // Switch interaction states immediately when animation completes
+            // Switch interaction states
             gsap.set(currentLayer, { pointerEvents: 'none' });
             gsap.set(newLayer, { pointerEvents: 'auto' });
+            
+            // Clean up old HLS instance
+            const oldHls = activeLayer === 'A' ? hlsA : hlsB;
+            if (oldHls) {
+                oldHls.destroy();
+                if (activeLayer === 'A') {
+                    hlsA = null;
+                } else {
+                    hlsB = null;
+                }
+            }
             
             // Update active layer for next transition
             activeLayer = activeLayer === 'A' ? 'B' : 'A';
@@ -367,14 +417,35 @@
 		});
 	}
 
-	function startVideoFeed() {
-		const videFeedItems = swiper.el.querySelectorAll(".video-feed-item");
+	// Optimized video feed with intersection observer
+    let videoObserver;
 
-		videFeedItems.forEach((video) => {
-            video.muted = true;
-            video.defaultMuted = true;
-			video.play()
-		});
+	function startVideoFeed() {
+		const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
+
+        // Use intersection observer for better performance
+        if (videoObserver) {
+            videoObserver.disconnect();
+        }
+
+        videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    video.muted = true;
+                    video.defaultMuted = true;
+                    video.play().catch(e => console.log('Video play failed:', e));
+                } else {
+                    video.pause();
+                }
+            });
+        }, {
+            threshold: 0.5 // Play when 50% visible
+        });
+
+        videoFeedItems.forEach((video) => {
+            videoObserver.observe(video);
+        });
 	}
 
 	function updateSwiperTouch() {
@@ -384,8 +455,7 @@
 	}
 
 	onMount(() => {
-        
-       swiper = new Swiper(".scrollSwiperAdvertising", {
+        swiper = new Swiper(".scrollSwiperAdvertising", {
             direction: "vertical",
             slidesPerView: "auto",
             freeMode: {
@@ -418,11 +488,21 @@
             if (closeCollapse) {
                 document.removeEventListener("click", closeCollapse);
             }
+            if (videoObserver) {
+                videoObserver.disconnect();
+            }
+            // Clean up players and HLS instances
             if (playerA && playerA.destroy) {
                 playerA.destroy();
             }
             if (playerB && playerB.destroy) {
                 playerB.destroy();
+            }
+            if (hlsA) {
+                hlsA.destroy();
+            }
+            if (hlsB) {
+                hlsB.destroy();
             }
         };
     });
@@ -436,7 +516,7 @@
         
         if (!mainVideoContainer) return;
 
-        console.log(mainVideoContainer.offsetWidth)
+        console.log(mainVideoContainer.offsetWidth);
         
         document.documentElement.style.setProperty('--video-width', `${mainVideoContainer.offsetWidth}px`);
         document.documentElement.style.setProperty('--video-height', `${mainVideoContainer.offsetHeight}px`);
@@ -444,7 +524,6 @@
 
 </script>
 
-<!-- Rest of your template remains the same -->
 <svelte:head>
     <title>{currentProject?.title ?? 'Advertising'} - Pete & Wolf</title>
     <meta name="description" content="{currentProject?.description ?? ''}">
@@ -546,11 +625,12 @@
 									   <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
 										<video 
 											class="w-100 object-fit-cover video-feed-item" 
-											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4"
+											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_480p.mp4"
 											playsinline
 											loop 
                                             autoplay
 											muted
+                                            preload="metadata"
 										>
 										</video>
 									</div>
@@ -568,7 +648,6 @@
     </div>
 </section>
 
-<!-- Same styles as before -->
 <style>
     .video-wrapper {
         position: relative;
