@@ -62,6 +62,8 @@ export const load = async () => {
 
         const aboutData = await client.fetch(query);
 
+        console.log(aboutData)
+
         return {
             aboutData
         };
