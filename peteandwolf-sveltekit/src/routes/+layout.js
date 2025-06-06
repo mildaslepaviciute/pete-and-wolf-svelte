@@ -9,8 +9,8 @@ export const load = async () => {
             title,
             description,
             "image": {
-                "url": backgroundImage.asset->url,
-                "alt": backgroundImage.alt
+                "url": image.asset->url,
+                "alt": image.alt
             }
         }`);
 
