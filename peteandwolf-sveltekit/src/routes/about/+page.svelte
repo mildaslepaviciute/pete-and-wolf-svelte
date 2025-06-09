@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="col-lg-6 h-lg-100 d-flex flex-column scrolling-lg">
-        <hr class="mb-2 mb-lg-0">
+        <hr class="mt-0 mb-2 mb-lg-0">
         <h1 class="w-100 sticky-top bg-white font-2 font-3-mob mb-0 pb-0">
           <b>{aboutData.title}</b>
         </h1>

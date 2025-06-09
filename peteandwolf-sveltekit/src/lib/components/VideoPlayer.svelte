@@ -180,7 +180,7 @@
             on:loadeddata={handleLoadedData}
             on:canplay={handleCanPlay}
             on:error={handleError}
-            preload="false"
+            preload="none"
             class="w-100"
             data-video-id={videoId}
         >

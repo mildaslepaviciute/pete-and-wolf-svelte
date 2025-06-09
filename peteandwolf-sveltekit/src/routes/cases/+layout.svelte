@@ -50,7 +50,8 @@
 
         const mainContentArea = document.querySelector(".scrolling");
         if (mainContentArea) {
-            mainContentArea.scrollTop = 0;
+          //  mainContentArea.style.scrollBehavior = 'auto';
+           // mainContentArea.scrollTop = 0;
         }
     }
 
@@ -129,7 +130,7 @@
                         <div type="button" class="back-button" on:click|preventDefault={goBack}>&larr; About Sonic ID</div>
                     </div>
                 {/if}
-                <div class="position-absolute d-none d--lgflex flex-row-reverse text-rotate top-0 text-end" style="left: -20px;">
+                <div class="position-absolute d-none d-lg-flex flex-row-reverse text-rotate top-0 text-end" style="left: -20px;">
                     {#if navSections !== null}
                         {#each navSections as section, sectionIndex}
                             <div class="fw-bold mt-4 fs-9">

@@ -7,84 +7,78 @@
   export let data;
   const caseItems = data.caseItems;
 
-  $: currentProject = caseItems.find(
-    (item) => $page.params.slug && item.slug === $page.params.slug
-  );
-
   let wrapper;
   let mainContent;
   let previousSlug;
   let isFirstLoad = true;
+  let isTransitioning = false;
 
-  // Store the previous project data for shadow content
-  let shadowProject = null;
-  let showShadow = false;
+  // Initialize currentProject directly
+  let currentProject = caseItems.find(
+    (item) => $page.params.slug && item.slug === $page.params.slug
+  );
 
-  // Watch for project changes and trigger animation
-  $: if (currentProject && currentProject.slug !== previousSlug) {
-    if (previousSlug && !isFirstLoad) {
-      // Store current project as shadow before it changes
-      shadowProject = caseItems.find(item => item.slug === previousSlug);
-      animateContentTransition();
-    } else {
-      isFirstLoad = false;
+  // Watch for route changes and handle transitions
+  $: {
+    const newSlug = $page.params.slug;
+    const newProject = caseItems.find(item => newSlug && item.slug === newSlug);
+    
+    if (newSlug !== previousSlug) {
+      if (previousSlug && !isFirstLoad && newProject && !isTransitioning) {
+        // Start transition
+        animateContentTransition(newProject);
+      } else if (newProject) {
+        // First load or no previous slug
+        currentProject = newProject;
+        isFirstLoad = false;
+      }
+      previousSlug = newSlug;
     }
-    previousSlug = currentProject.slug;
   }
 
-  async function animateContentTransition() {
-    if (!wrapper || !mainContent) return;
-
-    // Show shadow content
-    showShadow = true;
+  async function animateContentTransition(targetProject) {
+    if (!mainContent || isTransitioning) return;
     
-    await tick(); // Wait for shadow to render
-
-    const shadowElement = wrapper.querySelector('.content-shadow');
+    console.log('Starting transition from', currentProject?.slug, 'to', targetProject?.slug);
+    isTransitioning = true;
     
-    if (!shadowElement) return;
-
-    // Position shadow content on top and visible
-    gsap.set(shadowElement, {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      zIndex: 2,
-      opacity: 1,
-      filter: 'blur(0px)',
-      pointerEvents: 'none'
-    });
-
-    // Hide main content initially
-    gsap.set(mainContent, {
+    // Fade out OLD content (currentProject is still the old one)
+    await gsap.to(mainContent, {
       opacity: 0,
-      filter: 'blur(10px)',
-      zIndex: 1
+      duration: 0.5,
+      ease: 'none'
     });
-
-    // Create timeline for sequential animation
-    const tl = gsap.timeline();
     
-    // Step 1: Fade out shadow content completely
-    tl.to(shadowElement, {
-      opacity: 0,
-      filter: 'blur(10px)',
-      duration: 0.3,
-      ease: 'none'
-    })
-    // Step 2: Wait a moment then fade in main content
-    .to(mainContent, {
+    console.log('Faded out, resetting scroll');
+    
+    // Reset scroll while invisible
+    const mainContentArea = document.querySelector(".scrolling");
+    if (mainContentArea) {
+      mainContentArea.style.scrollBehavior = 'auto';
+      mainContentArea.scrollTop = 0;
+    }
+    
+    // Small delay to ensure scroll reset completes
+    await new Promise(resolve => setTimeout(resolve, 50));
+    
+    console.log('Updating to new content');
+    
+    // NOW update to new content
+    currentProject = targetProject;
+    
+    await tick(); // Wait for new content to render
+    
+    console.log('Fading in new content');
+    
+    // Fade in NEW content
+    await gsap.to(mainContent, {
       opacity: 1,
-      filter: 'blur(0px)',
-      duration: 0.3,
+      duration: 0.5,
       ease: 'none'
-    }, "+=0.1") // Small delay after fade out completes
-    .call(() => {
-      // Clean up shadow content after animation
-      showShadow = false;
-      shadowProject = null;
     });
+    
+    console.log('Transition complete');
+    isTransitioning = false;
   }
 
   function getTitleAlignmentClass(alignment) {
@@ -102,7 +96,6 @@
     if (mainContent) {
       gsap.set(mainContent, {
         opacity: 1,
-        filter: 'blur(0px)',
         zIndex: 1
       });
     }
@@ -111,52 +104,6 @@
 
 {#if currentProject}
   <div bind:this={wrapper} class="single-case-wrapper">
-    <!-- Shadow content (previous project) -->
-    {#if showShadow && shadowProject}
-      <div class="content-shadow">
-        <div id={shadowProject.slug}>
-          {#each shadowProject.sections as section, sectionIndex}
-            <div
-              id={section.title.replace(/\s+/g, '-').toLowerCase()}
-              class="mb-last-0"
-            >
-              {#if sectionIndex === 0}
-                <h1
-                  class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold pt-2 {getTitleAlignmentClass(section.titleAlignment)}"
-                >
-                  {section.title}
-                </h1>
-              {:else}
-                <h2
-                  class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold pt-2 {getTitleAlignmentClass(section.titleAlignment)}"
-                >
-                  {section.title}
-                </h2>
-              {/if}
-              <hr class="my-4" />
-              {#each section.blocks as block, blockIndex}
-                <div class="row gy-3 gy-lg-0">
-                  {#if block.grid === 1}
-                    <Column columnData={block.col_1} grid={block.grid} block_id={`shadow_${sectionIndex}_${blockIndex}_1`} />
-                  {:else if block.grid === 2}
-                    <Column columnData={block.col_1} grid={block.grid} block_id={`shadow_${sectionIndex}_${blockIndex}_1`} />
-                    <Column columnData={block.col_2} grid={block.grid} block_id={`shadow_${sectionIndex}_${blockIndex}_2`} />
-                  {:else if block.grid === 3}
-                    <Column columnData={block.col_1} grid={block.grid} block_id={`shadow_${sectionIndex}_${blockIndex}_1`} />
-                    <Column columnData={block.col_2} grid={block.grid} block_id={`shadow_${sectionIndex}_${blockIndex}_2`} />
-                    <Column columnData={block.col_3} grid={block.grid} block_id={`shadow_${sectionIndex}_${blockIndex}_3`} />
-                  {/if}
-                </div>
-                {#if !(sectionIndex === shadowProject.sections.length - 1 && blockIndex === section.blocks.length - 1)}
-                  <hr class="my-4" />
-                {/if}
-              {/each}
-            </div>
-          {/each}
-        </div>
-      </div>
-    {/if}
-
     <!-- Main content (current project) -->
     <div bind:this={mainContent} class="main-content">
       <div id={currentProject.slug}>
@@ -211,11 +158,6 @@
   }
 
   .main-content {
-    width: 100%;
-    min-height: 100vh;
-  }
-
-  .content-shadow {
     width: 100%;
     min-height: 100vh;
   }
