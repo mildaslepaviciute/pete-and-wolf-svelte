@@ -22,7 +22,7 @@
             <a href="/advertising" class="nav-link">Advertising</a>
           </li>
           <li class="nav-item">
-            <a href="/cases/sonic-id" class="nav-link">Sonic-ID</a>
+            <a href="/cases/sonic-id" class="nav-link">Cases</a>
           </li>
           <li class="nav-item">
             <a href="/about" class="nav-link">About</a>
