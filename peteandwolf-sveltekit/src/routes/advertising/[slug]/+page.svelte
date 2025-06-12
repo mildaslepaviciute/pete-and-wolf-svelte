@@ -178,14 +178,14 @@
     // Optimized video creation with HLS support
     function createPlayer(videoElement, videoId) {
         const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
-        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_480p.mp4`; // Upgraded to 480p
+        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`; // Upgraded to 480p
         
         let hls = null;
         
         // Try HLS first for better streaming performance
         if (Hls.isSupported()) {
             hls = new Hls({
-                startLevel: 1, // Start with medium quality
+                startLevel: 5, // Start with medium quality
                 maxLoadingDelay: 4,
                 maxBufferLength: 10,
                 maxBufferSize: 60 * 1000 * 1000, // 60MB
@@ -219,7 +219,6 @@
             autoplay: true,
             muted: true,
             loop: { active: false },
-            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
         });
 
         return { player, hls };
@@ -417,15 +416,119 @@
 		});
 	}
 
-    function startVideoFeed() {
-        const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
-
-        videoFeedItems.forEach((video) => {
-            video.muted = true;
-            video.defaultMuted = true;
-            video.play().catch(e => console.log('Video play failed:', e));
+    // Add this function to handle video feed HLS setup
+// Updated function to always use lowest quality for video feed
+function setupVideoFeedHLS(videoElement, videoId) {
+    const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
+    const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
+    
+    if (Hls.isSupported()) {
+        const hls = new Hls({
+            startLevel: 0, // Start with lowest quality
+            maxLoadingDelay: 2,
+            maxBufferLength: 5, // Shorter buffer for preview videos
+            maxBufferSize: 10 * 1000, // 10MB for previews
+            liveSyncDurationCount: 1,
+            autoStartLoad: true,
+            enableWorker: true,
+            // Disable automatic quality switching
+            capLevelToPlayerSize: false,
+            capLevelOnFPSDrop: false,
         });
+        
+        hls.loadSource(hlsUrl);
+        hls.attachMedia(videoElement);
+        
+        // Force lowest quality when manifest is loaded
+        hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+            console.log('Video feed levels available:', data.levels.length);
+            // Always set to lowest quality (index 0)
+            hls.currentLevel = 0;
+            console.log('Video feed forced to lowest quality:', data.levels[0]);
+        });
+        
+        // Prevent automatic quality changes
+        hls.on(Hls.Events.LEVEL_SWITCHING, (event, data) => {
+            console.log('Video feed level switching to:', data.level);
+            // If it tries to switch to a higher level, force it back to 0
+            if (data.level > 0) {
+                setTimeout(() => {
+                    hls.currentLevel = 0;
+                }, 100);
+            }
+        });
+        
+        hls.on(Hls.Events.ERROR, (event, data) => {
+            console.warn('HLS error for video feed:', data);
+            // Fallback to MP4 on error
+            if (data.fatal) {
+                videoElement.src = mp4Url;
+                videoElement.load();
+            }
+        });
+        
+        // Store HLS instance on the video element for cleanup
+        videoElement._hls = hls;
+        
+        return hls;
+    } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+        // Native HLS support (Safari) - no quality control available
+        videoElement.src = hlsUrl;
+        return null;
+    } else {
+        // Fallback to MP4 (lowest quality)
+        videoElement.src = mp4Url;
+        return null;
     }
+}
+
+// Update your startVideoFeed function
+function startVideoFeed() {
+    const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
+
+    videoFeedItems.forEach((video) => {
+        // Clean up existing HLS instance if any
+        if (video._hls) {
+            video._hls.destroy();
+            video._hls = null;
+        }
+        
+        // Get video ID from the video element's data attribute or src
+        const videoId = video.dataset.videoId;
+        if (videoId) {
+            setupVideoFeedHLS(video, videoId);
+        }
+        
+        video.muted = true;
+        video.defaultMuted = true;
+        video.preload = 'metadata';
+        
+        // Play with better error handling
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(e => {
+                console.log('Video feed play failed:', e);
+                // Retry once after a short delay
+                setTimeout(() => {
+                    video.play().catch(() => {
+                        console.log('Video feed retry failed');
+                    });
+                }, 100);
+            });
+        }
+    });
+}
+
+// Add cleanup function for video feed
+function cleanupVideoFeed() {
+    const videoFeedItems = document.querySelectorAll(".video-feed-item");
+    videoFeedItems.forEach((video) => {
+        if (video._hls) {
+            video._hls.destroy();
+            video._hls = null;
+        }
+    });
+}
 
 	function updateSwiperTouch() {
 		const isMobile = window.innerWidth < 992;
@@ -596,20 +699,22 @@
                              {#each data.advertisingProjects as project}
                                 <div class="swiper-slide">
                                     <a href="/advertising/{project.slug.current}"
-                                       class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
-                                       data-slug={project.slug.current}>
-									   <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
-										<video 
-											class="w-100 object-fit-cover video-feed-item" 
-											src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4"
-											playsinline
-											loop 
+                                    class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
+                                    data-slug={project.slug.current}>
+                                    <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
+                                        <video 
+                                            class="w-100 object-fit-cover video-feed-item" 
+                                            data-video-id="{project.videoPreviewId || project.videoId}"
+                                            playsinline
+                                            loop 
                                             autoplay
-											muted
+                                            muted
                                             preload="metadata"
-										>
-										</video>
-									</div>
+                                        >
+                                            <!-- Fallback source for browsers that don't support HLS -->
+                                            <source src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4" type="video/mp4">
+                                        </video>
+                                    </div>
                                         <div class="w-65 h-100 d-flex align-items-center font-7 px-3 text-black">
                                             {project.title}
                                         </div>
