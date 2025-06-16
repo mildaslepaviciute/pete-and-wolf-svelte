@@ -29,7 +29,7 @@
           {@html renderBlocks(aboutData.textContent, true)}
         </div>
         <div class="flex-grow-1 d-flex flex-column justify-content-end">
-        <hr class="mb-2 d-none d-lg-block">
+        <hr class="mb-2 mt-0 d-none d-lg-block">
         <div class="row">
           <hr class="my-2 d-lg-none">
           <div class="col-lg-4 d-flex flex-column  justify-content-end ">
