@@ -12,7 +12,7 @@
 
 
 <section class="d-lg-none h-100vh pt-4 overflow-hidden">
-  <div class="container h-100 d-flex flex-column" style="padding-top: 0.28rem;">
+  <div class="container h-100 d-flex flex-column scrolling-mob" style="padding-top: 0.28rem;">
     <div class="align-items-center gy-4 gy-lg-0 gx-5 pb-4 pb-lg-0">
         <a href="/" class="navbar-brand">
           <img src="/img/logo.svg" alt="Pete & Wolf">
@@ -43,7 +43,7 @@
 
 <section class="d-none d-lg-block h-100vh pt-below-nav overflow-hidden">
   <div class="container h-100 d-flex flex-column">
-    <div class="row align-items-center scrolling-mob gy-4 gy-lg-0 gx-5 pb-4 pb-lg-0">
+    <div class="row align-items-center gy-4 gy-lg-0 gx-5 pb-4 pb-lg-0">
       <div class="col-lg-6 h-lg-100 d-flex flex-column">
         <div class="w-100">
           <img src={homeData.image.url} alt={homeData.image.alt} class="w-100"/>

@@ -30,25 +30,24 @@
         </div>
         <div class="flex-grow-1 d-flex flex-column justify-content-end">
         <hr class="mb-2 mt-0 d-none d-lg-block">
-        <div class="row">
-          <hr class="my-2 d-lg-none">
-          <div class="col-lg-4 d-flex flex-column  justify-content-end ">
+        <div class="row g-0">
+          <hr class="my-3 d-lg-none">
+          <div class="col-lg-4 d-flex flex-column  justify-content-end font-6-mob">
               {@html renderBlocks(aboutData.col_1, true, true)}
-
           </div>
-          <hr class="my-2 d-lg-none">
-          <div class="col-lg-3 d-flex flex-column  justify-content-end ">
+          <hr class="my-3 d-lg-none">
+          <div class="col-lg-3 d-flex flex-column  justify-content-end font-6-mob">
               {@html renderBlocks(aboutData.col_2, true, true)}
           </div>
-          <hr class="my-2 d-lg-none">
-          <div class="col-lg-3 d-flex flex-column  justify-content-end ">
+          <hr class="my-3 d-lg-none">
+          <div class="col-lg-3 d-flex flex-column  justify-content-end font-6-mob">
               {@html renderBlocks(aboutData.col_3, true, true)}
           </div>
-          <hr class="my-2 d-lg-none">
-          <div class="col-lg-2 d-flex flex-column  justify-content-end">
+          <hr class="my-3 d-lg-none">
+          <div class="col-lg-2 d-flex flex-column  justify-content-end font-6-mob">
               {@html renderBlocks(aboutData.col_4, true, true)}
           </div>
-          <hr class="my-2 d-lg-none">
+          <hr class="my-3 d-lg-none">
         </div>
         <hr class="d-none d-lg-block mt-2 mb-0">
       </div>

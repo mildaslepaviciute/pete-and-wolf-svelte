@@ -488,6 +488,10 @@ a:hover {
         font-size: 1.8rem;
     }
 
+    .font-6-mob * {
+         font-size: $fs-6!important;
+    }
+
     .ratio-1x1-mob {
         --bs-aspect-ratio: 100%;
     }
@@ -499,6 +503,10 @@ a:hover {
 
     .pe-0-mob {
         padding-right: 0;
+    }
+
+    .pe-10px-mob {
+        padding-right: 12px;
     }
 
     .border-x-0-mob {
@@ -735,3 +743,5 @@ a:hover {
 .plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]::before {
   background: #0022f7;
 }
+
+.plyr--full-ui.plyr--video .plyr__control--overlaid {}
