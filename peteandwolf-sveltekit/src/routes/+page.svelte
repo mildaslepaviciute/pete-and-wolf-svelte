@@ -11,9 +11,9 @@
 </svelte:head>
 
 
-<section class="d-lg-none h-100vh pt-3 overflow-hidden">
-  <div class="container h-100 d-flex flex-column px-4">
-    <div class="align-items-center scrolling-mob gy-4 gy-lg-0 gx-5 pb-4 pb-lg-0">
+<section class="d-lg-none h-100vh pt-4 overflow-hidden">
+  <div class="container h-100 d-flex flex-column" style="padding-top: 0.28rem;">
+    <div class="align-items-center gy-4 gy-lg-0 gx-5 pb-4 pb-lg-0">
         <a href="/" class="navbar-brand">
           <img src="/img/logo.svg" alt="Pete & Wolf">
         </a>
