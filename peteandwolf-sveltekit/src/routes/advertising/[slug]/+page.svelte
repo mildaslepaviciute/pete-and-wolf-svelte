@@ -417,118 +417,118 @@
 	}
 
     // Add this function to handle video feed HLS setup
-// Updated function to always use lowest quality for video feed
-function setupVideoFeedHLS(videoElement, videoId) {
-    const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
-    const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
-    
-    if (Hls.isSupported()) {
-        const hls = new Hls({
-            startLevel: 0, // Start with lowest quality
-            maxLoadingDelay: 2,
-            maxBufferLength: 5, // Shorter buffer for preview videos
-            maxBufferSize: 10 * 1000, // 10MB for previews
-            liveSyncDurationCount: 1,
-            autoStartLoad: true,
-            enableWorker: true,
-            // Disable automatic quality switching
-            capLevelToPlayerSize: false,
-            capLevelOnFPSDrop: false,
-        });
+    // Updated function to always use lowest quality for video feed
+    function setupVideoFeedHLS(videoElement, videoId) {
+        const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
+        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
         
-        hls.loadSource(hlsUrl);
-        hls.attachMedia(videoElement);
-        
-        // Force lowest quality when manifest is loaded
-        hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-            console.log('Video feed levels available:', data.levels.length);
-            // Always set to lowest quality (index 0)
-            hls.currentLevel = 0;
-            console.log('Video feed forced to lowest quality:', data.levels[0]);
-        });
-        
-        // Prevent automatic quality changes
-        hls.on(Hls.Events.LEVEL_SWITCHING, (event, data) => {
-            console.log('Video feed level switching to:', data.level);
-            // If it tries to switch to a higher level, force it back to 0
-            if (data.level > 0) {
-                setTimeout(() => {
-                    hls.currentLevel = 0;
-                }, 100);
-            }
-        });
-        
-        hls.on(Hls.Events.ERROR, (event, data) => {
-            console.warn('HLS error for video feed:', data);
-            // Fallback to MP4 on error
-            if (data.fatal) {
-                videoElement.src = mp4Url;
-                videoElement.load();
-            }
-        });
-        
-        // Store HLS instance on the video element for cleanup
-        videoElement._hls = hls;
-        
-        return hls;
-    } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-        // Native HLS support (Safari) - no quality control available
-        videoElement.src = hlsUrl;
-        return null;
-    } else {
-        // Fallback to MP4 (lowest quality)
-        videoElement.src = mp4Url;
-        return null;
-    }
-}
-
-// Update your startVideoFeed function
-function startVideoFeed() {
-    const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
-
-    videoFeedItems.forEach((video) => {
-        // Clean up existing HLS instance if any
-        if (video._hls) {
-            video._hls.destroy();
-            video._hls = null;
-        }
-        
-        // Get video ID from the video element's data attribute or src
-        const videoId = video.dataset.videoId;
-        if (videoId) {
-            setupVideoFeedHLS(video, videoId);
-        }
-        
-        video.muted = true;
-        video.defaultMuted = true;
-        video.preload = 'metadata';
-        
-        // Play with better error handling
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(e => {
-                console.log('Video feed play failed:', e);
-                // Retry once after a short delay
-                setTimeout(() => {
-                    video.play().catch(() => {
-                        console.log('Video feed retry failed');
-                    });
-                }, 100);
+        if (Hls.isSupported()) {
+            const hls = new Hls({
+                startLevel: 0, // Start with lowest quality
+                maxLoadingDelay: 2,
+                maxBufferLength: 5, // Shorter buffer for preview videos
+                maxBufferSize: 1 * 1000, // 10MB for previews
+                liveSyncDurationCount: 1,
+                autoStartLoad: true,
+                enableWorker: true,
+                // Disable automatic quality switching
+                capLevelToPlayerSize: false,
+                capLevelOnFPSDrop: false,
             });
+            
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(videoElement);
+            
+            // Force lowest quality when manifest is loaded
+            hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+                console.log('Video feed levels available:', data.levels.length);
+                // Always set to lowest quality (index 0)
+                hls.currentLevel = 0;
+                console.log('Video feed forced to lowest quality:', data.levels[0]);
+            });
+            
+            // Prevent automatic quality changes
+            hls.on(Hls.Events.LEVEL_SWITCHING, (event, data) => {
+                console.log('Video feed level switching to:', data.level);
+                // If it tries to switch to a higher level, force it back to 0
+                if (data.level > 0) {
+                    setTimeout(() => {
+                        hls.currentLevel = 0;
+                    }, 100);
+                }
+            });
+            
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                console.warn('HLS error for video feed:', data);
+                // Fallback to MP4 on error
+                if (data.fatal) {
+                    videoElement.src = mp4Url;
+                    videoElement.load();
+                }
+            });
+            
+            // Store HLS instance on the video element for cleanup
+            videoElement._hls = hls;
+            
+            return hls;
+        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            // Native HLS support (Safari) - no quality control available
+            videoElement.src = hlsUrl;
+            return null;
+        } else {
+            // Fallback to MP4 (lowest quality)
+            videoElement.src = mp4Url;
+            return null;
         }
-    });
-}
+    }
 
-// Add cleanup function for video feed
-function cleanupVideoFeed() {
-    const videoFeedItems = document.querySelectorAll(".video-feed-item");
-    videoFeedItems.forEach((video) => {
-        if (video._hls) {
-            video._hls.destroy();
-            video._hls = null;
-        }
-    });
-}
+    // Update your startVideoFeed function
+    function startVideoFeed() {
+        const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
+
+        videoFeedItems.forEach((video) => {
+            // Clean up existing HLS instance if any
+            if (video._hls) {
+                video._hls.destroy();
+                video._hls = null;
+            }
+            
+            // Get video ID from the video element's data attribute or src
+            const videoId = video.dataset.videoId;
+            if (videoId) {
+                setupVideoFeedHLS(video, videoId);
+            }
+            
+            video.muted = true;
+            video.defaultMuted = true;
+            video.preload = 'metadata';
+            
+            // Play with better error handling
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    console.log('Video feed play failed:', e);
+                    // Retry once after a short delay
+                    setTimeout(() => {
+                        video.play().catch(() => {
+                            console.log('Video feed retry failed');
+                        });
+                    }, 100);
+                });
+            }
+        });
+    }
+
+    // Add cleanup function for video feed
+    function cleanupVideoFeed() {
+        const videoFeedItems = document.querySelectorAll(".video-feed-item");
+        videoFeedItems.forEach((video) => {
+            if (video._hls) {
+                video._hls.destroy();
+                video._hls = null;
+            }
+        });
+    }
 
 	function updateSwiperTouch() {
 		const isMobile = window.innerWidth < 992;
