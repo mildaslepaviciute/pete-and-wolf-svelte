@@ -426,7 +426,7 @@
             const hls = new Hls({
                 startLevel: 0, // Start with lowest quality
                 maxLoadingDelay: 2,
-                maxBufferLength: 5, // Shorter buffer for preview videos
+                maxBufferLength: 2, // Shorter buffer for preview videos
                 maxBufferSize: 1 * 1000, // 10MB for previews
                 liveSyncDurationCount: 1,
                 autoStartLoad: true,
