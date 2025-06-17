@@ -466,19 +466,19 @@ function createPlayer(videoElement, videoId) {
         });
     }
 
-// Updated cleanup function
-function cleanupVideoFeed() {
-    const videoFeedItems = document.querySelectorAll(".video-feed-item");
-    videoFeedItems.forEach((video) => {
-        if (video._hls) {
-            video._hls.destroy();
-            video._hls = null;
-        }
-        // For MP4, we just need to pause and clear src
-        video.pause();
-        video.src = '';
-    });
-}
+    // Updated cleanup function
+    function cleanupVideoFeed() {
+        const videoFeedItems = document.querySelectorAll(".video-feed-item");
+        videoFeedItems.forEach((video) => {
+            if (video._hls) {
+                video._hls.destroy();
+                video._hls = null;
+            }
+            // For MP4, we just need to pause and clear src
+            video.pause();
+            //video.src = '';
+        });
+    }
 
 	function updateSwiperTouch() {
 		const isMobile = window.innerWidth < 992;
