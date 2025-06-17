@@ -523,6 +523,7 @@ a:hover {
         scroll-behavior: smooth;
         -ms-overflow-style: none;
         scrollbar-width: none;
+        overscroll-behavior: none;
     }
     
     .scrolling-mob::-webkit-scrollbar {
