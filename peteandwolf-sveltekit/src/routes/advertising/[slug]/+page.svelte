@@ -185,7 +185,7 @@
         // Try HLS first for better streaming performance
         if (Hls.isSupported()) {
             hls = new Hls({
-                startLevel: 5, // Start with medium quality
+                startLevel: -1,
                 maxLoadingDelay: 4,
                 maxBufferLength: 10,
                 maxBufferSize: 60 * 1000 * 1000, // 60MB
