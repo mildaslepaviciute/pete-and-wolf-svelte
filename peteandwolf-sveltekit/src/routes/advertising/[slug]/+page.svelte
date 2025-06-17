@@ -470,7 +470,7 @@ function createPlayer(videoElement, videoId) {
 
 		updateActiveSlides($page.params.slug);
 
-        //startVideoFeed();
+        startVideoFeed();
 
         saveVideoSize();
 
