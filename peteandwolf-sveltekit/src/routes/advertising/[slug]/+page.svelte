@@ -470,10 +470,6 @@ function createPlayer(videoElement, videoId) {
     function cleanupVideoFeed() {
         const videoFeedItems = document.querySelectorAll(".video-feed-item");
         videoFeedItems.forEach((video) => {
-            if (video._hls) {
-                video._hls.destroy();
-                video._hls = null;
-            }
             // For MP4, we just need to pause and clear src
             video.pause();
             //video.src = '';
@@ -660,6 +656,7 @@ function createPlayer(videoElement, videoId) {
                                             autoplay
                                             muted
                                             preload="metadata"
+                                            poster="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
                                         >
                                             <!-- Direct MP4 source -->
                                             <source src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4" type="video/mp4">
