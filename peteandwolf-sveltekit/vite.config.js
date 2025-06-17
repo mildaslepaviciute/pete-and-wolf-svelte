@@ -18,8 +18,19 @@ export default defineConfig({
         cssMinify: true,
         rollupOptions: {
             output: {
+                // Add timestamp to prevent caching
+                entryFileNames: 'assets/[name]-[hash]-' + Date.now() + '.js',
+                chunkFileNames: 'assets/[name]-[hash]-' + Date.now() + '.js',
+                assetFileNames: 'assets/[name]-[hash]-' + Date.now() + '.[ext]',
                 manualChunks: undefined // Prevents code splitting for CSS
             }
+        }
+    },
+    server: {
+        headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
         }
     }
 });
