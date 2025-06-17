@@ -351,6 +351,7 @@ video {
     scroll-behavior: smooth;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    overscroll-behavior: none;
 }
 
 .scrolling::-webkit-scrollbar {
@@ -673,6 +674,7 @@ a:hover {
         scroll-behavior: smooth;
         -ms-overflow-style: none;
         scrollbar-width: none;
+        overscroll-behavior: none;
     }
     
     .scrolling-lg::-webkit-scrollbar {
