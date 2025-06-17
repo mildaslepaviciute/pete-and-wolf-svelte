@@ -449,20 +449,19 @@ function createPlayer(videoElement, videoId) {
         videoFeedItems.forEach((video) => {
             
             const videoId = video.dataset.videoId;
-            if (videoId) {
-                setupVideoFeedMP4(video, videoId);
-            }
+            // if (videoId) {
+            //     setupVideoFeedMP4(video, videoId);
+            // }
             
             video.muted = true;
             video.defaultMuted = true;
             video.load();
-            
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(e => {
-                    console.log(`Video feed ${videoId} play failed:`, e);
-                });
-            }
+            video.play();
+            // if (playPromise !== undefined) {
+            //     playPromise.catch(e => {
+            //         console.log(`Video feed ${videoId} play failed:`, e);
+            //     });
+            // }
         });
     }
 
