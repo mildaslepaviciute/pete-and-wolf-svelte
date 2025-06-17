@@ -422,46 +422,16 @@ function createPlayer(videoElement, videoId) {
 		});
 	}
 
-    // 7-second MP4 video feed with limited buffering
-    function setupVideoFeedMP4(videoElement, videoId) {
-        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
-        
-        videoElement.src = mp4Url;
-        videoElement.preload = 'none'; // Don't preload to control buffering
-        
-        
-        // Limit to 7 seconds and loop
-        videoElement.addEventListener('timeupdate', () => {
-            if (videoElement.currentTime >= 7) {
-                videoElement.currentTime = 0;
-            }
-        });
-        
-        videoElement.addEventListener('error', (e) => {
-            console.log(`Video feed error for ${videoId}:`, e);
-        });
-    }
 
     // Updated startVideoFeed function
     function startVideoFeed() {
         const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
 
         videoFeedItems.forEach((video) => {
-            
-            const videoId = video.dataset.videoId;
-            // if (videoId) {
-            //     setupVideoFeedMP4(video, videoId);
-            // }
-            
             video.muted = true;
             video.defaultMuted = true;
             video.load();
             video.play();
-            // if (playPromise !== undefined) {
-            //     playPromise.catch(e => {
-            //         console.log(`Video feed ${videoId} play failed:`, e);
-            //     });
-            // }
         });
     }
 
@@ -500,7 +470,7 @@ function createPlayer(videoElement, videoId) {
 
 		updateActiveSlides($page.params.slug);
 
-        startVideoFeed();
+        //startVideoFeed();
 
         saveVideoSize();
 
@@ -540,8 +510,6 @@ function createPlayer(videoElement, videoId) {
         
         if (!mainVideoContainer) return;
 
-        console.log(mainVideoContainer.offsetWidth);
-        
         document.documentElement.style.setProperty('--video-width', `${mainVideoContainer.offsetWidth}px`);
         document.documentElement.style.setProperty('--video-height', `${mainVideoContainer.offsetHeight}px`);
     }
@@ -649,7 +617,6 @@ function createPlayer(videoElement, videoId) {
                                     <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
                                         <video 
                                             class="w-100 object-fit-cover video-feed-item" 
-                                            data-video-id="{project.videoPreviewId || project.videoId}"
                                             playsinline
                                             loop 
                                             autoplay
@@ -657,7 +624,6 @@ function createPlayer(videoElement, videoId) {
                                             preload="metadata"
                                             poster="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
                                         >
-                                            <!-- Direct MP4 source -->
                                             <source src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4" type="video/mp4">
                                         </video>
                                     </div>
