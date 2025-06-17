@@ -416,58 +416,49 @@
 		});
 	}
 
-  // Simple MP4-only setup for video feed
-function setupVideoFeedMP4(videoElement, videoId) {
-    const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
-    
-    videoElement.src = mp4Url;
-    videoElement.load();
-    
-    // Add basic error handling
-    videoElement.addEventListener('error', (e) => {
-        console.log(`Video feed error for ${videoId}:`, e);
-        // Could add a placeholder image or retry logic here if needed
-    });
-    
-    return null; // No HLS instance to return
-}
+    // 7-second MP4 video feed with limited buffering
+    function setupVideoFeedMP4(videoElement, videoId) {
+        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
+        
+        videoElement.src = mp4Url;
+        videoElement.preload = 'none'; // Don't preload to control buffering
+        
+        
+        // Limit to 7 seconds and loop
+        videoElement.addEventListener('timeupdate', () => {
+            if (videoElement.currentTime >= 7) {
+                videoElement.currentTime = 0;
+            }
+        });
+        
+        videoElement.addEventListener('error', (e) => {
+            console.log(`Video feed error for ${videoId}:`, e);
+        });
+    }
 
-// Updated startVideoFeed function - much simpler
-function startVideoFeed() {
-    const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
+    // Updated startVideoFeed function
+    function startVideoFeed() {
+        const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
 
-    videoFeedItems.forEach((video) => {
-        // Clean up any existing HLS instances (from previous attempts)
-        if (video._hls) {
-            video._hls.destroy();
-            video._hls = null;
-        }
-        
-        const videoId = video.dataset.videoId;
-        if (videoId) {
-            // Simple MP4 setup
-            setupVideoFeedMP4(video, videoId);
-        }
-        
-        video.muted = true;
-        video.defaultMuted = true;
-        video.preload = 'metadata';
-        
-        // Play with error handling
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(e => {
-                console.log(`Video feed ${videoId} play failed:`, e);
-                // Simple retry after delay
-                setTimeout(() => {
-                    video.play().catch(() => {
-                        console.log(`Video feed ${videoId} retry failed`);
-                    });
-                }, 200);
-            });
-        }
-    });
-}
+        videoFeedItems.forEach((video) => {
+            
+            const videoId = video.dataset.videoId;
+            if (videoId) {
+                setupVideoFeedMP4(video, videoId);
+            }
+            
+            video.muted = true;
+            video.defaultMuted = true;
+            video.load();
+            
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    console.log(`Video feed ${videoId} play failed:`, e);
+                });
+            }
+        });
+    }
 
 // Updated cleanup function
 function cleanupVideoFeed() {
