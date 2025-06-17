@@ -418,69 +418,131 @@
 
     // Add this function to handle video feed HLS setup
     // Updated function to always use lowest quality for video feed
-    function setupVideoFeedHLS(videoElement, videoId) {
-        const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
-        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
+   function setupVideoFeedHLS(videoElement, videoId) {
+    const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
+    const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
+    
+    if (Hls.isSupported()) {
+        const hls = new Hls({
+            // Optimized for 1-minute previews with reasonable buffer sizes
+            startLevel: 0, // Always start with lowest quality
+            maxLoadingDelay: 4,
+            maxBufferLength: 10, // 10 seconds of video buffered ahead
+            maxBufferSize: 2 * 1000 * 1000, // 2MB buffer per video (much more reasonable)
+            maxBufferHole: 0.5,
+            
+            // Stall recovery settings
+            maxStarvationDelay: 4,
+            maxSeekHole: 2,
+            
+            // Keep back buffer small for memory efficiency
+            backBufferLength: 3, // Only keep 3 seconds behind current position
+            
+            // Disable caps that might interfere
+            capLevelToPlayerSize: false,
+            capLevelOnFPSDrop: false,
+            
+            // Network retry settings
+            fragLoadingMaxRetry: 2, // Reduced retries
+            fragLoadingMaxRetryTimeout: 3000,
+            manifestLoadingMaxRetry: 2,
+            manifestLoadingMaxRetryTimeout: 3000,
+            
+            // Enable progressive loading
+            progressive: true,
+            enableWorker: true,
+        });
         
-        if (Hls.isSupported()) {
-            const hls = new Hls({
-                startLevel: 0, // Start with lowest quality
-                maxLoadingDelay: 2,
-                maxBufferLength: 2, // Shorter buffer for preview videos
-                maxBufferSize: 1 * 1000, // 10MB for previews
-                liveSyncDurationCount: 1,
-                autoStartLoad: true,
-                enableWorker: true,
-                // Disable automatic quality switching
-                capLevelToPlayerSize: false,
-                capLevelOnFPSDrop: false,
-            });
-            
-            hls.loadSource(hlsUrl);
-            hls.attachMedia(videoElement);
-            
-            // Force lowest quality when manifest is loaded
-            hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-                console.log('Video feed levels available:', data.levels.length);
-                // Always set to lowest quality (index 0)
+        hls.loadSource(hlsUrl);
+        hls.attachMedia(videoElement);
+        
+        // Force lowest quality and prevent switching
+        hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+            console.log(`Video feed ${videoId}: ${data.levels.length} quality levels available`);
+            hls.currentLevel = 0; // Lock to lowest quality
+        });
+        
+        // Prevent any quality switching
+        hls.on(Hls.Events.LEVEL_SWITCHING, (event, data) => {
+            if (data.level !== 0) {
                 hls.currentLevel = 0;
-                console.log('Video feed forced to lowest quality:', data.levels[0]);
-            });
+            }
+        });
+        
+        // Enhanced error handling
+        hls.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+                console.log(`Fatal error in video feed ${videoId}, switching to MP4`);
+                hls.destroy();
+                videoElement._hls = null;
+                videoElement.src = mp4Url;
+                videoElement.load();
+                return;
+            }
             
-            // Prevent automatic quality changes
-            hls.on(Hls.Events.LEVEL_SWITCHING, (event, data) => {
-                console.log('Video feed level switching to:', data.level);
-                // If it tries to switch to a higher level, force it back to 0
-                if (data.level > 0) {
+            // Handle specific error types
+            switch (data.type) {
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                    try {
+                        hls.recoverMediaError();
+                    } catch (err) {
+                        hls.destroy();
+                        videoElement._hls = null;
+                        videoElement.src = mp4Url;
+                        videoElement.load();
+                    }
+                    break;
+                    
+                case Hls.ErrorTypes.NETWORK_ERROR:
                     setTimeout(() => {
-                        hls.currentLevel = 0;
-                    }, 100);
-                }
-            });
-            
-            hls.on(Hls.Events.ERROR, (event, data) => {
-                console.warn('HLS error for video feed:', data);
-                // Fallback to MP4 on error
-                if (data.fatal) {
-                    videoElement.src = mp4Url;
-                    videoElement.load();
-                }
-            });
-            
-            // Store HLS instance on the video element for cleanup
-            videoElement._hls = hls;
-            
-            return hls;
-        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-            // Native HLS support (Safari) - no quality control available
-            videoElement.src = hlsUrl;
-            return null;
-        } else {
-            // Fallback to MP4 (lowest quality)
+                        if (hls && !hls.destroyed) {
+                            hls.startLoad();
+                        }
+                    }, 1000);
+                    break;
+                    
+                default:
+                    if (data.details === 'bufferStalledError') {
+                        // Try simple recovery first
+                        try {
+                            const currentTime = videoElement.currentTime;
+                            videoElement.currentTime = currentTime + 0.1;
+                        } catch (seekError) {
+                            // If recovery fails, fallback to MP4
+                            hls.destroy();
+                            videoElement._hls = null;
+                            videoElement.src = mp4Url;
+                            videoElement.load();
+                        }
+                    }
+                    break;
+            }
+        });
+        
+        videoElement._hls = hls;
+        return hls;
+        
+    } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+        // Native HLS support (Safari)
+        videoElement.src = hlsUrl;
+        
+        videoElement.addEventListener('error', (e) => {
             videoElement.src = mp4Url;
-            return null;
-        }
+            videoElement.load();
+        });
+        
+        videoElement.addEventListener('stalled', (e) => {
+            videoElement.src = mp4Url;
+            videoElement.load();
+        });
+        
+        return null;
+    } else {
+        // Fallback to MP4
+        videoElement.src = mp4Url;
+        return null;
     }
+}
 
     // Update your startVideoFeed function
     function startVideoFeed() {
