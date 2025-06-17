@@ -175,139 +175,60 @@
         });
     }
 
-    // Optimized video creation with HLS support
-    function createPlayer(videoElement, videoId) {
-        const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
-        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
-        
-        let hls = null;
-        
-        if (Hls.isSupported()) {
-            hls = new Hls({
-                startLevel: -1, // Auto-select best quality
-                maxLoadingDelay: 2, // Reduced from 4 for faster loading
-                maxBufferLength: 6, // Reduced from 30 for better memory usage
-                maxBufferSize: 10 * 1000 * 1000, // Reduced from 60MB to 40MB
-                maxBufferHole: 0.5,
-                lowLatencyMode: false,
-                backBufferLength: 10, // Keep 10s of back buffer
-                
-                // Network optimizations
-                fragLoadingMaxRetry: 3,
-                fragLoadingMaxRetryTimeout: 3000,
-                manifestLoadingMaxRetry: 3,
-                manifestLoadingMaxRetryTimeout: 3000,
-                
-                // Performance optimizations
-                enableWorker: true,
-                progressive: true,
-                
-                // Quality switching optimizations
-                abrEwmaFastLive: 3.0,
-                abrEwmaSlowLive: 9.0,
-                abrEwmaFastVoD: 3.0,
-                abrEwmaSlowVoD: 9.0,
-            });
-            
-            hls.loadSource(hlsUrl);
-            hls.attachMedia(videoElement);
-            
-            // Wait for manifest before creating player
-            hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-                console.log(`Main player ${videoId}: ${data.levels.length} quality levels available`);
-                
-                // Log available qualities for debugging
-                data.levels.forEach((level, index) => {
-                    console.log(`Level ${index}: ${level.width}x${level.height} @ ${Math.round(level.bitrate/1000)}kbps`);
-                });
-            });
-            
-            // Enhanced error handling
-            hls.on(Hls.Events.ERROR, (event, data) => {
-                console.error('HLS error:', data);
-                
-                if (data.fatal) {
-                    switch (data.type) {
-                        case Hls.ErrorTypes.NETWORK_ERROR:
-                            console.log('Network error, retrying...');
-                            hls.startLoad();
-                            break;
-                        case Hls.ErrorTypes.MEDIA_ERROR:
-                            console.log('Media error, attempting recovery...');
-                            hls.recoverMediaError();
-                            break;
-                        default:
-                            console.log('Fatal error, switching to MP4 fallback');
-                            hls.destroy();
-                            videoElement.src = mp4Url;
-                            break;
-                    }
-                }
-            });
-            
-        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-            // Native HLS support (Safari)
-            videoElement.src = hlsUrl;
-            
-            // Add error handling for native HLS
-            videoElement.addEventListener('error', (e) => {
-                console.log('Native HLS error, switching to MP4');
-                videoElement.src = mp4Url;
-            });
-            
-        } else {
-            // Fallback to MP4
-            videoElement.src = mp4Url;
-        }
-
-        // Optimized video element settings
-        videoElement.preload = 'metadata';
-        videoElement.playsInline = true; // Important for mobile
-        videoElement.load();
-        
-        // Create Plyr instance with optimized settings
-        const player = new Plyr(videoElement, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-            autoplay: true,
-            muted: true,
-            loop: { active: false },
-            settings: ['quality', 'speed'], // Enable quality controls
-            quality: { default: 'auto' },
-            
-            // Performance optimizations
-            keyboard: { focused: true, global: false },
-            tooltips: { controls: false, seek: true },
-            
-            // Reduce DOM updates
-            displayDuration: false,
-            invertTime: false,
+ // Simple video player with mobile optimization
+function createPlayer(videoElement, videoId) {
+    const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
+    const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
+    
+    let hls = null;
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (Hls.isSupported()) {
+        hls = new Hls({
+            startLevel: 1, // Start at level 1 (second quality)
+            maxBufferLength: 10,
+            maxBufferSize: 20 * 1000 * 1000, // 20MB
         });
-
-        // Handle Plyr quality changes for HLS
-        if (hls) {
-            player.on('qualitychange', (event) => {
-                const quality = event.detail.quality;
-                console.log('Quality changed to:', quality);
-                
-                // Handle quality switching
-                if (quality === 'auto') {
-                    hls.currentLevel = -1;
-                } else {
-                    // Find matching level by resolution
-                    const levels = hls.levels;
-                    const levelIndex = levels.findIndex(level => 
-                        level.height == quality || `${level.height}p` === quality
-                    );
-                    
-                    if (levelIndex !== -1) {
-                        hls.currentLevel = levelIndex;
-                    }
-                }
-            });
-        }
-
-        return { player, hls };
+        
+        hls.loadSource(hlsUrl);
+        hls.attachMedia(videoElement);
+        
+        // Lock mobile to level 1
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            if (isMobile) {
+                hls.currentLevel = 1; // Lock to level 1 on mobile
+                console.log('Mobile detected: locked to quality level 1');
+            }
+        });
+        
+        // Simple error handling - just switch to MP4
+        hls.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+                console.log('HLS failed, switching to MP4');
+                hls.destroy();
+                videoElement.src = mp4Url;
+                videoElement.load();
+            }
+        });
+        
+    } else {
+        // Fallback to MP4
+        videoElement.src = mp4Url;
     }
+
+    videoElement.preload = 'metadata';
+    videoElement.playsInline = true;
+    videoElement.load();
+    
+    // Simple Plyr setup
+    const player = new Plyr(videoElement, {
+        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+        autoplay: true,
+        muted: true,
+    });
+
+    return { player, hls };
+}
 
     // Optimized crossfade with better loading detection
     async function crossfadeVideo(newVideoId) {
