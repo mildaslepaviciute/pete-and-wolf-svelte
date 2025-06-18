@@ -351,7 +351,7 @@ function createPlayer(videoElement, videoId) {
         //     }, 2000); // Reduced from 3000ms
         // });
 
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 500));
 
 
         console.log('Starting optimized video crossfade animation');
