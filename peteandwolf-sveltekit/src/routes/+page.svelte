@@ -17,15 +17,16 @@
         <img src="/img/logo.svg" alt="Pete & Wolf">
       </a>
       <hr class="mt-3 mb-2">
-      <h1 class="w-100 font-6 fw-bold">{homeData.title}</h1>
+      <h1 class="w-100 font-6 fw-bold mb-0">{homeData.title}</h1>
 
-      <!-- <div class="flex-grow-1"></div> -->
+      <div class="flex-grow-1"></div>
 
-      <div class="w-10 mt-3">
+      <div class="w-100">
         <img src={homeData.image.url} alt={homeData.image.alt} class="w-100"/>
       </div> 
 
       <div class="flex-grow-1"></div>
+
 
       <hr class="mt-1 mb-0">
 
