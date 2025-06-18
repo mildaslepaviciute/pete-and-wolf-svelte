@@ -13,31 +13,39 @@
 
 <section class="d-lg-none h-100vh pt-4 overflow-hidden">
   <div class="container h-100 d-flex flex-column scrolling-mob" style="padding-top: 0.28rem;">
-    <div class="align-items-center gy-4 gy-lg-0 gx-5 pb-4 pb-lg-0">
-        <a href="/" class="navbar-brand">
-          <img src="/img/logo.svg" alt="Pete & Wolf">
-        </a>
-        <hr class="mt-3 mb-2">
-        <h1 class="w-100 font-6 fw-bold pb-3 mb-3">{homeData.title}</h1>
-        <div class="w-100">
-          <img src={homeData.image.url} alt={homeData.image.alt} class="w-100"/>
-        </div> 
-        <hr class="mt-5 mb-0">
-          <a href="/advertising" class="d-flex justify-content-between align-items-center pill-link font-2 fw-bold text-black text-decoration-none arrow-link-hover">
-            <span>Advertising</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left ms-1 font-3 arrow-move" viewBox="0 0 16 16" style="width: 1em; height: 1em;">
-              <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 .5-.5z"/>
-            </svg>
-          </a>
-          <hr class="mt-0 mb-0">
-          <a href="/cases/sonic-id" class="d-flex justify-content-between align-items-center pill-link font-2 fw-bold text-black text-decoration-none arrow-link-hover">
-            <span>Cases</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left ms-1 font-3 arrow-move" viewBox="0 0 16 16" style="width: 1em; height: 1em;">
-              <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 .5-.5z"/>
-            </svg>
-          </a>
-          <hr class="mt-0 mb-4">
-    </div>
+      <a href="/" class="navbar-brand">
+        <img src="/img/logo.svg" alt="Pete & Wolf">
+      </a>
+      <hr class="mt-3 mb-2">
+      <h1 class="w-100 font-6 fw-bold">{homeData.title}</h1>
+
+      <!-- <div class="flex-grow-1"></div> -->
+
+      <div class="w-10 mt-3">
+        <img src={homeData.image.url} alt={homeData.image.alt} class="w-100"/>
+      </div> 
+
+      <div class="flex-grow-1"></div>
+
+      <hr class="mt-1 mb-0">
+
+      <a href="/advertising" class="d-flex justify-content-between align-items-center pill-link font-2 fw-bold text-black text-decoration-none arrow-link-hover">
+        <span>Advertising</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left ms-1 font-3 arrow-move" viewBox="0 0 16 16" style="width: 1em; height: 1em;">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 .5-.5z"/>
+        </svg>
+      </a>
+
+      <hr class="mt-0 mb-0">
+
+      <a href="/cases/sonic-id" class="d-flex justify-content-between align-items-center pill-link font-2 fw-bold text-black text-decoration-none arrow-link-hover">
+        <span>Cases</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left ms-1 font-3 arrow-move" viewBox="0 0 16 16" style="width: 1em; height: 1em;">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 .5-.5z"/>
+        </svg>
+      </a>
+
+      <hr class="mt-0 mb-4">
   </div>
 </section>
 
