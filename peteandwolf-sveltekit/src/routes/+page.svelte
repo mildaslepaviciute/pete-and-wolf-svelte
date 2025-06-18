@@ -11,7 +11,7 @@
 </svelte:head>
 
 
-<section class="d-lg-none h-100vh pt-4 overflow-hidden">
+<section class="d-sm-none h-100vh pt-4 overflow-hidden">
   <div class="container h-100 d-flex flex-column" style="padding-top: 0.28rem;">
       <a href="/" class="navbar-brand">
         <img src="/img/logo.svg" alt="Pete & Wolf">
@@ -50,15 +50,15 @@
   </div>
 </section>
 
-<section class="d-none d-lg-block h-100vh pt-below-nav overflow-hidden">
+<section class="d-none d-sm-block h-100vh pt-below-nav overflow-hidden">
   <div class="container h-100 d-flex flex-column">
     <div class="row align-items-center gy-4 gy-lg-0 gx-5 pb-4 pb-lg-0">
-      <div class="col-lg-6 h-lg-100 d-flex flex-column">
+      <div class="col-sm-6 h-lg-100 d-flex flex-column">
         <div class="w-100">
           <img src={homeData.image.url} alt={homeData.image.alt} class="w-100"/>
         </div> 
       </div>
-      <div class="col-lg-6 h-lg-100 d-flex flex-column">
+      <div class="col-sm-6 h-lg-100 d-flex flex-column">
         <hr class="mt-0 mb-3">
         <a href="/" class="navbar-brand">
           <img src="/img/logo.svg" alt="Pete & Wolf">

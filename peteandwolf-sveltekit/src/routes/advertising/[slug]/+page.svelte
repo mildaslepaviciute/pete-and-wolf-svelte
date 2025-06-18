@@ -311,45 +311,48 @@ function createPlayer(videoElement, videoId) {
         }
 
         // Improved loading detection - wait for video to be ready
-        await new Promise((resolve) => {
-            let isResolved = false;
+        // await new Promise((resolve) => {
+        //     let isResolved = false;
             
-            const resolveOnce = () => {
-                if (!isResolved) {
-                    isResolved = true;
-                    resolve();
-                }
-            };
+        //     const resolveOnce = () => {
+        //         if (!isResolved) {
+        //             isResolved = true;
+        //             resolve();
+        //         }
+        //     };
 
-            // Wait for player to be ready and video to have enough data
-            newPlayer.on('ready', () => {
-                console.log('Player ready');
-                // Check if video has enough data to play
-                if (newVideoElement.readyState >= 3) { // HAVE_FUTURE_DATA
-                    console.log('Video has enough data');
-                    resolveOnce();
-                } else {
-                    // Wait for canplaythrough for smoother playback
-                    newVideoElement.addEventListener('canplaythrough', resolveOnce, { once: true });
-                    // Fallback to canplay if canplaythrough takes too long
-                    setTimeout(() => {
-                        newVideoElement.addEventListener('canplay', resolveOnce, { once: true });
-                    }, 1000);
-                }
-            });
+        //     // Wait for player to be ready and video to have enough data
+        //     newPlayer.on('ready', () => {
+        //         console.log('Player ready');
+        //         // Check if video has enough data to play
+        //         if (newVideoElement.readyState >= 3) { // HAVE_FUTURE_DATA
+        //             console.log('Video has enough data');
+        //             resolveOnce();
+        //         } else {
+        //             // Wait for canplaythrough for smoother playback
+        //             newVideoElement.addEventListener('canplaythrough', resolveOnce, { once: true });
+        //             // Fallback to canplay if canplaythrough takes too long
+        //             setTimeout(() => {
+        //                 newVideoElement.addEventListener('canplay', resolveOnce, { once: true });
+        //             }, 1000);
+        //         }
+        //     });
 
-            // Additional safety nets
-            newVideoElement.addEventListener('loadeddata', () => {
-                console.log('Video loadeddata');
-                setTimeout(resolveOnce, 100);
-            });
+        //     // Additional safety nets
+        //     newVideoElement.addEventListener('loadeddata', () => {
+        //         console.log('Video loadeddata');
+        //         setTimeout(resolveOnce, 100);
+        //     });
 
-            // Reduced timeout for faster transitions
-            setTimeout(() => {
-                console.log('Video loading timeout, proceeding anyway');
-                resolveOnce();
-            }, 2000); // Reduced from 3000ms
-        });
+        //     // Reduced timeout for faster transitions
+        //     setTimeout(() => {
+        //         console.log('Video loading timeout, proceeding anyway');
+        //         resolveOnce();
+        //     }, 2000); // Reduced from 3000ms
+        // });
+
+        await new Promise(resolve => setTimeout(resolve, 200));
+
 
         console.log('Starting optimized video crossfade animation');
 
