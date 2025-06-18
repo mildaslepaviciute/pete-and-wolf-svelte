@@ -12,7 +12,7 @@
 
 
 <section class="d-lg-none h-100vh pt-4 overflow-hidden">
-  <div class="container h-100 d-flex flex-column scrolling-mob" style="padding-top: 0.28rem;">
+  <div class="container h-100 d-flex flex-column" style="padding-top: 0.28rem;">
       <a href="/" class="navbar-brand">
         <img src="/img/logo.svg" alt="Pete & Wolf">
       </a>
