@@ -384,201 +384,98 @@ function createPlayer(videoElement, videoId) {
 		});
 	}
 
-// Track loading state for all videos
-let videoLoadingState = new Map();
+// Simple video feed - waits for ALL videos to load
+let videosToLoad = new Set();
+let videosLoaded = new Set();
 let allVideosReady = false;
-let videoFeedInitialized = false;
 
-// Show photo first, then switch to video when ALL videos are ready
-function setupVideoFeedWithPhoto(videoElement, videoId) {
-    // Skip if already processed (prevents duplicates from loop)
-    if (videoLoadingState.has(videoId)) {
-        return;
-    }
-    
-    const photoUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/thumbnail.jpg`;
-    const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
-    
-    // Create photo element
-    const photoImg = document.createElement('img');
-    photoImg.src = photoUrl;
-    photoImg.style.cssText = `
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 2;
-        transition: opacity 0.3s ease;
-    `;
-    
-    // Add photo to video container
-    videoElement.parentElement.style.position = 'relative';
-    videoElement.parentElement.appendChild(photoImg);
-    
-    // Prepare video (hidden behind photo) - FORCE MUTED
-    videoElement.style.opacity = '0';
-    videoElement.src = mp4Url;
-    videoElement.preload = 'metadata';
-    videoElement.muted = true;
-    videoElement.defaultMuted = true;
-    videoElement.loop = true;
-    videoElement.playsInline = true;
-    videoElement.volume = 0;
-    
-    // Mark this video as loading (only once per unique videoId)
-    videoLoadingState.set(videoId, { 
-        loaded: false, 
-        elements: [videoElement],
-        photos: [photoImg],
-        processed: false
-    });
-    
-    // When individual video is ready to play - just mark as loaded, keep showing photo
-    videoElement.addEventListener('canplay', () => {
-        const videoState = videoLoadingState.get(videoId);
-        if (videoState && !videoState.loaded) {
-            console.log(`Video ${videoId} ready to play (${videoLoadingState.size - Array.from(videoLoadingState.values()).filter(v => v.loaded).length - 1} remaining)`);
-            videoState.loaded = true;
-            videoLoadingState.set(videoId, videoState);
-            
-            // Check if all videos are loaded
-            checkAllVideosLoaded();
-        }
-    }, { once: true });
-    
-    // Handle errors - keep showing photo
-    videoElement.addEventListener('error', () => {
-        const videoState = videoLoadingState.get(videoId);
-        if (videoState && !videoState.error) {
-            console.log(`Video ${videoId} failed to load, keeping photo`);
-            videoState.error = true;
-            videoLoadingState.set(videoId, videoState);
-            checkAllVideosLoaded();
-        }
-    }, { once: true });
-}
-
-// Check if all videos are loaded and start them together
-function checkAllVideosLoaded() {
-    if (allVideosReady) return;
-    
-    const allLoaded = Array.from(videoLoadingState.values()).every(video => 
-        video.loaded || video.error
-    );
-    
-    const totalUniqueVideos = videoLoadingState.size;
-    const loadedCount = Array.from(videoLoadingState.values()).filter(v => v.loaded).length;
-    
-    console.log(`Videos ready: ${loadedCount}/${totalUniqueVideos}`);
-    
-    // ONLY switch from photos to videos when ALL are ready
-    if (allLoaded && videoLoadingState.size > 0) {
-        console.log('🎬 ALL VIDEOS READY - Switching from photos to videos');
-        allVideosReady = true;
-        switchFromPhotosToVideos();
-    }
-}
-
-// Switch all photos to videos at once
-function switchFromPhotosToVideos() {
-    videoLoadingState.forEach((videoState, videoId) => {
-        if (videoState.loaded && !videoState.processed) {
-            // Find all video elements with this videoId (due to loop duplicates)
-            const allVideosWithId = swiper.el.querySelectorAll(`[data-video-id="${videoId}"]`);
-            
-            allVideosWithId.forEach((element) => {
-                const photo = element.parentElement.querySelector('img');
-                if (photo && element) {
-                    // ENSURE VIDEO IS MUTED
-                    element.muted = true;
-                    element.defaultMuted = true;
-                    element.volume = 0;
-                    
-                    // Fade out photo, fade in video
-                    photo.style.opacity = '0';
-                    element.style.opacity = '1';
-                    element.style.transition = 'opacity 0.3s ease';
-                    
-                    // Start playing the video (now that it's ready)
-                    element.play().catch(e => {
-                        console.log('Autoplay failed:', e);
-                    });
-                    
-                    // Remove photo after transition
-                    setTimeout(() => {
-                        if (photo.parentElement) {
-                            photo.parentElement.removeChild(photo);
-                        }
-                    }, 300);
-                }
-            });
-            
-            // Mark as processed
-            videoState.processed = true;
-        }
-    });
-}
-
-// Updated startVideoFeed function
 function startVideoFeed() {
-    if (videoFeedInitialized) return;
-    
-    // Reset loading state
-    videoLoadingState.clear();
-    allVideosReady = false;
-    
     if (!swiper) {
-        console.log('Swiper not ready, retrying...');
         setTimeout(startVideoFeed, 100);
         return;
     }
     
-    // Get only unique video IDs to avoid duplicates from loop
-    const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
-    const uniqueVideoIds = new Set();
+    console.log('🎬 Starting video feed - waiting for ALL videos to load');
     
-    console.log(`Found ${videoFeedItems.length} video elements in swiper`);
-
-    videoFeedItems.forEach((video) => {
-        const videoId = video.dataset.videoId || 
-                      video.querySelector('source')?.src?.match(/\/([^\/]+)\/play_240p\.mp4/)?.[1];
-        
-        if (videoId) {
-            uniqueVideoIds.add(videoId);
-            // Only setup the first occurrence of each unique video ID
-            if (!videoLoadingState.has(videoId)) {
-                setupVideoFeedWithPhoto(video, videoId);
-            }
+    const videoElements = swiper.el.querySelectorAll('.video-feed-item');
+    
+    // Get unique video IDs (skip duplicates from loop)
+    const uniqueVideos = new Map();
+    videoElements.forEach(video => {
+        const videoId = video.dataset.videoId;
+        if (videoId && !uniqueVideos.has(videoId)) {
+            uniqueVideos.set(videoId, video);
+            videosToLoad.add(videoId);
         }
     });
     
-    console.log(`Processing ${uniqueVideoIds.size} unique videos`);
-    videoFeedInitialized = true;
+    console.log(`📊 Need to load ${videosToLoad.size} unique videos`);
     
-    if (uniqueVideoIds.size === 0) {
-        console.log('No videos found in feed');
-        allVideosReady = true;
-    }
-}
-
-// Updated cleanup function
-function cleanupVideoFeed() {
-    videoLoadingState.clear();
-    allVideosReady = false;
-    videoFeedInitialized = false;
-    
-    const videoFeedItems = document.querySelectorAll(".video-feed-item");
-    videoFeedItems.forEach((video) => {
-        const photos = video.parentElement.querySelectorAll('img');
-        photos.forEach(img => img.remove());
-        video.pause();
-        video.style.opacity = '0';
+    // Setup each unique video
+    uniqueVideos.forEach((video, videoId) => {
+        video.muted = true;
+        video.volume = 0;
+        video.loop = true;
+        video.setAttribute('muted', '');
+        
+        video.addEventListener('canplay', () => {
+            videosLoaded.add(videoId);
+            console.log(`✅ Video ${videoId} loaded (${videosLoaded.size}/${videosToLoad.size})`);
+            
+            // Check if all are loaded
+            if (videosLoaded.size === videosToLoad.size && !allVideosReady) {
+                console.log('🎉 ALL VIDEOS LOADED - Starting playback!');
+                allVideosReady = true;
+                startAllVideos();
+            }
+        }, { once: true });
+        
+        video.addEventListener('error', (e) => {
+            console.error(`❌ Video ${videoId} failed to load:`, e);
+            videosLoaded.add(videoId); // Count as "loaded" so we don't wait forever
+            
+            if (videosLoaded.size === videosToLoad.size && !allVideosReady) {
+                console.log('🎉 ALL VIDEOS PROCESSED - Starting playback!');
+                allVideosReady = true;
+                startAllVideos();
+            }
+        }, { once: true });
+        
+        video.load();
     });
 }
 
-// Updated onMount to ensure proper initialization order
+function startAllVideos() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const video = entry.target;
+            const videoId = video.dataset.videoId;
+            
+            if (entry.isIntersecting) {
+                console.log(`👁️ Video ${videoId} visible - playing`);
+                video.play().catch(e => console.log('Play failed:', e));
+            } else {
+                console.log(`👁️‍🗨️ Video ${videoId} hidden - pausing`);
+                video.pause();
+            }
+        });
+    }, { 
+        threshold: 0.1,
+        root: swiper.el
+    });
+    
+    // Start observing all videos now
+    const videos = swiper.el.querySelectorAll('.video-feed-item');
+    videos.forEach(video => observer.observe(video));
+}
+
+// Reset when needed
+function resetVideoFeed() {
+    videosToLoad.clear();
+    videosLoaded.clear();
+    allVideosReady = false;
+}
+
 onMount(() => {
     swiper = new Swiper(".scrollSwiperAdvertising", {
         direction: "vertical",
@@ -592,11 +489,9 @@ onMount(() => {
             releaseOnEdges: true,
         },
         simulateTouch: window.innerWidth < 992,
-        // Add event listener for when swiper is fully initialized
         on: {
             init: function() {
                 console.log('Swiper initialized, starting video feed');
-                // Small delay to ensure DOM is fully ready
                 setTimeout(() => {
                     startVideoFeed();
                 }, 50);
@@ -607,8 +502,6 @@ onMount(() => {
     window.addEventListener("resize", updateSwiperTouch);
     updateActiveSlides($page.params.slug);
     saveVideoSize();
-
-    // Remove the startVideoFeed() call from here since it's now in swiper.on.init
 
     const closeCollapse = (event) => {
         if (isPanelOpen && collapseElement && !collapseElement.contains(event.target) && !collapseToggleButton.contains(event.target)) {
