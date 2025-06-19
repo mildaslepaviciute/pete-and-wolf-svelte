@@ -310,47 +310,6 @@ function createPlayer(videoElement, videoId) {
             hlsA = newHls;
         }
 
-        // Improved loading detection - wait for video to be ready
-        // await new Promise((resolve) => {
-        //     let isResolved = false;
-            
-        //     const resolveOnce = () => {
-        //         if (!isResolved) {
-        //             isResolved = true;
-        //             resolve();
-        //         }
-        //     };
-
-        //     // Wait for player to be ready and video to have enough data
-        //     newPlayer.on('ready', () => {
-        //         console.log('Player ready');
-        //         // Check if video has enough data to play
-        //         if (newVideoElement.readyState >= 3) { // HAVE_FUTURE_DATA
-        //             console.log('Video has enough data');
-        //             resolveOnce();
-        //         } else {
-        //             // Wait for canplaythrough for smoother playback
-        //             newVideoElement.addEventListener('canplaythrough', resolveOnce, { once: true });
-        //             // Fallback to canplay if canplaythrough takes too long
-        //             setTimeout(() => {
-        //                 newVideoElement.addEventListener('canplay', resolveOnce, { once: true });
-        //             }, 1000);
-        //         }
-        //     });
-
-        //     // Additional safety nets
-        //     newVideoElement.addEventListener('loadeddata', () => {
-        //         console.log('Video loadeddata');
-        //         setTimeout(resolveOnce, 100);
-        //     });
-
-        //     // Reduced timeout for faster transitions
-        //     setTimeout(() => {
-        //         console.log('Video loading timeout, proceeding anyway');
-        //         resolveOnce();
-        //     }, 2000); // Reduced from 3000ms
-        // });
-
         await new Promise(resolve => setTimeout(resolve, 500));
 
 
@@ -425,28 +384,259 @@ function createPlayer(videoElement, videoId) {
 		});
 	}
 
+// Track loading state for all videos
+let videoLoadingState = new Map();
+let allVideosReady = false;
+let videoFeedInitialized = false;
 
-    // Updated startVideoFeed function
-    function startVideoFeed() {
-        const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
-
-        videoFeedItems.forEach((video) => {
-            video.muted = true;
-            video.defaultMuted = true;
-            video.load();
-            video.play();
-        });
+// Show photo first, then switch to video when ALL videos are ready
+function setupVideoFeedWithPhoto(videoElement, videoId) {
+    // Skip if already processed (prevents duplicates from loop)
+    if (videoLoadingState.has(videoId)) {
+        return;
     }
+    
+    const photoUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/thumbnail.jpg`;
+    const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_240p.mp4`;
+    
+    // Create photo element
+    const photoImg = document.createElement('img');
+    photoImg.src = photoUrl;
+    photoImg.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 2;
+        transition: opacity 0.3s ease;
+    `;
+    
+    // Add photo to video container
+    videoElement.parentElement.style.position = 'relative';
+    videoElement.parentElement.appendChild(photoImg);
+    
+    // Prepare video (hidden behind photo) - FORCE MUTED
+    videoElement.style.opacity = '0';
+    videoElement.src = mp4Url;
+    videoElement.preload = 'metadata';
+    videoElement.muted = true;
+    videoElement.defaultMuted = true;
+    videoElement.loop = true;
+    videoElement.playsInline = true;
+    videoElement.volume = 0;
+    
+    // Mark this video as loading (only once per unique videoId)
+    videoLoadingState.set(videoId, { 
+        loaded: false, 
+        elements: [videoElement],
+        photos: [photoImg],
+        processed: false
+    });
+    
+    // When individual video is ready to play - just mark as loaded, keep showing photo
+    videoElement.addEventListener('canplay', () => {
+        const videoState = videoLoadingState.get(videoId);
+        if (videoState && !videoState.loaded) {
+            console.log(`Video ${videoId} ready to play (${videoLoadingState.size - Array.from(videoLoadingState.values()).filter(v => v.loaded).length - 1} remaining)`);
+            videoState.loaded = true;
+            videoLoadingState.set(videoId, videoState);
+            
+            // Check if all videos are loaded
+            checkAllVideosLoaded();
+        }
+    }, { once: true });
+    
+    // Handle errors - keep showing photo
+    videoElement.addEventListener('error', () => {
+        const videoState = videoLoadingState.get(videoId);
+        if (videoState && !videoState.error) {
+            console.log(`Video ${videoId} failed to load, keeping photo`);
+            videoState.error = true;
+            videoLoadingState.set(videoId, videoState);
+            checkAllVideosLoaded();
+        }
+    }, { once: true });
+}
 
-    // Updated cleanup function
-    function cleanupVideoFeed() {
-        const videoFeedItems = document.querySelectorAll(".video-feed-item");
-        videoFeedItems.forEach((video) => {
-            // For MP4, we just need to pause and clear src
-            video.pause();
-            //video.src = '';
-        });
+// Check if all videos are loaded and start them together
+function checkAllVideosLoaded() {
+    if (allVideosReady) return;
+    
+    const allLoaded = Array.from(videoLoadingState.values()).every(video => 
+        video.loaded || video.error
+    );
+    
+    const totalUniqueVideos = videoLoadingState.size;
+    const loadedCount = Array.from(videoLoadingState.values()).filter(v => v.loaded).length;
+    
+    console.log(`Videos ready: ${loadedCount}/${totalUniqueVideos}`);
+    
+    // ONLY switch from photos to videos when ALL are ready
+    if (allLoaded && videoLoadingState.size > 0) {
+        console.log('🎬 ALL VIDEOS READY - Switching from photos to videos');
+        allVideosReady = true;
+        switchFromPhotosToVideos();
     }
+}
+
+// Switch all photos to videos at once
+function switchFromPhotosToVideos() {
+    videoLoadingState.forEach((videoState, videoId) => {
+        if (videoState.loaded && !videoState.processed) {
+            // Find all video elements with this videoId (due to loop duplicates)
+            const allVideosWithId = swiper.el.querySelectorAll(`[data-video-id="${videoId}"]`);
+            
+            allVideosWithId.forEach((element) => {
+                const photo = element.parentElement.querySelector('img');
+                if (photo && element) {
+                    // ENSURE VIDEO IS MUTED
+                    element.muted = true;
+                    element.defaultMuted = true;
+                    element.volume = 0;
+                    
+                    // Fade out photo, fade in video
+                    photo.style.opacity = '0';
+                    element.style.opacity = '1';
+                    element.style.transition = 'opacity 0.3s ease';
+                    
+                    // Start playing the video (now that it's ready)
+                    element.play().catch(e => {
+                        console.log('Autoplay failed:', e);
+                    });
+                    
+                    // Remove photo after transition
+                    setTimeout(() => {
+                        if (photo.parentElement) {
+                            photo.parentElement.removeChild(photo);
+                        }
+                    }, 300);
+                }
+            });
+            
+            // Mark as processed
+            videoState.processed = true;
+        }
+    });
+}
+
+// Updated startVideoFeed function
+function startVideoFeed() {
+    if (videoFeedInitialized) return;
+    
+    // Reset loading state
+    videoLoadingState.clear();
+    allVideosReady = false;
+    
+    if (!swiper) {
+        console.log('Swiper not ready, retrying...');
+        setTimeout(startVideoFeed, 100);
+        return;
+    }
+    
+    // Get only unique video IDs to avoid duplicates from loop
+    const videoFeedItems = swiper.el.querySelectorAll(".video-feed-item");
+    const uniqueVideoIds = new Set();
+    
+    console.log(`Found ${videoFeedItems.length} video elements in swiper`);
+
+    videoFeedItems.forEach((video) => {
+        const videoId = video.dataset.videoId || 
+                      video.querySelector('source')?.src?.match(/\/([^\/]+)\/play_240p\.mp4/)?.[1];
+        
+        if (videoId) {
+            uniqueVideoIds.add(videoId);
+            // Only setup the first occurrence of each unique video ID
+            if (!videoLoadingState.has(videoId)) {
+                setupVideoFeedWithPhoto(video, videoId);
+            }
+        }
+    });
+    
+    console.log(`Processing ${uniqueVideoIds.size} unique videos`);
+    videoFeedInitialized = true;
+    
+    if (uniqueVideoIds.size === 0) {
+        console.log('No videos found in feed');
+        allVideosReady = true;
+    }
+}
+
+// Updated cleanup function
+function cleanupVideoFeed() {
+    videoLoadingState.clear();
+    allVideosReady = false;
+    videoFeedInitialized = false;
+    
+    const videoFeedItems = document.querySelectorAll(".video-feed-item");
+    videoFeedItems.forEach((video) => {
+        const photos = video.parentElement.querySelectorAll('img');
+        photos.forEach(img => img.remove());
+        video.pause();
+        video.style.opacity = '0';
+    });
+}
+
+// Updated onMount to ensure proper initialization order
+onMount(() => {
+    swiper = new Swiper(".scrollSwiperAdvertising", {
+        direction: "vertical",
+        slidesPerView: "auto",
+        freeMode: {
+            enabled: true,
+            momentum: true,
+        },
+        loop: true,
+        mousewheel: {
+            releaseOnEdges: true,
+        },
+        simulateTouch: window.innerWidth < 992,
+        // Add event listener for when swiper is fully initialized
+        on: {
+            init: function() {
+                console.log('Swiper initialized, starting video feed');
+                // Small delay to ensure DOM is fully ready
+                setTimeout(() => {
+                    startVideoFeed();
+                }, 50);
+            }
+        }
+    });
+
+    window.addEventListener("resize", updateSwiperTouch);
+    updateActiveSlides($page.params.slug);
+    saveVideoSize();
+
+    // Remove the startVideoFeed() call from here since it's now in swiper.on.init
+
+    const closeCollapse = (event) => {
+        if (isPanelOpen && collapseElement && !collapseElement.contains(event.target) && !collapseToggleButton.contains(event.target)) {
+            toggleCreditsPanel();
+        }
+    };
+    document.addEventListener("click", closeCollapse);
+
+    return () => {
+        if (closeCollapse) {
+            document.removeEventListener("click", closeCollapse);
+        }
+        // Clean up players and HLS instances
+        if (playerA && playerA.destroy) {
+            playerA.destroy();
+        }
+        if (playerB && playerB.destroy) {
+            playerB.destroy();
+        }
+        if (hlsA) {
+            hlsA.destroy();
+        }
+        if (hlsB) {
+            hlsB.destroy();
+        }
+    };
+});
+
 
 	function updateSwiperTouch() {
 		const isMobile = window.innerWidth < 992;
@@ -454,55 +644,6 @@ function createPlayer(videoElement, videoId) {
 		swiper.update();
 	}
 
-	onMount(() => {
-        swiper = new Swiper(".scrollSwiperAdvertising", {
-            direction: "vertical",
-            slidesPerView: "auto",
-            freeMode: {
-                enabled: true,
-                momentum: true,
-            },
-            loop: true,
-            mousewheel: {
-                releaseOnEdges: true,
-            },
-            simulateTouch: window.innerWidth < 992,
-        });
-
-		window.addEventListener("resize", updateSwiperTouch);
-
-		updateActiveSlides($page.params.slug);
-
-        startVideoFeed();
-
-        saveVideoSize();
-
-		const closeCollapse = (event) => {
-            if (isPanelOpen && collapseElement && !collapseElement.contains(event.target) && !collapseToggleButton.contains(event.target)) {
-                toggleCreditsPanel();
-            }
-        };
-        document.addEventListener("click", closeCollapse);
-
-        return () => {
-            if (closeCollapse) {
-                document.removeEventListener("click", closeCollapse);
-            }
-            // Clean up players and HLS instances
-            if (playerA && playerA.destroy) {
-                playerA.destroy();
-            }
-            if (playerB && playerB.destroy) {
-                playerB.destroy();
-            }
-            if (hlsA) {
-                hlsA.destroy();
-            }
-            if (hlsB) {
-                hlsB.destroy();
-            }
-        };
-    });
 
 	$: if ($page.params.slug) {
 		updateActiveSlides($page.params.slug);
@@ -617,19 +758,19 @@ function createPlayer(videoElement, videoId) {
                                     <a href="/advertising/{project.slug.current}"
                                     class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                     data-slug={project.slug.current}>
-                                    <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
-                                        <video 
-                                            class="w-100 object-fit-cover video-feed-item" 
-                                            playsinline
-                                            loop 
-                                            autoplay
-                                            muted
-                                            preload="metadata"
-                                            poster="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
-                                        >
-                                            <source src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4" type="video/mp4">
-                                        </video>
-                                    </div>
+                                        <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
+                                           <video 
+                                                class="w-100 object-fit-cover video-feed-item" 
+                                                playsinline
+                                                loop 
+                                                muted
+                                                preload="none"
+                                                data-video-id="{project.videoPreviewId || project.videoId}"
+                                                poster="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
+                                            >
+                                                <source src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
                                         <div class="w-65 h-100 d-flex align-items-center font-7 px-3 text-black">
                                             {project.title}
                                         </div>
