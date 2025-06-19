@@ -383,10 +383,10 @@
                     if (video.paused) {
                         video.play().then(() => {
                             console.log(`▶️ Video ${videoId} started playing`);
-                            if (thumbnail) {
+                            if (thumbnail && thumbnail.style.opacity !== '0') {
                                 thumbnail.style.opacity = '0';
-                                thumbnail.style.transition = 'opacity 0.3s ease';
-                            }
+                                // thumbnail.style.transition = 'opacity 0.3s ease';
+                            }6
                         }).catch(e => {
                             console.log(`❌ Play failed for ${videoId}:`, e);
                         });
@@ -401,11 +401,6 @@
                         console.log(`⏸️ Video ${videoId} paused`);
                     }
                     
-                    // Show thumbnail when paused
-                    if (thumbnail) {
-                        thumbnail.style.opacity = '1';
-                        thumbnail.style.transition = 'opacity 0.3s ease';
-                    }
                 }
             });
         }, { 
@@ -467,7 +462,7 @@
                 enabled: true,
                 momentum: true,
             },
-           // loop: true,
+            loop: true,
             mousewheel: {
                 releaseOnEdges: true,
             },
