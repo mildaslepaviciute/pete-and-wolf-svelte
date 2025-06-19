@@ -1,16 +1,15 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
-	import Swiper, { 
-        Mousewheel, 
-        FreeMode, 
-    } from 'swiper';
-    Swiper.use([Mousewheel, FreeMode]);
     import { page } from "$app/stores";
     import { gsap } from "gsap";
 	import { renderBlocks } from "$lib/helpers.js";
     import { tick } from 'svelte';
-    // Import HLS.js for better video streaming
     import Hls from 'hls.js';
+    import Swiper, { 
+        Mousewheel, 
+        FreeMode, 
+    } from 'swiper';
+    Swiper.use([Mousewheel, FreeMode]);
     
     export let data;
 
@@ -21,25 +20,21 @@
     let swiper;
     let collapseElement;
     let collapseToggleButton;
-
     let desktopCredits;
     let previousSlug;
     let isFirstLoad = true;
-
-    // Store previous project for animation
     let previousProject = null;
     let shadowCredits = null;
 
     $: if ($page.params.slug && desktopCredits) {
         if (previousSlug !== $page.params.slug) {
-            // Store current project as previous before it changes
             previousProject = data.advertisingProjects.find((p) => p.slug.current === previousSlug);
             animateProjectTransition();
             previousSlug = $page.params.slug;
         }
     }
 
-   async function animateProjectTransition() {
+    async function animateProjectTransition() {
         if (isFirstLoad) {
             isFirstLoad = false;
             gsap.set(".fade-text", { y: 0 });
@@ -48,15 +43,12 @@
 
         if (!previousProject) return;
 
-        // Create shadow element with previous project content
         if (!shadowCredits) {
             shadowCredits = document.createElement('div');
             shadowCredits.className = 'credits-shadow d-none d-lg-flex font-8 pt-3 flex-column h-100';
-            // Insert shadow as a child of desktopCredits container, not as a sibling
             desktopCredits.appendChild(shadowCredits);
         }
 
-        // Populate shadow with previous project content
         shadowCredits.innerHTML = `
             <hr class="mt-0 mb-2">
             <div class="position-relative overflow-hidden">
@@ -88,7 +80,6 @@
             <hr class="mt-2 mb-0">
         `;
 
-        // Position shadow to cover exactly the same area as the main content
         gsap.set(shadowCredits, {
             position: 'absolute',
             top: 0,
@@ -98,10 +89,9 @@
             zIndex: 2,
             opacity: 1,
             pointerEvents: 'none',
-            background: 'inherit' // Inherit background from parent
+            background: 'inherit'
         });
 
-        // Hide main credits content (but keep container visible for positioning)
         const mainCreditsContent = desktopCredits.children;
         Array.from(mainCreditsContent).forEach(child => {
             if (child !== shadowCredits) {
@@ -109,13 +99,11 @@
             }
         });
 
-        // Set initial positions for shadow fade-text elements
         const shadowFadeElements = shadowCredits.querySelectorAll(".fade-text");
         gsap.set(shadowFadeElements, { y: 0 });
 
         await tick();
 
-        // Show main credits content and set initial positions for new elements
         Array.from(mainCreditsContent).forEach(child => {
             if (child !== shadowCredits) {
                 gsap.set(child, { opacity: 1 });
@@ -124,14 +112,12 @@
             }
         });
 
-        // Animate shadow elements out (slide down)
         await gsap.to(shadowFadeElements, {
             y: '5rem',
             duration: 0.5,
             ease: 'none',
         });
 
-        // Get new fade elements from the main content (not shadow)
         const newFadeElements = [];
         Array.from(mainCreditsContent).forEach(child => {
             if (child !== shadowCredits) {
@@ -140,14 +126,12 @@
             }
         });
 
-        // Animate new elements in (slide up from above)
         gsap.to(newFadeElements, {
             y: 0,
             duration: 0.5,
             ease: 'none',
         });
 
-        // Clean up shadow after animation
         setTimeout(() => {
             if (shadowCredits && shadowCredits.parentNode) {
                 shadowCredits.remove();
@@ -165,7 +149,6 @@
     let playerB;
     let hlsA;
     let hlsB;
-
     let videoTransitionPromise = Promise.resolve();
 
     $: if (currentProject.videoId && currentProject.videoId !== currentVideoId) {
@@ -175,75 +158,66 @@
         });
     }
 
- // Simple video player with mobile optimization
-function createPlayer(videoElement, videoId) {
-    const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
-    const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
-    
-    let hls = null;
-    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (Hls.isSupported()) {
-        hls = new Hls({
-            startLevel: 1, // Start at level 1 (second quality)
-            maxBufferLength: 10,
-            maxBufferSize: 20 * 1000 * 1000, // 20MB
+    function createPlayer(videoElement, videoId) {
+        const hlsUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/playlist.m3u8`;
+        const mp4Url = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
+        
+        let hls = null;
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (Hls.isSupported()) {
+            hls = new Hls({
+                startLevel: 1,
+                maxBufferLength: 10,
+                maxBufferSize: 20 * 1000 * 1000,
+            });
+            
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(videoElement);
+            
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                if (isMobile) {
+                    hls.currentLevel = 1;
+                    console.log('Mobile detected: locked to quality level 1');
+                }
+            });
+            
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                    console.log('HLS failed, switching to MP4');
+                    hls.destroy();
+                    videoElement.src = mp4Url;
+                    videoElement.load();
+                }
+            });
+            
+        } else {
+            videoElement.src = mp4Url;
+        }
+
+        videoElement.preload = 'metadata';
+        videoElement.playsInline = true;
+        videoElement.load();
+        
+        const player = new Plyr(videoElement, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+            autoplay: true,
+            muted: true,
         });
-        
-        hls.loadSource(hlsUrl);
-        hls.attachMedia(videoElement);
-        
-        // Lock mobile to level 1
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            if (isMobile) {
-                hls.currentLevel = 1; // Lock to level 1 on mobile
-                console.log('Mobile detected: locked to quality level 1');
-            }
-        });
-        
-        // Simple error handling - just switch to MP4
-        hls.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-                console.log('HLS failed, switching to MP4');
-                hls.destroy();
-                videoElement.src = mp4Url;
-                videoElement.load();
-            }
-        });
-        
-    } else {
-        // Fallback to MP4
-        videoElement.src = mp4Url;
+
+        return { player, hls };
     }
 
-    videoElement.preload = 'metadata';
-    videoElement.playsInline = true;
-    videoElement.load();
-    
-    // Simple Plyr setup
-    const player = new Plyr(videoElement, {
-        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-        autoplay: true,
-        muted: true,
-    });
-
-    return { player, hls };
-}
-
-    // Optimized crossfade with better loading detection
     async function crossfadeVideo(newVideoId) {
-        // Ensure both layers exist
         if (!videoLayerA || !videoLayerB) return;
 
         if (isVideoFirstLoad) {
             console.log('First video load, initializing player');
             isVideoFirstLoad = false;
             
-            // Create video element for Plyr
             videoLayerA.innerHTML = '<video id="player-a" playsinline style="width:100%;height:100%;"></video>';
             const videoElementA = videoLayerA.querySelector('#player-a');
             
-            // Initialize first player
             try {
                 const result = createPlayer(videoElementA, newVideoId);
                 playerA = result.player;
@@ -258,19 +232,16 @@ function createPlayer(videoElement, videoId) {
 
         console.log('Crossfading to new video:', newVideoId);
 
-        // Determine which layer to use for the new video
         const currentLayer = activeLayer === 'A' ? videoLayerA : videoLayerB;
         const newLayer = activeLayer === 'A' ? videoLayerB : videoLayerA;
         const currentPlayer = activeLayer === 'A' ? playerA : playerB;
 
         if (currentPlayer) {
-            currentPlayer.muted = true; // Ensure current player is muted
+            currentPlayer.muted = true;
         }
         
-        // Create unique player ID
         const newPlayerId = activeLayer === 'A' ? 'player-b' : 'player-a';
 
-        // Ensure current layer is visible and interactive
         gsap.set(currentLayer, {
             opacity: 1,
             filter: 'blur(0px)',
@@ -278,30 +249,27 @@ function createPlayer(videoElement, videoId) {
             pointerEvents: 'auto'
         });
 
-        // Set up new layer with new video player (hidden initially)
         newLayer.innerHTML = `<video id="${newPlayerId}" playsinline preload="metadata" style="width:100%;height:100%;"></video>`;
         const newVideoElement = newLayer.querySelector(`#${newPlayerId}`);
 
         gsap.set(newLayer, { 
             opacity: 0, 
-            filter: 'blur(10px)', // Reduced blur for better performance
+            filter: 'blur(10px)',
             zIndex: 2,
             pointerEvents: 'none'
         });
 
-        // Create new player instance
         let newPlayer, newHls;
         try {
             const result = createPlayer(newVideoElement, newVideoId);
             newPlayer = result.player;
             newHls = result.hls;
-            newPlayer.muted = false; // Unmute new player
+            newPlayer.muted = false;
         } catch (error) {
             console.error('Error creating new player:', error);
             return;
         }
         
-        // Store reference to new player and HLS instance
         if (activeLayer === 'A') {
             playerB = newPlayer;
             hlsB = newHls;
@@ -312,31 +280,26 @@ function createPlayer(videoElement, videoId) {
 
         await new Promise(resolve => setTimeout(resolve, 500));
 
-
         console.log('Starting optimized video crossfade animation');
 
-        // Faster crossfade animation
         const tl = gsap.timeline();
 
-        // Simultaneous fade out/in with reduced duration
         tl.to(currentLayer, {
             opacity: 0,
             filter: 'blur(10px)',
-            duration: 0.5, // Reduced from 1.5s
+            duration: 0.5,
             ease: 'power2.inOut'
         })
         .to(newLayer, {
             opacity: 1,
             filter: 'blur(0px)',
-            duration: 0.4, // Faster fade in
+            duration: 0.4,
             ease: 'power2.out'
-        }, 0.1) // Small overlap for smoother transition
+        }, 0.1)
         .call(() => {
-            // Switch interaction states
             gsap.set(currentLayer, { pointerEvents: 'none' });
             gsap.set(newLayer, { pointerEvents: 'auto' });
             
-            // Clean up old HLS instance
             const oldHls = activeLayer === 'A' ? hlsA : hlsB;
             if (oldHls) {
                 oldHls.destroy();
@@ -347,7 +310,6 @@ function createPlayer(videoElement, videoId) {
                 }
             }
             
-            // Update active layer for next transition
             activeLayer = activeLayer === 'A' ? 'B' : 'A';
         });
 
@@ -367,180 +329,156 @@ function createPlayer(videoElement, videoId) {
             collapseToggleButton.textContent = '+ Credits';
         }
     }
-    
-	function updateActiveSlides(slug) {
-		if (!swiper) return;
 
-		const allSlideLinks = swiper.el.querySelectorAll(".swiper-slide-link");
+    // Simple video feed - play all videos when ready
+    let videosToLoad = new Set();
+    let videosLoaded = new Set();
+    let allVideosReady = false;
+    let videoFeedInitialized = false;
 
-		allSlideLinks.forEach((link) => {
-			link.classList.remove("swiper-slide-link-active");
-		});
-
-		allSlideLinks.forEach((link) => {
-			if (link.dataset.slug === slug) {
-				link.classList.add("swiper-slide-link-active");
-			}
-		});
-	}
-
-// Simple video feed - waits for ALL videos to load
-let videosToLoad = new Set();
-let videosLoaded = new Set();
-let allVideosReady = false;
 
 function startVideoFeed() {
+    if (videoFeedInitialized) return;
+    
     if (!swiper) {
         setTimeout(startVideoFeed, 100);
         return;
     }
     
-    console.log('🎬 Starting video feed - waiting for ALL videos to load');
+    console.log('🎬 Simple video feed');
     
     const videoElements = swiper.el.querySelectorAll('.video-feed-item');
     
-    // Get unique video IDs (skip duplicates from loop)
-    const uniqueVideos = new Map();
     videoElements.forEach(video => {
         const videoId = video.dataset.videoId;
-        if (videoId && !uniqueVideos.has(videoId)) {
-            uniqueVideos.set(videoId, video);
-            videosToLoad.add(videoId);
-        }
-    });
-    
-    console.log(`📊 Need to load ${videosToLoad.size} unique videos`);
-    
-    // Setup each unique video
-    uniqueVideos.forEach((video, videoId) => {
+        const thumbnail = video.parentElement.querySelector('.video-thumbnail');
+        
+        // Setup video
         video.muted = true;
         video.volume = 0;
         video.loop = true;
         video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        
+        // Listen for when video actually starts playing
+        video.addEventListener('playing', () => {
+            console.log(`▶️ Video ${videoId} is now playing`);
+            if (thumbnail) {
+                thumbnail.style.opacity = '0';
+                console.log(`🖼️ Hidden thumbnail for ${videoId}`);
+            }
+        }, { once: true });
+        
+        // Start playing
+        video.play().catch(e => {
+            console.log(`❌ ${videoId} failed to start:`, e);
+        });
+    });
+    
+    videoFeedInitialized = true;
+}
+
+    function setupVideo(video, videoId) {
+        video.muted = true;
+        video.volume = 0;
+        video.loop = true;
+        video.preload = 'metadata';
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.removeAttribute('autoplay');
+        
+        console.log(`🎬 Setting up video ${videoId}`);
         
         video.addEventListener('canplay', () => {
             videosLoaded.add(videoId);
             console.log(`✅ Video ${videoId} loaded (${videosLoaded.size}/${videosToLoad.size})`);
             
-            // Check if all are loaded
             if (videosLoaded.size === videosToLoad.size && !allVideosReady) {
-                console.log('🎉 ALL VIDEOS LOADED - Starting playback!');
+                console.log('🎉 ALL VIDEOS LOADED - Playing all videos!');
                 allVideosReady = true;
-                startAllVideos();
+                playAllVideos();
             }
         }, { once: true });
         
         video.addEventListener('error', (e) => {
             console.error(`❌ Video ${videoId} failed to load:`, e);
-            videosLoaded.add(videoId); // Count as "loaded" so we don't wait forever
+            videosLoaded.add(videoId);
             
             if (videosLoaded.size === videosToLoad.size && !allVideosReady) {
-                console.log('🎉 ALL VIDEOS PROCESSED - Starting playback!');
+                console.log('🎉 ALL VIDEOS PROCESSED - Playing loaded videos!');
                 allVideosReady = true;
-                startAllVideos();
+                playAllVideos();
             }
         }, { once: true });
         
         video.load();
+    }
+
+    function playAllVideos() {
+    console.log('▶️ Starting to play all videos');
+    
+    const allVideos = swiper.el.querySelectorAll('.video-feed-item');
+    
+    allVideos.forEach((video, index) => {
+        const videoId = video.dataset.videoId;
+        const thumbnail = video.parentElement.querySelector('.video-thumbnail');
+        
+        // Debug logging
+        console.log(`🔍 Video ${videoId}:`, {
+            video: video,
+            parentElement: video.parentElement,
+            thumbnail: thumbnail,
+            thumbnailFound: !!thumbnail
+        });
+        
+        video.play().then(() => {
+            console.log(`▶️ Video ${videoId} playing`);
+            
+            setTimeout(() => {
+                // More detailed checks
+                const isPlaying = !video.paused && video.currentTime > 0;
+                console.log(`🖼️ Thumbnail check for ${videoId}:`, {
+                    thumbnail: !!thumbnail,
+                    videoPlaying: isPlaying,
+                    videoPaused: video.paused,
+                    currentTime: video.currentTime
+                });
+                
+                if (thumbnail && isPlaying) {
+                    console.log(`🖼️ Hiding thumbnail for ${videoId}`);
+                    thumbnail.style.opacity = '0';
+                } else {
+                    console.log(`❌ Not hiding thumbnail for ${videoId} - conditions not met`);
+                }
+            }, 500); // Increased delay to 500ms
+            
+        }).catch(e => {
+            console.log(`❌ Play failed for ${videoId}:`, e);
+        });
     });
 }
 
-function startAllVideos() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            const video = entry.target;
-            const videoId = video.dataset.videoId;
-            
-            if (entry.isIntersecting) {
-                console.log(`👁️ Video ${videoId} visible - playing`);
-                video.play().catch(e => console.log('Play failed:', e));
-            } else {
-                console.log(`👁️‍🗨️ Video ${videoId} hidden - pausing`);
-                video.pause();
+    function updateActiveSlides(slug) {
+        if (!swiper) return;
+
+        const allSlideLinks = swiper.el.querySelectorAll(".swiper-slide-link");
+
+        allSlideLinks.forEach((link) => {
+            link.classList.remove("swiper-slide-link-active");
+        });
+
+        allSlideLinks.forEach((link) => {
+            if (link.dataset.slug === slug) {
+                link.classList.add("swiper-slide-link-active");
             }
         });
-    }, { 
-        threshold: 0.1,
-        root: swiper.el
-    });
-    
-    // Start observing all videos now
-    const videos = swiper.el.querySelectorAll('.video-feed-item');
-    videos.forEach(video => observer.observe(video));
-}
+    }
 
-// Reset when needed
-function resetVideoFeed() {
-    videosToLoad.clear();
-    videosLoaded.clear();
-    allVideosReady = false;
-}
-
-onMount(() => {
-    swiper = new Swiper(".scrollSwiperAdvertising", {
-        direction: "vertical",
-        slidesPerView: "auto",
-        freeMode: {
-            enabled: true,
-            momentum: true,
-        },
-        loop: true,
-        mousewheel: {
-            releaseOnEdges: true,
-        },
-        simulateTouch: window.innerWidth < 992,
-        on: {
-            init: function() {
-                console.log('Swiper initialized, starting video feed');
-                setTimeout(() => {
-                    startVideoFeed();
-                }, 50);
-            }
-        }
-    });
-
-    window.addEventListener("resize", updateSwiperTouch);
-    updateActiveSlides($page.params.slug);
-    saveVideoSize();
-
-    const closeCollapse = (event) => {
-        if (isPanelOpen && collapseElement && !collapseElement.contains(event.target) && !collapseToggleButton.contains(event.target)) {
-            toggleCreditsPanel();
-        }
-    };
-    document.addEventListener("click", closeCollapse);
-
-    return () => {
-        if (closeCollapse) {
-            document.removeEventListener("click", closeCollapse);
-        }
-        // Clean up players and HLS instances
-        if (playerA && playerA.destroy) {
-            playerA.destroy();
-        }
-        if (playerB && playerB.destroy) {
-            playerB.destroy();
-        }
-        if (hlsA) {
-            hlsA.destroy();
-        }
-        if (hlsB) {
-            hlsB.destroy();
-        }
-    };
-});
-
-
-	function updateSwiperTouch() {
-		const isMobile = window.innerWidth < 992;
-		swiper.params.simulateTouch = isMobile;
-		swiper.update();
-	}
-
-
-	$: if ($page.params.slug) {
-		updateActiveSlides($page.params.slug);
-	}
+    function updateSwiperTouch() {
+        const isMobile = window.innerWidth < 992;
+        swiper.params.simulateTouch = isMobile;
+        swiper.update();
+    }
 
     function saveVideoSize() {
         const mainVideoContainer = document.querySelector('#main-video-container');
@@ -551,6 +489,66 @@ onMount(() => {
         document.documentElement.style.setProperty('--video-height', `${mainVideoContainer.offsetHeight}px`);
     }
 
+    $: if ($page.params.slug) {
+        updateActiveSlides($page.params.slug);
+    }
+
+    onMount(() => {
+        swiper = new Swiper(".scrollSwiperAdvertising", {
+            direction: "vertical",
+            slidesPerView: "auto",
+            freeMode: {
+                enabled: true,
+                momentum: true,
+            },
+            loop: true,
+            mousewheel: {
+                releaseOnEdges: true,
+            },
+            simulateTouch: false,
+            on: {
+                init: function() {
+                    console.log('Swiper initialized, starting video feed');
+                    setTimeout(() => {
+                        startVideoFeed();
+                    }, 50);
+                }
+            }
+        });
+
+        window.addEventListener("resize", updateSwiperTouch);
+        updateActiveSlides($page.params.slug);
+        saveVideoSize();
+
+        const closeCollapse = (event) => {
+            if (isPanelOpen && collapseElement && !collapseElement.contains(event.target) && !collapseToggleButton.contains(event.target)) {
+                toggleCreditsPanel();
+            }
+        };
+        document.addEventListener("click", closeCollapse);
+
+        return () => {
+            if (closeCollapse) {
+                document.removeEventListener("click", closeCollapse);
+            }
+            if (playerA && playerA.destroy) {
+                playerA.destroy();
+            }
+            if (playerB && playerB.destroy) {
+                playerB.destroy();
+            }
+            if (hlsA) {
+                hlsA.destroy();
+            }
+            if (hlsB) {
+                hlsB.destroy();
+            }
+            videosToLoad.clear();
+            videosLoaded.clear();
+            allVideosReady = false;
+            videoFeedInitialized = false;
+        };
+    });
 </script>
 
 <svelte:head>
@@ -651,15 +649,25 @@ onMount(() => {
                                     <a href="/advertising/{project.slug.current}"
                                     class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                     data-slug={project.slug.current}>
-                                        <div class="w-35 bg-black border-end border-black ratio ratio-16x9">
-                                           <video 
-                                                class="w-100 object-fit-cover video-feed-item" 
+                                        <!-- In your Swiper slide HTML -->
+                                        <div class="w-35 bg-black border-end border-black ratio ratio-16x9 position-relative">
+                                            <!-- Static thumbnail image -->
+                                            <img 
+                                                src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
+                                                alt="{project.title}"
+                                                class="video-thumbnail position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+                                                style="z-index: 2; transition: opacity 0.3s ease;"
+                                            >
+                                            
+                                            <!-- Video element -->
+                                            <video 
+                                                class="w-100 h-100 object-fit-cover video-feed-item position-absolute top-0 start-0" 
                                                 playsinline
                                                 loop 
                                                 muted
-                                                preload="none"
+                                                preload="metadata"
                                                 data-video-id="{project.videoPreviewId || project.videoId}"
-                                                poster="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
+                                                style="z-index: 1;"
                                             >
                                                 <source src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4" type="video/mp4">
                                             </video>
