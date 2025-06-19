@@ -330,133 +330,88 @@
         }
     }
 
-    // Simple video feed - play all videos when ready
-    let videosToLoad = new Set();
-    let videosLoaded = new Set();
-    let allVideosReady = false;
+    // Viewport-based video feed for Swiper
     let videoFeedInitialized = false;
+    let videoObserver = null;
 
-
-function startVideoFeed() {
-    if (videoFeedInitialized) return;
-    
-    if (!swiper) {
-        setTimeout(startVideoFeed, 100);
-        return;
-    }
-    
-    console.log('🎬 Simple video feed');
-    
-    const videoElements = swiper.el.querySelectorAll('.video-feed-item');
-    
-    videoElements.forEach(video => {
-        const videoId = video.dataset.videoId;
-        const thumbnail = video.parentElement.querySelector('.video-thumbnail');
+    function startVideoFeed() {
+        if (videoFeedInitialized) return;
         
-        // Setup video
-        video.muted = true;
-        video.volume = 0;
-        video.loop = true;
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
+        if (!swiper) {
+            setTimeout(startVideoFeed, 100);
+            return;
+        }
         
-        // Listen for when video actually starts playing
-        video.addEventListener('playing', () => {
-            console.log(`▶️ Video ${videoId} is now playing`);
-            if (thumbnail) {
-                thumbnail.style.opacity = '0';
-                console.log(`🖼️ Hidden thumbnail for ${videoId}`);
-            }
-        }, { once: true });
+        console.log('🎬 Starting viewport-based video feed for Swiper');
         
-        // Start playing
-        video.play().catch(e => {
-            console.log(`❌ ${videoId} failed to start:`, e);
-        });
-    });
-    
-    videoFeedInitialized = true;
-}
-
-    function setupVideo(video, videoId) {
-        video.muted = true;
-        video.volume = 0;
-        video.loop = true;
-        video.preload = 'metadata';
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
-        video.removeAttribute('autoplay');
+        const videoElements = swiper.el.querySelectorAll('.video-feed-item');
         
-        console.log(`🎬 Setting up video ${videoId}`);
-        
-        video.addEventListener('canplay', () => {
-            videosLoaded.add(videoId);
-            console.log(`✅ Video ${videoId} loaded (${videosLoaded.size}/${videosToLoad.size})`);
+        // Setup all videos but don't play yet
+        videoElements.forEach(video => {
+            const videoId = video.dataset.videoId;
             
-            if (videosLoaded.size === videosToLoad.size && !allVideosReady) {
-                console.log('🎉 ALL VIDEOS LOADED - Playing all videos!');
-                allVideosReady = true;
-                playAllVideos();
-            }
-        }, { once: true });
-        
-        video.addEventListener('error', (e) => {
-            console.error(`❌ Video ${videoId} failed to load:`, e);
-            videosLoaded.add(videoId);
+            video.muted = true;
+            video.volume = 0;
+            video.loop = true;
+            video.setAttribute('muted', '');
+            video.setAttribute('playsinline', '');
+            video.preload = 'metadata';
             
-            if (videosLoaded.size === videosToLoad.size && !allVideosReady) {
-                console.log('🎉 ALL VIDEOS PROCESSED - Playing loaded videos!');
-                allVideosReady = true;
-                playAllVideos();
-            }
-        }, { once: true });
-        
-        video.load();
-    }
-
-    function playAllVideos() {
-    console.log('▶️ Starting to play all videos');
-    
-    const allVideos = swiper.el.querySelectorAll('.video-feed-item');
-    
-    allVideos.forEach((video, index) => {
-        const videoId = video.dataset.videoId;
-        const thumbnail = video.parentElement.querySelector('.video-thumbnail');
-        
-        // Debug logging
-        console.log(`🔍 Video ${videoId}:`, {
-            video: video,
-            parentElement: video.parentElement,
-            thumbnail: thumbnail,
-            thumbnailFound: !!thumbnail
+            console.log(`🎬 Setup video ${videoId}`);
         });
         
-        video.play().then(() => {
-            console.log(`▶️ Video ${videoId} playing`);
-            
-            setTimeout(() => {
-                // More detailed checks
-                const isPlaying = !video.paused && video.currentTime > 0;
-                console.log(`🖼️ Thumbnail check for ${videoId}:`, {
-                    thumbnail: !!thumbnail,
-                    videoPlaying: isPlaying,
-                    videoPaused: video.paused,
-                    currentTime: video.currentTime
-                });
+        // Start intersection observer
+        startVideoObserver();
+        
+        videoFeedInitialized = true;
+    }
+
+    function startVideoObserver() {
+        if (videoObserver) return;
+        
+        // Create observer that watches within the Swiper container
+        videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                const videoId = video.dataset.videoId;
+                const thumbnail = video.parentElement.querySelector('.video-thumbnail');
                 
-                if (thumbnail && isPlaying) {
-                    console.log(`🖼️ Hiding thumbnail for ${videoId}`);
-                    thumbnail.style.opacity = '0';
+                if (entry.isIntersecting) {
+                    console.log(`👁️ Video ${videoId} in view - playing`);
+                    
+                    video.play().then(() => {
+                        console.log(`▶️ Video ${videoId} playing`);
+                        if (thumbnail) {
+                            thumbnail.style.opacity = '0';
+                            thumbnail.style.transition = 'opacity 0.3s ease';
+                        }
+                    }).catch(e => {
+                        console.log(`❌ Play failed for ${videoId}:`, e);
+                    });
+                    
                 } else {
-                    console.log(`❌ Not hiding thumbnail for ${videoId} - conditions not met`);
+                    console.log(`👁️‍🗨️ Video ${videoId} out of view - pausing`);
+                    video.pause();
+                    
+                    // Show thumbnail again when paused
+                    if (thumbnail) {
+                        thumbnail.style.opacity = '1';
+                        thumbnail.style.transition = 'opacity 0.3s ease';
+                    }
                 }
-            }, 500); // Increased delay to 500ms
-            
-        }).catch(e => {
-            console.log(`❌ Play failed for ${videoId}:`, e);
+            });
+        }, { 
+            threshold: 0.5, // Play when 50% visible
+            root: swiper.el, // Observe within swiper container
+            rootMargin: '0px 0px -20% 0px' // Give some buffer
         });
-    });
-}
+        
+        // Observe all videos
+        const videos = swiper.el.querySelectorAll('.video-feed-item');
+        videos.forEach(video => videoObserver.observe(video));
+        
+        console.log(`👀 Observing ${videos.length} videos in Swiper`);
+    }
 
     function updateActiveSlides(slug) {
         if (!swiper) return;
@@ -508,10 +463,17 @@ function startVideoFeed() {
             simulateTouch: window.innerWidth < 992,
             on: {
                 init: function() {
-                    console.log('Swiper initialized, starting video feed');
+                    console.log('✅ Swiper initialized');
+                    // Start video feed after Swiper is ready
                     setTimeout(() => {
                         startVideoFeed();
-                    }, 50);
+                    }, 100);
+                },
+                slideChange: function() {
+                    // Re-observe videos when slides change (for loop mode)
+                    if (videoObserver && videoFeedInitialized) {
+                        console.log('🔄 Swiper slide changed - re-checking video visibility');
+                    }
                 }
             }
         });
@@ -543,9 +505,13 @@ function startVideoFeed() {
             if (hlsB) {
                 hlsB.destroy();
             }
-            videosToLoad.clear();
-            videosLoaded.clear();
-            allVideosReady = false;
+            
+            // Clean up video observer
+            if (videoObserver) {
+                videoObserver.disconnect();
+                videoObserver = null;
+            }
+            
             videoFeedInitialized = false;
         };
     });
