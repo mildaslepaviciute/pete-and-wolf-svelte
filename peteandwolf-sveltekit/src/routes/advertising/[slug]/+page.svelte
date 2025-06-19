@@ -330,7 +330,7 @@
         }
     }
 
-    // Viewport-based video feed for Swiper
+    // Individual video viewport checking
     let videoFeedInitialized = false;
     let videoObserver = null;
 
@@ -342,11 +342,11 @@
             return;
         }
         
-        console.log('🎬 Starting viewport-based video feed for Swiper');
+        console.log('🎬 Starting individual video viewport checking');
         
         const videoElements = swiper.el.querySelectorAll('.video-feed-item');
         
-        // Setup all videos but don't play yet
+        // Setup all videos
         videoElements.forEach(video => {
             const videoId = video.dataset.videoId;
             
@@ -360,40 +360,48 @@
             console.log(`🎬 Setup video ${videoId}`);
         });
         
-        // Start intersection observer
-        startVideoObserver();
+        // Start individual video observation
+        startIndividualVideoObserver();
         
         videoFeedInitialized = true;
     }
 
-    function startVideoObserver() {
+    function startIndividualVideoObserver() {
         if (videoObserver) return;
         
-        // Create observer that watches within the Swiper container
+        // Create observer that checks each video individually
         videoObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const video = entry.target;
                 const videoId = video.dataset.videoId;
-                const thumbnail = video.parentElement.querySelector('.video-thumbnail');
+                const thumbnail = video.parentElement?.querySelector('.video-thumbnail');
                 
                 if (entry.isIntersecting) {
-                    console.log(`👁️ Video ${videoId} in view - playing`);
+                    // Video is in view - play it
+                    console.log(`👁️ Video ${videoId} entered viewport - playing`);
                     
-                    video.play().then(() => {
-                        console.log(`▶️ Video ${videoId} playing`);
-                        if (thumbnail) {
-                            thumbnail.style.opacity = '0';
-                            thumbnail.style.transition = 'opacity 0.3s ease';
-                        }
-                    }).catch(e => {
-                        console.log(`❌ Play failed for ${videoId}:`, e);
-                    });
+                    if (video.paused) {
+                        video.play().then(() => {
+                            console.log(`▶️ Video ${videoId} started playing`);
+                            if (thumbnail) {
+                                thumbnail.style.opacity = '0';
+                                thumbnail.style.transition = 'opacity 0.3s ease';
+                            }
+                        }).catch(e => {
+                            console.log(`❌ Play failed for ${videoId}:`, e);
+                        });
+                    }
                     
                 } else {
-                    console.log(`👁️‍🗨️ Video ${videoId} out of view - pausing`);
-                    video.pause();
+                    // Video is out of view - pause it
+                    console.log(`👁️‍🗨️ Video ${videoId} left viewport - pausing`);
                     
-                    // Show thumbnail again when paused
+                    if (!video.paused) {
+                        video.pause();
+                        console.log(`⏸️ Video ${videoId} paused`);
+                    }
+                    
+                    // Show thumbnail when paused
                     if (thumbnail) {
                         thumbnail.style.opacity = '1';
                         thumbnail.style.transition = 'opacity 0.3s ease';
@@ -401,16 +409,19 @@
                 }
             });
         }, { 
-            threshold: 0.5, // Play when 50% visible
-            root: swiper.el, // Observe within swiper container
-            rootMargin: '0px 0px -20% 0px' // Give some buffer
+            threshold: 0.3, // Trigger when 30% of video is visible
+            root: swiper.el, // Use swiper container as root
+            rootMargin: '0px' // No margin - exact viewport checking
         });
         
-        // Observe all videos
+        // Observe each video individually
         const videos = swiper.el.querySelectorAll('.video-feed-item');
-        videos.forEach(video => videoObserver.observe(video));
+        videos.forEach(video => {
+            videoObserver.observe(video);
+            console.log(`👀 Now observing video ${video.dataset.videoId}`);
+        });
         
-        console.log(`👀 Observing ${videos.length} videos in Swiper`);
+        console.log(`✅ Individual observation setup for ${videos.length} videos`);
     }
 
     function updateActiveSlides(slug) {
@@ -464,16 +475,10 @@
             on: {
                 init: function() {
                     console.log('✅ Swiper initialized');
-                    // Start video feed after Swiper is ready
+                    // Start individual video checking after Swiper is ready
                     setTimeout(() => {
                         startVideoFeed();
                     }, 100);
-                },
-                slideChange: function() {
-                    // Re-observe videos when slides change (for loop mode)
-                    if (videoObserver && videoFeedInitialized) {
-                        console.log('🔄 Swiper slide changed - re-checking video visibility');
-                    }
                 }
             }
         });
@@ -506,7 +511,7 @@
                 hlsB.destroy();
             }
             
-            // Clean up video observer
+            // Clean up individual video observer
             if (videoObserver) {
                 videoObserver.disconnect();
                 videoObserver = null;
