@@ -505,7 +505,7 @@ function startVideoFeed() {
             mousewheel: {
                 releaseOnEdges: true,
             },
-            simulateTouch: false,
+            simulateTouch: window.innerWidth < 992,
             on: {
                 init: function() {
                     console.log('Swiper initialized, starting video feed');
