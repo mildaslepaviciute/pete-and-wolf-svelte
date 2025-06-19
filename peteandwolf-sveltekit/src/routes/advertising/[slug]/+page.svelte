@@ -467,7 +467,7 @@
                 enabled: true,
                 momentum: true,
             },
-            loop: true,
+           // loop: true,
             mousewheel: {
                 releaseOnEdges: true,
             },
