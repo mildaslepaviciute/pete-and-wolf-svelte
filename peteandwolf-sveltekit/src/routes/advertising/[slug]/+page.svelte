@@ -423,7 +423,7 @@ setInterval(logVideoStatus, 2000);
             });
         }, { 
             threshold: 1, // Trigger when 30% of video is visible
-            root: document.getElementById('swiper-wrapper'), // Use swiper container as root
+root: null,
             rootMargin: '0px' // No margin - exact viewport checking
         });
         
