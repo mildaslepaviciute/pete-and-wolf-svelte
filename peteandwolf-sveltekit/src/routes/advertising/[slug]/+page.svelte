@@ -624,8 +624,8 @@ setInterval(logVideoStatus, 2000);
             </div>
 
             <!-- Projects List Column -->
-            <div class="col-lg-4 ps-lg-1 px-0-mob h-100" bind:this={rightColumn}>
-                <div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden" id="swiper-wrapper">
+            <div class="col-lg-4 ps-lg-1 px-0-mob h-100" bind:this={rightColumn} id="swiper-wrapper">
+                <div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden">
                     <div class="swiper-container scrollSwiperAdvertising">
                         <div class="swiper-wrapper h-100">
                             {#each data.advertisingProjects as project}
