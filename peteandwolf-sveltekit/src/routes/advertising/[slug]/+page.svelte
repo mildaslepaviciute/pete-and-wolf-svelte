@@ -330,94 +330,156 @@
         }
     }
 
-    // Individual video viewport checking
-    let videoFeedInitialized = false;
-    let videoObserver = null;
+// Fixed Safari-optimized video feed
+let videoFeedInitialized = false;
+let videoObserver = null;
+let videoCache = new Map();
 
-    function startVideoFeed() {
-        if (videoFeedInitialized) return;
+function startVideoFeed() {
+    if (videoFeedInitialized) return;
+    
+    if (!swiper) {
+        setTimeout(startVideoFeed, 100);
+        return;
+    }
+    
+    console.log('🎬 Fixed Safari video feed - remove/recreate');
+    
+    const videoElements = swiper.el.querySelectorAll('.video-feed-item');
+    
+    // Cache original video data and find their containers
+    videoElements.forEach(video => {
+        const videoId = video.dataset.videoId;
+        const src = video.src || video.querySelector('source')?.src;
+        const container = video.parentElement; // The slide container
         
-        if (!swiper) {
-            setTimeout(startVideoFeed, 100);
-            return;
+        // Make sure container has the video ID
+        if (!container.dataset.videoId) {
+            container.dataset.videoId = videoId;
         }
         
-        console.log('🎬 Starting individual video viewport checking');
-        
-        const videoElements = swiper.el.querySelectorAll('.video-feed-item');
-        
-        // Setup all videos
-        videoElements.forEach(video => {
-            const videoId = video.dataset.videoId;
-            
-            video.muted = true;
-            video.volume = 0;
-            video.loop = true;
-            video.setAttribute('muted', '');
-            video.setAttribute('playsinline', '');
-            video.preload = 'metadata';
-            
-            console.log(`🎬 Setup video ${videoId}`);
+        videoCache.set(videoId, {
+            src: src,
+            poster: video.poster,
+            className: video.className
         });
         
-        // Start individual video observation
-        startIndividualVideoObserver();
+        console.log(`💾 Cached video ${videoId}, container:`, container.className);
         
-        videoFeedInitialized = true;
-    }
+        // Remove video but keep container
+        video.remove();
+    });
+    
+    startVideoObserver();
+    videoFeedInitialized = true;
+}
 
-    function startIndividualVideoObserver() {
-        if (videoObserver) return;
-        
-        // Create observer that checks each video individually
-        videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target;
-                const videoId = video.dataset.videoId;
-                const thumbnail = video.parentElement?.querySelector('.video-thumbnail');
+function startVideoObserver() {
+    if (videoObserver) return;
+    
+    videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const container = entry.target;
+            const videoId = container.dataset.videoId;
+            
+            if (!videoId) return;
+            
+            if (entry.isIntersecting) {
+                console.log(`👁️ Container ${videoId} in view - creating video`);
+                createVideoInContainer(container, videoId);
                 
-                if (entry.isIntersecting) {
-                    // Video is in view - play it
-                    console.log(`👁️ Video ${videoId} entered viewport - playing`);
-                    
-                    if (video.paused) {
-                        video.play().then(() => {
-                            console.log(`▶️ Video ${videoId} started playing`);
-                            if (thumbnail && thumbnail.style.opacity !== '0') {
-                                thumbnail.style.opacity = '0';
-                                // thumbnail.style.transition = 'opacity 0.3s ease';
-                            }6
-                        }).catch(e => {
-                            console.log(`❌ Play failed for ${videoId}:`, e);
-                        });
-                    }
-                    
-                } else {
-                    // Video is out of view - pause it
-                    console.log(`👁️‍🗨️ Video ${videoId} left viewport - pausing`);
-                    
-                    if (!video.paused) {
-                        video.pause();
-                        console.log(`⏸️ Video ${videoId} paused`);
-                    }
-                    
-                }
-            });
-        }, { 
-            threshold: 0.3, // Trigger when 30% of video is visible
-            root: swiper.el, // Use swiper container as root
-            rootMargin: '0px' // No margin - exact viewport checking
+            } else {
+                console.log(`👁️‍🗨️ Container ${videoId} out of view - removing video`);
+                removeVideoFromContainer(container);
+            }
         });
-        
-        // Observe each video individually
-        const videos = swiper.el.querySelectorAll('.video-feed-item');
-        videos.forEach(video => {
-            videoObserver.observe(video);
-            console.log(`👀 Now observing video ${video.dataset.videoId}`);
-        });
-        
-        console.log(`✅ Individual observation setup for ${videos.length} videos`);
+    }, { 
+        threshold: 0.3,
+        root: swiper.el,
+        rootMargin: '50px'
+    });
+    
+    // Find all containers that should have videos
+    const containers = swiper.el.querySelectorAll('[data-video-id]');
+    containers.forEach(container => {
+        videoObserver.observe(container);
+        console.log(`👀 Observing container for video ${container.dataset.videoId}`);
+    });
+    
+    console.log(`✅ Observing ${containers.length} video containers`);
+}
+
+function createVideoInContainer(container, videoId) {
+    // Don't create if already exists
+    if (container.querySelector('.video-feed-item')) {
+        console.log(`⚠️ Video ${videoId} already exists in container`);
+        return;
     }
+    
+    const cachedData = videoCache.get(videoId);
+    if (!cachedData) {
+        console.log(`❌ No cached data for video ${videoId}`);
+        return;
+    }
+    
+    console.log(`🎬 Creating video element for ${videoId}`);
+    
+    // Create fresh video element
+    const video = document.createElement('video');
+    video.className = cachedData.className;
+    video.dataset.videoId = videoId;
+    video.src = cachedData.src;
+    if (cachedData.poster) video.poster = cachedData.poster;
+    
+    video.muted = true;
+    video.volume = 0;
+    video.loop = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.preload = 'metadata';
+    
+    // Hide thumbnail when video starts playing
+    const thumbnail = container.querySelector('.video-thumbnail');
+    video.addEventListener('playing', () => {
+        console.log(`▶️ Video ${videoId} started playing`);
+        if (thumbnail) {
+            thumbnail.style.opacity = '0';
+            thumbnail.style.transition = 'opacity 0.3s ease';
+        }
+    }, { once: true });
+    
+    // Add video to container
+    container.appendChild(video);
+    
+    // Start playing
+    setTimeout(() => {
+        video.play().then(() => {
+            console.log(`✅ Successfully playing ${videoId}`);
+        }).catch(e => {
+            console.log(`❌ Play failed for ${videoId}:`, e);
+        });
+    }, 100);
+}
+
+function removeVideoFromContainer(container) {
+    const video = container.querySelector('.video-feed-item');
+    if (!video) return;
+    
+    const videoId = video.dataset.videoId;
+    const thumbnail = container.querySelector('.video-thumbnail');
+    
+    console.log(`🗑️ Removing video ${videoId} from container`);
+    
+    // Show thumbnail
+    if (thumbnail) {
+        thumbnail.style.opacity = '1';
+        thumbnail.style.transition = 'opacity 0.3s ease';
+    }
+    
+    // Remove video from DOM
+    video.remove();
+    console.log(`✅ Video ${videoId} removed from DOM`);
+}
 
     function updateActiveSlides(slug) {
         if (!swiper) return;
