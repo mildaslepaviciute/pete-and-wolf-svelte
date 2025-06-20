@@ -418,7 +418,7 @@ function startWebpObserver(webpElements) {
                 console.log(`⏸️ Stopped WebP ${videoId}`);
             }
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0 });
 
     webpElements.forEach(webp => {
         webpObserver.observe(webp);
