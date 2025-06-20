@@ -366,6 +366,39 @@
         videoFeedInitialized = true;
     }
 
+    // Video playback counter
+let playingVideosCount = 0;
+let playingVideos = new Set(); // Track which videos are playing
+
+function trackVideoPlay(videoId) {
+    if (!playingVideos.has(videoId)) {
+        playingVideos.add(videoId);
+        playingVideosCount++;
+        console.log(`▶️ Video ${videoId} started. Total playing: ${playingVideosCount}`);
+        
+        // Alert if too many videos
+        if (playingVideosCount > 3) {
+            console.warn(`🚨 WARNING: ${playingVideosCount} videos playing simultaneously!`);
+        }
+    }
+}
+
+function trackVideoStop(videoId) {
+    if (playingVideos.has(videoId)) {
+        playingVideos.delete(videoId);
+        playingVideosCount--;
+        console.log(`⏸️ Video ${videoId} stopped. Total playing: ${playingVideosCount}`);
+    }
+}
+
+function logVideoStatus() {
+    console.log(`📊 Currently playing: ${playingVideosCount} videos`);
+    console.log(`📊 Playing video IDs:`, Array.from(playingVideos));
+}
+
+// Log every 2 seconds
+setInterval(logVideoStatus, 2000);
+
     function startIndividualVideoObserver() {
         if (videoObserver) return;
         
@@ -375,32 +408,17 @@
                 const video = entry.target;
                 const videoId = video.dataset.videoId;
                 const thumbnail = video.parentElement?.querySelector('.video-thumbnail');
-                
-                if (entry.isIntersecting) {
-                    // Video is in view - play it
-                    console.log(`👁️ Video ${videoId} entered viewport - playing`);
-                    
-                    if (video.paused) {
-                        video.play().then(() => {
-                            console.log(`▶️ Video ${videoId} started playing`);
-                            if (thumbnail && thumbnail.style.opacity !== '0') {
-                                thumbnail.style.opacity = '0';
-                                // thumbnail.style.transition = 'opacity 0.3s ease';
-                            }6
-                        }).catch(e => {
-                            console.log(`❌ Play failed for ${videoId}:`, e);
-                        });
-                    }
-                    
+               if (entry.isIntersecting) {
+                    video.play().then(() => {
+                        trackVideoPlay(videoId); // Add this
+                        if (thumbnail) thumbnail.style.opacity = '0';
+                    }).catch(e => {
+                        console.log(`❌ Play failed for ${videoId}:`, e);
+                    });
                 } else {
-                    // Video is out of view - pause it
-                    console.log(`👁️‍🗨️ Video ${videoId} left viewport - pausing`);
-                    
-                    if (!video.paused) {
-                        video.pause();
-                        console.log(`⏸️ Video ${videoId} paused`);
-                    }
-                    
+                    video.pause();
+                    trackVideoStop(videoId); // Add this
+                    if (thumbnail) thumbnail.style.opacity = '1';
                 }
             });
         }, { 
