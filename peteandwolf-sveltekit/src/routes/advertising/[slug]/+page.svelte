@@ -330,40 +330,102 @@
         }
     }
 
-    let webpObserver;
-    let webpFeedInitialized = false;
+let webpObserver;
+let webpFeedInitialized = false;
+let webpLoadingPromises = new Map();
+let fullyLoadedWebps = new Set();
 
-    function initializeWebpFeed() {
-        if (webpFeedInitialized) return;
-        
-        if (!swiper) {
-            setTimeout(initializeWebpFeed, 100);
-            return;
-        }
-        
-        if (webpObserver) {
-            webpObserver.disconnect();
-        }
-        
-        webpObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const webpImg = entry.target;
-                
-                if (entry.isIntersecting) {
-                    webpImg.style.opacity = '1';
-                } else {
-                    webpImg.style.opacity = '0';
-                }
-            });
-        }, { threshold: 0.5 });
-
-        const webpElements = swiper.el.querySelectorAll('.video-webp-item');
-        webpElements.forEach(webp => {
-            webpObserver.observe(webp);
-        });
-        
-        webpFeedInitialized = true;
+function initializeWebpFeed() {
+    if (webpFeedInitialized) return;
+    
+    if (!swiper) {
+        setTimeout(initializeWebpFeed, 100);
+        return;
     }
+    
+    console.log('🎬 Starting WebP preloading...');
+    
+    const webpElements = swiper.el.querySelectorAll('.video-webp-item');
+    
+    // Preload all WebPs first
+    preloadAllWebps(webpElements).then(() => {
+        console.log('✅ All WebPs preloaded, starting observer');
+        startWebpObserver(webpElements);
+    });
+    
+    webpFeedInitialized = true;
+}
+
+async function preloadAllWebps(webpElements) {
+    const loadPromises = [];
+    
+    webpElements.forEach(webpImg => {
+        const videoId = webpImg.dataset.videoId;
+        const webpUrl = webpImg.dataset.webpSrc; // Get from data attribute
+        
+        if (!webpLoadingPromises.has(videoId)) {
+            const loadPromise = new Promise((resolve, reject) => {
+                const preloadImg = new Image();
+                
+                preloadImg.onload = () => {
+                    fullyLoadedWebps.add(videoId);
+                    console.log(`✅ WebP ${videoId} fully loaded`);
+                    resolve();
+                };
+                
+                preloadImg.onerror = () => {
+                    console.error(`❌ WebP ${videoId} failed to load`);
+                    reject();
+                };
+                
+                preloadImg.src = webpUrl;
+            });
+            
+            webpLoadingPromises.set(videoId, loadPromise);
+            loadPromises.push(loadPromise);
+        }
+    });
+    
+    try {
+        await Promise.all(loadPromises);
+        console.log(`🎯 All ${loadPromises.length} WebPs preloaded successfully`);
+    } catch (error) {
+        console.warn('⚠️ Some WebPs failed to preload, continuing anyway');
+    }
+}
+
+function startWebpObserver(webpElements) {
+    if (webpObserver) {
+        webpObserver.disconnect();
+    }
+    
+    webpObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const webpImg = entry.target;
+            const videoId = webpImg.dataset.videoId;
+            const thumbnail = webpImg.parentElement?.querySelector('.video-thumbnail');
+            
+            if (entry.isIntersecting) {
+                // Only start WebP if fully loaded
+                if (fullyLoadedWebps.has(videoId)) {
+                    webpImg.src = webpImg.dataset.webpSrc; // Start WebP animation
+                    if (thumbnail) thumbnail.style.display = 'none'; // Hide thumbnail
+                    console.log(`▶️ Playing WebP ${videoId}`);
+                }
+            } else {
+                webpImg.src = ''; // Stop WebP animation
+                if (thumbnail) thumbnail.style.display = 'block'; // Show thumbnail
+                console.log(`⏸️ Stopped WebP ${videoId}`);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    webpElements.forEach(webp => {
+        webpObserver.observe(webp);
+    });
+    
+    console.log(`👀 Observer started for ${webpElements.length} WebPs`);
+}
 
     function updateActiveSlides(slug) {
         if (!swiper) return;
@@ -561,14 +623,23 @@
                                     data-slug={project.slug.current}>
                                         <!-- In your Swiper slide HTML -->
                                       <div class="w-35 bg-black border-end border-black ratio ratio-16x9 position-relative">
-                                            <!-- Just the WebP animation -->
-                                            <img 
-                                                src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/preview.webp"
-                                                alt="{project.title}"
-                                                class="video-webp-item position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
-                                                data-video-id="{project.videoPreviewId || project.videoId}"
-                                            >
-                                        </div>
+    <!-- Thumbnail (shows by default) -->
+    <img 
+        src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
+        alt="{project.title} thumbnail"
+        class="video-thumbnail position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+    >
+    
+    <!-- WebP animation (starts empty) -->
+    <img 
+        src=""
+        data-webp-src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/preview.webp?v={project.videoId}"
+        alt="{project.title}"
+        class="video-webp-item position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
+        data-video-id="{project.videoPreviewId || project.videoId}"
+    >
+</div>
+
                                         <div class="w-65 h-100 d-flex align-items-center font-7 px-3 text-black">
                                             {project.title}
                                         </div>
