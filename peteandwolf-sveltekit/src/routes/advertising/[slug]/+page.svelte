@@ -634,28 +634,25 @@ root: null,
                                     class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                     data-slug={project.slug.current}>
                                         <!-- In your Swiper slide HTML -->
-                                        <div class="w-35 bg-black border-end border-black ratio ratio-16x9 position-relative">
-                                            <!-- Static thumbnail image -->
-                                            <img 
-                                                src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
-                                                alt="{project.title}"
-                                                class="video-thumbnail position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
-                                                style="z-index: 2; transition: opacity 0.3s ease;"
-                                            >
-                                            
-                                            <!-- Video element -->
-                                            <video 
-                                                class="w-100 h-100 object-fit-cover video-feed-item position-absolute top-0 start-0" 
-                                                playsinline
-                                                loop 
-                                                muted
-                                                preload="metadata"
-                                                data-video-id="{project.videoPreviewId || project.videoId}"
-                                                style="z-index: 1;"
-                                            >
-                                                <source src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/play_240p.mp4" type="video/mp4">
-                                            </video>
-                                        </div>
+                                       <div class="w-35 bg-black border-end border-black ratio ratio-16x9 position-relative">
+    <!-- Static thumbnail image (fallback/loading state) -->
+    <!-- <img 
+        src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
+        alt="{project.title}"
+        class="video-thumbnail position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+        style="z-index: 1; transition: opacity 0.3s ease;"
+    > -->
+    
+    <!-- WebP animation (plays when visible) -->
+    <img 
+        src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/preview.webp"
+        data-webp-src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/preview.webp"
+        alt="{project.title}"
+        class="video-webp-item position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
+        data-video-id="{project.videoPreviewId || project.videoId}"
+        style="z-index: 2; opacity: 1; transition: opacity 0.3s ease;"
+    >
+</div>
                                         <div class="w-65 h-100 d-flex align-items-center font-7 px-3 text-black">
                                             {project.title}
                                         </div>
