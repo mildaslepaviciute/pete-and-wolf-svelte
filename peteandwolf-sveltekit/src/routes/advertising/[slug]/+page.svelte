@@ -330,111 +330,39 @@
         }
     }
 
-    // Individual video viewport checking
-    let videoFeedInitialized = false;
-    let videoObserver = null;
+    let webpObserver;
+    let webpFeedInitialized = false;
 
-    function startVideoFeed() {
-        if (videoFeedInitialized) return;
+    function initializeWebpFeed() {
+        if (webpFeedInitialized) return;
         
         if (!swiper) {
-            setTimeout(startVideoFeed, 100);
+            setTimeout(initializeWebpFeed, 100);
             return;
         }
         
-        console.log('🎬 Starting individual video viewport checking');
-        
-        const videoElements = swiper.el.querySelectorAll('.video-feed-item');
-        
-        // Setup all videos
-        videoElements.forEach(video => {
-            const videoId = video.dataset.videoId;
-            
-            video.muted = true;
-            video.volume = 0;
-            video.loop = true;
-            video.setAttribute('muted', '');
-            video.setAttribute('playsinline', '');
-            video.preload = 'metadata';
-            
-            console.log(`🎬 Setup video ${videoId}`);
-        });
-        
-        // Start individual video observation
-        startIndividualVideoObserver();
-        
-        videoFeedInitialized = true;
-    }
-
-    // Video playback counter
-let playingVideosCount = 0;
-let playingVideos = new Set(); // Track which videos are playing
-
-function trackVideoPlay(videoId) {
-    if (!playingVideos.has(videoId)) {
-        playingVideos.add(videoId);
-        playingVideosCount++;
-        console.log(`▶️ Video ${videoId} started. Total playing: ${playingVideosCount}`);
-        
-        // Alert if too many videos
-        if (playingVideosCount > 3) {
-            console.warn(`🚨 WARNING: ${playingVideosCount} videos playing simultaneously!`);
+        if (webpObserver) {
+            webpObserver.disconnect();
         }
-    }
-}
-
-function trackVideoStop(videoId) {
-    if (playingVideos.has(videoId)) {
-        playingVideos.delete(videoId);
-        playingVideosCount--;
-        console.log(`⏸️ Video ${videoId} stopped. Total playing: ${playingVideosCount}`);
-    }
-}
-
-function logVideoStatus() {
-    console.log(`📊 Currently playing: ${playingVideosCount} videos`);
-    console.log(`📊 Playing video IDs:`, Array.from(playingVideos));
-}
-
-// Log every 2 seconds
-setInterval(logVideoStatus, 2000);
-
-    function startIndividualVideoObserver() {
-        if (videoObserver) return;
         
-        // Create observer that checks each video individually
-        videoObserver = new IntersectionObserver((entries) => {
+        webpObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                const video = entry.target;
-                const videoId = video.dataset.videoId;
-                const thumbnail = video.parentElement?.querySelector('.video-thumbnail');
-               if (entry.isIntersecting) {
-                    video.play().then(() => {
-                        trackVideoPlay(videoId); // Add this
-                        if (thumbnail) thumbnail.style.opacity = '0';
-                    }).catch(e => {
-                        console.log(`❌ Play failed for ${videoId}:`, e);
-                    });
+                const webpImg = entry.target;
+                
+                if (entry.isIntersecting) {
+                    webpImg.style.opacity = '1';
                 } else {
-                    video.pause();
-                    trackVideoStop(videoId); // Add this
-                    if (thumbnail) thumbnail.style.opacity = '1';
+                    webpImg.style.opacity = '0';
                 }
             });
-        }, { 
-            threshold: 1, // Trigger when 30% of video is visible
-root: null,
-            rootMargin: '0px' // No margin - exact viewport checking
+        }, { threshold: 0.5 });
+
+        const webpElements = swiper.el.querySelectorAll('.video-webp-item');
+        webpElements.forEach(webp => {
+            webpObserver.observe(webp);
         });
         
-        // Observe each video individually
-        const videos = swiper.el.querySelectorAll('.video-feed-item');
-        videos.forEach(video => {
-            videoObserver.observe(video);
-            console.log(`👀 Now observing video ${video.dataset.videoId}`);
-        });
-        
-        console.log(`✅ Individual observation setup for ${videos.length} videos`);
+        webpFeedInitialized = true;
     }
 
     function updateActiveSlides(slug) {
@@ -487,10 +415,8 @@ root: null,
             simulateTouch: window.innerWidth < 992,
             on: {
                 init: function() {
-                    console.log('✅ Swiper initialized');
-                    // Start individual video checking after Swiper is ready
-                    setTimeout(() => {
-                        startVideoFeed();
+                     setTimeout(() => {
+                        initializeWebpFeed();
                     }, 100);
                 }
             }
@@ -524,11 +450,11 @@ root: null,
                 hlsB.destroy();
             }
             
-            // Clean up individual video observer
-            if (videoObserver) {
-                videoObserver.disconnect();
-                videoObserver = null;
-            }
+            // // Clean up individual video observer
+            // if (videoObserver) {
+            //     videoObserver.disconnect();
+            //     videoObserver = null;
+            // }
             
             videoFeedInitialized = false;
         };
@@ -634,25 +560,15 @@ root: null,
                                     class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                     data-slug={project.slug.current}>
                                         <!-- In your Swiper slide HTML -->
-                                       <div class="w-35 bg-black border-end border-black ratio ratio-16x9 position-relative">
-    <!-- Static thumbnail image (fallback/loading state) -->
-    <!-- <img 
-        src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/thumbnail.jpg"
-        alt="{project.title}"
-        class="video-thumbnail position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
-        style="z-index: 1; transition: opacity 0.3s ease;"
-    > -->
-    
-    <!-- WebP animation (plays when visible) -->
-    <img 
-        src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/preview.webp"
-        data-webp-src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/preview.webp"
-        alt="{project.title}"
-        class="video-webp-item position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
-        data-video-id="{project.videoPreviewId || project.videoId}"
-        style="z-index: 2; opacity: 1; transition: opacity 0.3s ease;"
-    >
-</div>
+                                      <div class="w-35 bg-black border-end border-black ratio ratio-16x9 position-relative">
+                                            <!-- Just the WebP animation -->
+                                            <img 
+                                                src="https://vz-8d625025-b12.b-cdn.net/{project.videoPreviewId || project.videoId}/preview.webp"
+                                                alt="{project.title}"
+                                                class="video-webp-item position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
+                                                data-video-id="{project.videoPreviewId || project.videoId}"
+                                            >
+                                        </div>
                                         <div class="w-65 h-100 d-flex align-items-center font-7 px-3 text-black">
                                             {project.title}
                                         </div>
