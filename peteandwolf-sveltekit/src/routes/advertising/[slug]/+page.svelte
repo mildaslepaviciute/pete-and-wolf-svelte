@@ -404,8 +404,8 @@
                 }
             });
         }, { 
-            threshold: 0.3, // Trigger when 30% of video is visible
-            root: swiper.el, // Use swiper container as root
+            threshold: 1, // Trigger when 30% of video is visible
+            root: document.getElementById('swiper-wrapper'), // Use swiper container as root
             rootMargin: '0px' // No margin - exact viewport checking
         });
         
@@ -607,7 +607,7 @@
 
             <!-- Projects List Column -->
             <div class="col-lg-4 ps-lg-1 px-0-mob h-100" bind:this={rightColumn}>
-                <div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden">
+                <div class="h-100 border border-black border-x-0-mob border-top-0-mob overflow-hidden" id="swiper-wrapper">
                     <div class="swiper-container scrollSwiperAdvertising">
                         <div class="swiper-wrapper h-100">
                             {#each data.advertisingProjects as project}
