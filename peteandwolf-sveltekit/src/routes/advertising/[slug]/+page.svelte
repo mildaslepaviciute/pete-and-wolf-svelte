@@ -402,22 +402,45 @@
             webpObserver.disconnect();
         }
         
-        webpObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const img = entry.target;
-                const videoId = img.dataset.videoId;
-                const webpUrl = img.dataset.webpSrc;
-                const thumbnailUrl = img.dataset.thumbnailSrc;
-                
-                if (entry.isIntersecting) {
-                    if (fullyLoadedWebps.has(videoId)) {
-                        img.src = webpUrl; // Switch to WebP
-                    }
-                } else {
-                    img.src = thumbnailUrl; // Back to thumbnail
+      let debounceTimers = new Map();
+
+webpObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        const img = entry.target;
+        const videoId = img.dataset.videoId;
+        const webpUrl = img.dataset.webpSrc;
+        const thumbnailUrl = img.dataset.thumbnailSrc;
+        
+        // Clear existing timer for this video
+        if (debounceTimers.has(videoId)) {
+            clearTimeout(debounceTimers.get(videoId));
+            debounceTimers.delete(videoId);
+        }
+        
+        if (entry.isIntersecting) {
+            // Show WebP immediately if loaded, no delay for entering view
+            if (fullyLoadedWebps.has(videoId)) {
+                img.src = webpUrl;
+                console.log(`▶️ Switched to WebP ${videoId}`);
+            }
+            
+        } else {
+            // Only debounce the EXIT (switching back to thumbnail)
+            const delay = window.innerWidth < 992 ? 200 : 50;
+            
+            const timer = setTimeout(() => {
+                // Double-check it's still out of view
+                if (!entry.isIntersecting) {
+                    img.src = thumbnailUrl;
+                    console.log(`⏸️ Back to thumbnail ${videoId}`);
                 }
-            });
-        }, { threshold: 1 });
+                debounceTimers.delete(videoId);
+            }, delay);
+            
+            debounceTimers.set(videoId, timer);
+        }
+    });
+}, { threshold:1 }); // Lower threshold so it triggers easier
 
         webpElements.forEach(img => {
             webpObserver.observe(img);
