@@ -356,46 +356,33 @@
         webpFeedInitialized = true;
     }
 
-    async function preloadAllWebps(webpElements) {
-        const loadPromises = [];
+let webpObjectUrls = new Map(); // Store blob URLs
+
+async function preloadAllWebps(webpElements) {
+    const loadPromises = [];
+    
+    webpElements.forEach(img => {
+        const videoId = img.dataset.videoId;
+        const webpUrl = img.dataset.webpSrc;
         
-        webpElements.forEach(img => {
-            const videoId = img.dataset.videoId;
-            const webpUrl = img.dataset.webpSrc;
-            
-            // Store original thumbnail URL
-            img.dataset.thumbnailSrc = img.src;
-            
-            if (!webpLoadingPromises.has(videoId)) {
-                const loadPromise = new Promise((resolve, reject) => {
-                    const preloadImg = new Image();
-                    
-                    preloadImg.onload = () => {
-                        fullyLoadedWebps.add(videoId);
-                        console.log(`✅ WebP ${videoId} fully loaded`);
-                        resolve();
-                    };
-                    
-                    preloadImg.onerror = () => {
-                        console.error(`❌ WebP ${videoId} failed to load`);
-                        reject();
-                    };
-                    
-                    preloadImg.src = webpUrl;
-                });
-                
-                webpLoadingPromises.set(videoId, loadPromise);
-                loadPromises.push(loadPromise);
-            }
-        });
+        img.dataset.thumbnailSrc = img.src;
         
-        try {
-            await Promise.all(loadPromises);
-            console.log(`🎯 All ${loadPromises.length} WebPs preloaded`);
-        } catch (error) {
-            console.warn('⚠️ Some WebPs failed to preload');
+        if (!webpObjectUrls.has(videoId)) {
+            const loadPromise = fetch(webpUrl)  // ← This downloads once
+                .then(response => response.blob())
+                .then(blob => {
+                    const objectUrl = URL.createObjectURL(blob); // ← This creates cached blob URL
+                    webpObjectUrls.set(videoId, objectUrl); // ← Store the blob URL
+                    fullyLoadedWebps.add(videoId);
+                })
+                .catch(error => console.error(`WebP ${videoId} failed:`, error));
+            
+            loadPromises.push(loadPromise);
         }
-    }
+    });
+    
+    await Promise.all(loadPromises);
+}
 
     function startWebpObserver(webpElements) {
         if (webpObserver) {
@@ -417,13 +404,11 @@
                     debounceTimers.delete(videoId);
                 }
                 
-                if (entry.isIntersecting) {
-                    // Show WebP immediately if loaded, no delay for entering view
-                    if (fullyLoadedWebps.has(videoId)) {
-                        img.src = webpUrl;
-                        console.log(`▶️ Switched to WebP ${videoId}`);
-                    }
-                    
+              // Then in observer:
+         if (entry.isIntersecting) {
+    if (fullyLoadedWebps.has(videoId)) {
+        img.src = webpObjectUrls.get(videoId); // ← Uses cached blob, no network!
+    }
                 } else {
                     // Only debounce the EXIT (switching back to thumbnail)
                     const delay = window.innerWidth < 992 ? 200 : 50;
