@@ -417,7 +417,7 @@
                     img.src = thumbnailUrl; // Back to thumbnail
                 }
             });
-        }, { threshold: 0 });
+        }, { threshold: 1 });
 
         webpElements.forEach(img => {
             webpObserver.observe(img);
