@@ -1,8 +1,31 @@
 <script>
   import { renderBlocks } from "$lib/helpers.js";
   import Column from "$lib/components/Column.svelte";
+  import { onMount } from "svelte";
+  import { on } from "svelte/events";
+  import { gsap } from "gsap";
+
   export let data;
   const { aboutData } = data;
+
+  onMount(() => {
+    // gsap.fromTo('#about-image', {
+    //       opacity: 0,
+    // }, {
+    //       duration: 1,
+    //       ease: 'none',
+    //       opacity: 1,
+    // });
+
+    // gsap.fromTo('#about-title', {
+    //       opacity: 0,
+    // }, {
+    //       duration: 1,
+    //       ease: 'none',
+    //       opacity: 1,
+    //       delay: 0.2,
+    // });
+  });
 </script>
 
 <svelte:head>
@@ -15,12 +38,12 @@
     <div class="row align-items-stretch scrolling-mob gy-4 gy-lg-0 pb-4 pb-lg-0" id="aboutRow">
       <div class="col-lg-6 h-lg-100 d-flex flex-column">
         <div class="w-100">
-          <img src={aboutData.mainImage.url} alt={aboutData.mainImage.alt || ""} class="w-100"/>
+          <img id="about-image" src={aboutData.mainImage.url} alt={aboutData.mainImage.alt || ""} class="w-100"/>
         </div>
       </div>
       <div class="col-lg-6 h-lg-100 d-flex flex-column scrolling-lg">
         <hr class="mt-0 mb-2 mb-lg-0">
-        <h1 class="w-100 sticky-top bg-white font-2 font-3-mob mb-0 pb-0">
+        <h1 id="about-title" class="w-100 sticky-top bg-white font-2 font-3-mob mb-0 pb-0">
           <b>{aboutData.title}</b>
         </h1>
         <hr class="mb-3 mt-2 mt-lg-0">

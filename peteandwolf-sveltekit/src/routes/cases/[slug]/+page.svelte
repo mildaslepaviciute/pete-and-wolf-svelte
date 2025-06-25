@@ -93,10 +93,18 @@
   }
 
   onMount(() => {
-    if (mainContent) {
-      gsap.set(mainContent, {
-        opacity: 1,
+       gsap.set(mainContent, {
+        opacity: 0,
         zIndex: 1
+      });
+    if (mainContent) {
+   
+
+       gsap.to(mainContent, {
+          opacity: 1,
+          duration: 0.5,
+          delay: 0.75,
+          ease: 'none'
       });
     }
   });
