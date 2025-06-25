@@ -356,81 +356,107 @@
         webpFeedInitialized = true;
     }
 
-let webpObjectUrls = new Map(); // Store blob URLs
+let webpObjectUrls = new Map(); // videoId => blobUrl
 
-async function preloadAllWebps(webpElements) {
-    const loadPromises = [];
-    
-    webpElements.forEach(img => {
-        const videoId = img.dataset.videoId;
-        const webpUrl = img.dataset.webpSrc;
-        
-        img.dataset.thumbnailSrc = img.src;
-        
-        if (!webpObjectUrls.has(videoId)) {
-            const loadPromise = fetch(webpUrl)  // ← This downloads once
-                .then(response => response.blob())
-                .then(blob => {
-                    const objectUrl = URL.createObjectURL(blob); // ← This creates cached blob URL
-                    webpObjectUrls.set(videoId, objectUrl); // ← Store the blob URL
-                    fullyLoadedWebps.add(videoId);
-                })
-                .catch(error => console.error(`WebP ${videoId} failed:`, error));
-            
-            loadPromises.push(loadPromise);
-        }
-    });
-    
-    await Promise.all(loadPromises);
+// Returns blob URL from cache or creates a new one from fetch (using browser cache for repeated fetches)
+async function getOrCreateWebpObjectUrl(videoId, webpUrl) {
+    if (webpObjectUrls.has(videoId)) {
+        return webpObjectUrls.get(videoId);
+    }
+    const response = await fetch(webpUrl, { cache: "force-cache" }); // ensures browser cache
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    webpObjectUrls.set(videoId, objectUrl);
+    return objectUrl;
 }
 
-    function startWebpObserver(webpElements) {
-        if (webpObserver) {
-            webpObserver.disconnect();
-        }
+function cleanupWebpBlob(videoId) {
+    const blobUrl = webpObjectUrls.get(videoId);
+    if (blobUrl) {
+        URL.revokeObjectURL(blobUrl);
+        webpObjectUrls.delete(videoId);
+        // Optionally: log for debugging
+        // console.log("🗑️ Cleaned blob for", videoId);
+    }
+}
+
+// On destroy, clean up any blobs left
+import { onDestroy } from "svelte";
+onDestroy(() => {
+    for (const blobUrl of webpObjectUrls.values()) {
+        URL.revokeObjectURL(blobUrl);
+    }
+    webpObjectUrls.clear();
+});
+
+    async function preloadAllWebps(webpElements) {
+        const loadPromises = [];
         
-      let debounceTimers = new Map();
-
-        webpObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const img = entry.target;
-                const videoId = img.dataset.videoId;
-                const webpUrl = img.dataset.webpSrc;
-                const thumbnailUrl = img.dataset.thumbnailSrc;
-                
-                // Clear existing timer for this video
-                if (debounceTimers.has(videoId)) {
-                    clearTimeout(debounceTimers.get(videoId));
-                    debounceTimers.delete(videoId);
-                }
-                
-              // Then in observer:
-         if (entry.isIntersecting) {
-    if (fullyLoadedWebps.has(videoId)) {
-        img.src = webpObjectUrls.get(videoId); // ← Uses cached blob, no network!
-    }
-                } else {
-                    // Only debounce the EXIT (switching back to thumbnail)
-                    const delay = window.innerWidth < 992 ? 200 : 50;
-                    
-                    const timer = setTimeout(() => {
-                        // Double-check it's still out of view
-                        if (!entry.isIntersecting) {
-                            img.src = thumbnailUrl;
-                            console.log(`⏸️ Back to thumbnail ${videoId}`);
-                        }
-                        debounceTimers.delete(videoId);
-                    }, delay);
-                    
-                    debounceTimers.set(videoId, timer);
-                }
-            });
-        }, { threshold:1 }); // Lower threshold so it triggers easier
-
         webpElements.forEach(img => {
-            webpObserver.observe(img);
+            const videoId = img.dataset.videoId;
+            const webpUrl = img.dataset.webpSrc;
+            
+            img.dataset.thumbnailSrc = img.src;
+            
+            if (!webpObjectUrls.has(videoId)) {
+                const loadPromise = fetch(webpUrl)  // ← This downloads once
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const objectUrl = URL.createObjectURL(blob); // ← This creates cached blob URL
+                        webpObjectUrls.set(videoId, objectUrl); // ← Store the blob URL
+                        fullyLoadedWebps.add(videoId);
+                    })
+                    .catch(error => console.error(`WebP ${videoId} failed:`, error));
+                
+                loadPromises.push(loadPromise);
+            }
         });
+        
+        await Promise.all(loadPromises);
     }
+
+  function startWebpObserver(webpElements) {
+    if (webpObserver) webpObserver.disconnect();
+
+    let debounceTimers = new Map();
+
+    webpObserver = new IntersectionObserver(async (entries) => {
+        for (const entry of entries) {
+            const img = entry.target;
+            const videoId = img.dataset.videoId;
+            const webpUrl = img.dataset.webpSrc;
+            const thumbnailUrl = img.dataset.thumbnailSrc;
+
+            if (debounceTimers.has(videoId)) {
+                clearTimeout(debounceTimers.get(videoId));
+                debounceTimers.delete(videoId);
+            }
+
+            if (entry.isIntersecting) {
+                // Only replace with webp if not already using it
+                if (img.src !== webpObjectUrls.get(videoId)) {
+                    const objectUrl = await getOrCreateWebpObjectUrl(videoId, webpUrl);
+                    img.src = objectUrl;
+                }
+            } else {
+                // Delay fallback to thumbnail (debounce to avoid flicker)
+                const delay = window.innerWidth < 992 ? 200 : 50;
+                const timer = setTimeout(() => {
+                    if (!entry.isIntersecting) {
+                        img.src = thumbnailUrl;
+                        cleanupWebpBlob(videoId); // clean blob when no longer visible
+                    }
+                    debounceTimers.delete(videoId);
+                }, delay);
+                debounceTimers.set(videoId, timer);
+            }
+        }
+    }, { threshold: 1 });
+
+    webpElements.forEach(img => {
+        webpObserver.observe(img);
+    });
+}
 
     function updateActiveSlides(slug) {
         if (!swiper) return;
