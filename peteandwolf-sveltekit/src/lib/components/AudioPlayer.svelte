@@ -7,21 +7,23 @@
     let audio;
     let isPlaying = false;
     let progress = 0;
-    let playerId = Math.random().toString(16).slice(2); // Simple unique ID
+    let playerId = Math.random().toString(16).slice(2);
     
     function togglePlay() {
         if (!audio) return;
         
         if (audio.paused) {
             $audioPlayerActive = playerId;
-            audio.play().catch(console.error);
-            isPlaying = true;
+            audio.play().catch(error => {
+                console.error('Audio play failed:', error);
+                // Reset state if play fails
+                isPlaying = false;
+                if ($audioPlayerActive === playerId) {
+                    $audioPlayerActive = null;
+                }
+            });
         } else {
             audio.pause();
-            isPlaying = false;
-            if ($audioPlayerActive === playerId) {
-                $audioPlayerActive = null;
-            }
         }
     }
     
@@ -36,6 +38,9 @@
     
     function handlePause() {
         isPlaying = false;
+        if ($audioPlayerActive === playerId) {
+            $audioPlayerActive = null;
+        }
     }
 
     function handleEnded() {
@@ -49,10 +54,7 @@
     // Listen for other players starting
     $: if ($audioPlayerActive && $audioPlayerActive !== playerId && isPlaying && audio) {
         audio.pause();
-        isPlaying = false;
     }
-
-    console.log('updated')
 </script>
 
 <div class="audio-player-container">
@@ -89,11 +91,7 @@
                         <span></span>
                     </div>
                 {:else}
-                    <div class="play-icon">
-                        <svg viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="12" />
-                        </svg>
-                    </div>
+                    <div class="play-icon"></div>
                 {/if}
             </div>
         </button>
@@ -102,10 +100,11 @@
             bind:this={audio}
             src={audioUrl}
             on:timeupdate={handleTimeUpdate}
+            on:play={handlePlay}
+            on:pause={handlePause}
             on:ended={handleEnded}
-            preload="metadata"
+            preload="none"
         >
-            <track kind="captions" />
         </audio>
     </div>
     
@@ -115,6 +114,8 @@
         </div>
     {/if}
 </div>
+
+<!-- Same styles -->
 
 <style>
     .audio-player-container {
