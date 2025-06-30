@@ -51,6 +51,8 @@
         audio.pause();
         isPlaying = false;
     }
+
+    console.log('updated')
 </script>
 
 <div class="audio-player-container">
