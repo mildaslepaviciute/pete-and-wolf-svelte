@@ -47,12 +47,6 @@
         if (offcanvasCases) {
             offcanvasCases.hide()
         }
-
-        const mainContentArea = document.querySelector(".scrolling");
-        if (mainContentArea) {
-          //  mainContentArea.style.scrollBehavior = 'auto';
-           // mainContentArea.scrollTop = 0;
-        }
     }
 
     function goBack() {
@@ -133,11 +127,11 @@
                 <div class="position-absolute d-none d-lg-flex flex-row-reverse text-rotate top-0 text-end" style="left: -20px;">
                     {#if navSections !== null}
                         {#each navSections as section, sectionIndex}
-                            <div class="fw-bold mt-4 fs-9">
+                            <!-- <div class="fw-bold mt-4 fs-9">
                                 <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black font-7">
                                     {section.title}
                                 </a>
-                            </div>
+                            </div> -->
                             {#if section.blocks}
                                 {#each section.blocks as block, blockIndex}
                                     {#each ['col_1', 'col_2', 'col_3'] as colKey, colIdx}

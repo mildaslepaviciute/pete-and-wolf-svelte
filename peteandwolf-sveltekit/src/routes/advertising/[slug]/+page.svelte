@@ -249,7 +249,7 @@
             pointerEvents: 'auto'
         });
 
-        newLayer.innerHTML = `<video id="${newPlayerId}" playsinline preload="metadata" style="width:100%;height:100%;"></video>`;
+        newLayer.innerHTML = `<video id="${newPlayerId}" playsinline preload="metadata" style="margin:auto;height:100%;"></video>`;
         const newVideoElement = newLayer.querySelector(`#${newPlayerId}`);
 
         gsap.set(newLayer, { 
@@ -575,14 +575,12 @@ onDestroy(() => {
                     <div class="position-absolute credits-panel" 
                         style="top: 1px; right: 0; z-index: 10; transform: translateX(100%); transition: transform 0.3s ease-in-out;"
                         bind:this={collapseElement}>
-                        <div class="card card-body border-0 rounded-0 font-9 p-3" 
-                            id="cardCredits"
-                            style="width: 100%">
+                        <div class="card card-body border-0 rounded-0 font-9 p-3 w-100" id="cardCredits">
                             <h2 class="font-7 text-underline" fm-fade-in>{currentProject?.title}</h2>
-                            <div class="mb-0" fm-fade-in style="max-width:75%">
+                            <div class="mb-2" fm-fade-in style="max-width:75%">
                                 {@html renderBlocks(currentProject.description)}
                             </div>
-                            <p fm-fade-in>{currentProject.type}</p>
+                            <p class="mb-2" fm-fade-in>{currentProject.type}</p>
                             <p class="mb-0" fm-fade-in>
                                 {@html renderBlocks(currentProject.credits)}
                             </p>

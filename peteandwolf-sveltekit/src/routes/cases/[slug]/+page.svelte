@@ -49,13 +49,14 @@
       ease: 'none'
     });
     
-    console.log('Faded out, resetting scroll');
-    
     // Reset scroll while invisible
     const mainContentArea = document.querySelector(".scrolling");
     if (mainContentArea) {
       mainContentArea.style.scrollBehavior = 'auto';
       mainContentArea.scrollTop = 0;
+      setTimeout(() => {
+        mainContentArea.style.scrollBehavior = 'smooth';
+      }, 50);
     }
     
     // Small delay to ensure scroll reset completes
@@ -93,18 +94,9 @@
   }
 
   onMount(() => {
-       gsap.set(mainContent, {
-        opacity: 0,
-        zIndex: 1
-      });
     if (mainContent) {
-   
-
-       gsap.to(mainContent, {
-          opacity: 1,
-          duration: 0.5,
-          delay: 0.75,
-          ease: 'none'
+      gsap.set(mainContent, {
+        opacity: 1,
       });
     }
   });
