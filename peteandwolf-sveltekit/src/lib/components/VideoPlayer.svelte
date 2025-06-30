@@ -1,4 +1,6 @@
 <script>
+    import { onDestroy } from 'svelte';
+    
     export let videoId;
     export let poster = "";
     
@@ -7,15 +9,26 @@
     
     $: videoUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
     
+    // Reset when videoId changes
+    $: if (videoId) {
+        resetPlayer();
+    }
+    
+    function resetPlayer() {
+        isPlaying = false;
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+        }
+    }
+    
     function togglePlay() {
         if (!video) return;
         
         if (video.paused) {
             video.play().catch(console.error);
-            isPlaying = true;
         } else {
             video.pause();
-            isPlaying = false;
         }
     }
     
@@ -26,6 +39,11 @@
     function handlePause() {
         isPlaying = false;
     }
+    
+    // Clean up on component destroy
+    onDestroy(() => {
+        resetPlayer();
+    });
 </script>
 
 <div class="video-player">
