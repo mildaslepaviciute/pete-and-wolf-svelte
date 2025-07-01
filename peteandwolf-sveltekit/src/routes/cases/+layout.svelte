@@ -124,7 +124,7 @@
                         <div type="button" class="back-button" on:click|preventDefault={goBack}>&larr; About Sonic ID</div>
                     </div>
                 {/if}
-                <div class="position-absolute d-none d-lg-flex flex-row-reverse text-rotate top-0 text-end" style="left: -20px;">
+                <div class="position-absolute d-none d-lg-flex flex-row-reverse text-rotate top-0 text-end" style="left: -15px;">
                     {#if navSections !== null}
                         {#each navSections as section, sectionIndex}
                             <!-- <div class="fw-bold mt-4 fs-9">
@@ -197,7 +197,7 @@
             </div>
 
             <!-- Main content area -->
-            <div class="col-lg-8 h-100 min-h-100 ps-lg-2 pe-10px-mob">
+            <div class="col-lg-8 h-100 min-h-100 pe-10px-mob">
                <div class="max-h-screen min-h-mob-screen h-100 scrolling border-lg border-black px-lg-3 py-lg-3 overflow-x-hidden">
                     <div>
                         <slot />
