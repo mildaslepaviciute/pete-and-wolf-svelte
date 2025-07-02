@@ -14,7 +14,7 @@
     Swiper.use([Mousewheel, FreeMode]);
  
     export let data;
-    const { caseItems, sonicIdData } = data;
+    const { caseItems } = data;
 
     $: currentProject = $page.url.pathname === '/cases' 
         ? null 
@@ -22,7 +22,7 @@
             $page.params.slug && item.slug === $page.params.slug
         );
 
-    $: navSections = currentProject ? currentProject.sections : sonicIdData.sections;
+    $: navSections = currentProject ? currentProject.sections : null;
 
     let swiperSonic, swiperSonicMobile;
     let offcanvasCases;

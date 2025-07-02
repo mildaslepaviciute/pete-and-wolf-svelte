@@ -1,9 +1,13 @@
+import { orderRankField } from '@sanity/orderable-document-list'
+
+
 // schemas/documents/sonicIdProject.js
 export default {
     name: 'sonicIdProject',
     title: 'Sonic ID Project',
     type: 'document',
     fields: [
+        orderRankField({ type: 'sonicIdProject' }),
       {
         name: 'title',
         title: 'Title',

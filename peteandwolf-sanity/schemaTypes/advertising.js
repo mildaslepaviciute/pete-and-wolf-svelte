@@ -1,9 +1,12 @@
+import { orderRankField } from '@sanity/orderable-document-list'
+
 // schemas/advertising.js
 export default {
     name: 'advertisingProject',
     title: 'Advertising Project',
     type: 'document',
     fields: [
+      orderRankField({ type: 'advertisingProject' }),
       {
         name: 'title',
         title: 'Title',

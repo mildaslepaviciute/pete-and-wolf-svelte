@@ -1,10 +1,27 @@
-// deskStructure.js
-export const structure = (S) =>
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
+
+export const structure = (S, context) =>
   S.list()
     .title('Content')
     .items([
-      // Regular document types
-      ...S.documentTypeListItems().filter(item => !['aboutUs', 'homePage'].includes(item.getId())),
+      // Orderable document types
+      orderableDocumentListDeskItem({
+        type: 'sonicIdProject',
+        S,
+        context,
+        title: 'Sonic ID Projects (Orderable)'
+      }),
+      orderableDocumentListDeskItem({
+        type: 'advertisingProject', 
+        S,
+        context,
+        title: 'Advertising Projects (Orderable)'
+      }),
+      
+      // Regular document types (excluding singletons and orderable types)
+      ...S.documentTypeListItems().filter(item => 
+        !['aboutUs', 'homePage', 'sonicIdProject', 'advertisingProject'].includes(item.getId())
+      ),
       
       // Singleton - About Us
       S.listItem()
@@ -19,12 +36,12 @@ export const structure = (S) =>
 
       // Singleton - Home
       S.listItem()
-      .title('Home Page')
-      .id('homePage')
-      .child(
-        S.editor()
-          .id('homePage')
-          .schemaType('homePage')
-          .documentId('homePage')
-      ),
+        .title('Home Page')
+        .id('homePage')
+        .child(
+          S.editor()
+            .id('homePage')
+            .schemaType('homePage')
+            .documentId('homePage')
+        ),
     ])

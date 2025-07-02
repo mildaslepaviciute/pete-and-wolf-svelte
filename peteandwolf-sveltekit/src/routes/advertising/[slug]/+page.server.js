@@ -3,7 +3,7 @@ import { client } from '$lib/sanityClient';  // Assuming you have your Sanity cl
 import { error } from '@sveltejs/kit';
 
 export async function load({ params }) {
-    const query = `*[_type == "advertisingProject"] | order(order asc) {
+    const query = `*[_type == "advertisingProject"] | order(orderRank) {
         title,
         slug,
         videoId,

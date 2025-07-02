@@ -1,10 +1,11 @@
 import { client } from '$lib/sanityClient';
 
 export async function load() {
-    const projectsQuery = `*[_type == "sonicIdProject"] | order(order asc) {
+    const projectsQuery = `*[_type == "sonicIdProject"] | order(orderRank) {
         title,
         "slug": slug.current,
         description,
+        orderRank,
         "thumbnail": {
             "type": thumbnail.type,
             "url": thumbnail.image.asset->url,
