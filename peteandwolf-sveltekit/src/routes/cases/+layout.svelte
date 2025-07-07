@@ -1,4 +1,3 @@
-<!-- src/routes/sonic-id/+layout.svelte -->
 <script>
     import { renderBlocks } from "$lib/helpers.js";
     import { onMount, afterUpdate } from "svelte";
@@ -10,6 +9,8 @@
     } from 'swiper';
     import { tick } from 'svelte';
     import { gsap } from 'gsap';
+    import { browser } from '$app/environment';
+
 
     Swiper.use([Mousewheel, FreeMode]);
  
@@ -24,23 +25,48 @@
 
     $: navSections = currentProject ? currentProject.sections : null;
 
+    // Update active slides whenever the current project changes
+    $: if (browser && currentProject?.slug) {
+        updateActiveSlides(currentProject.slug);
+        animateNavigationLinks();
+    }
+
     let swiperSonic, swiperSonicMobile;
     let offcanvasCases;
+    let hasAnimated = false;
 
     function updateActiveSlides(slug) {
-        if (!swiperSonic && !swiperSonicMobile) return;
-        
-        const allSlideLinks = document.querySelectorAll(".swiper-slide-link");
+        // Add a small delay to ensure DOM is ready
+        setTimeout(() => {
+            const allSlideLinks = document.querySelectorAll(".swiper-slide-link");
 
-        allSlideLinks.forEach((link) => {
-            link.classList.remove("swiper-slide-link-active");
-        });
+            allSlideLinks.forEach((link) => {
+                link.classList.remove("swiper-slide-link-active");
+            });
 
-        allSlideLinks.forEach((link) => {
-            if (link.dataset.slug === slug) {
-                link.classList.add("swiper-slide-link-active");
+            allSlideLinks.forEach((link) => {
+                if (link.dataset.slug === slug) {
+                    link.classList.add("swiper-slide-link-active");
+                }
+            });
+        }, 100);
+    }
+
+    function animateNavigationLinks() {
+        // Wait for DOM to update with new navigation content
+        setTimeout(() => {
+            const navElements = document.querySelectorAll('.fade-up');
+            if (navElements.length > 0) {
+                // Reset and animate navigation links - just fade in, no movement
+                gsap.set(navElements, { opacity: 0 });
+                gsap.to(navElements, {
+                    opacity: 1,
+                    duration: 0.6,
+                    stagger: 0.15,
+                    ease: "power2.out"
+                });
             }
-        });
+        }, 100);
     }
 
     function hideOffcanvasElements() {
@@ -64,7 +90,38 @@
 		});
 	}
 
-    onMount(() => {
+    function initializeAnimations() {
+        if (hasAnimated) return;
+        
+        // Create main timeline for STATIC elements only
+        const mainTl = gsap.timeline();
+
+        mainTl.to('.fade-in', {
+            opacity: 1,
+            duration: 0.6,
+            ease: "power2.out"
+        })
+        .to('.stagger-item:not(.swiper-slide-duplicate)', {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: "power2.out",
+            onComplete: () => {
+                gsap.set('.stagger-item', { opacity: 1, y: 0 });
+                if (currentProject?.slug) {
+                    updateActiveSlides(currentProject.slug);
+                }
+            }
+        }, 0.1);
+
+        hasAnimated = true;
+    }
+
+    onMount(async () => {
+        // Wait a tick for DOM to be ready, then initialize Swiper FIRST
+        await tick();
+
         swiperSonic = new Swiper(".scrollSwiperSonic", {
             direction: "vertical",
             slidesPerView: "auto",
@@ -92,20 +149,29 @@
             },
         });
 
-        startVideoFeed()
+        // THEN initialize animations after Swiper has created clones
+        setTimeout(() => {
+            initializeAnimations();
+            animateNavigationLinks();
+        }, 50);
 
+        startVideoFeed();
         updateActiveSlides($page.params.slug);
 
         const offcanvasCasesEl = document.querySelector('#offcanvasCases');
-        offcanvasCases = new bootstrap.Offcanvas(offcanvasCasesEl);
+        if (offcanvasCasesEl) {
+            offcanvasCases = new bootstrap.Offcanvas(offcanvasCasesEl);
+        }
     });
 
     afterUpdate(() => {
-        const slug = $page.params.slug;
-        updateActiveSlides(slug);
         hideOffcanvasElements();
+        
+        // Update active slides on route change
+        if (currentProject?.slug) {
+            updateActiveSlides(currentProject.slug);
+        }
     });
-
 </script>
 
 <svelte:head>
@@ -127,16 +193,11 @@
                 <div class="position-absolute d-none d-lg-flex flex-row-reverse text-rotate top-0 text-end" style="left: -15px;">
                     {#if navSections !== null}
                         {#each navSections as section, sectionIndex}
-                            <!-- <div class="fw-bold mt-4 fs-9">
-                                <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} class="case-title u-offset-n1 text-black font-7">
-                                    {section.title}
-                                </a>
-                            </div> -->
                             {#if section.blocks}
                                 {#each section.blocks as block, blockIndex}
                                     {#each ['col_1', 'col_2', 'col_3'] as colKey, colIdx}
                                         {#if block[colKey] && block[colKey].includeNavigation}
-                                            <div class="fw-bold mt-4 fs-9">
+                                            <div class="fw-bold mt-4 fs-9 fade-up">
                                                 <a href={`#${sectionIndex}_${blockIndex}_${colIdx + 1}`} class="case-title u-offset-n1 text-black font-7">
                                                     {block[colKey].textContent[0]?.children?.map(child => child.text).join('')}
                                                 </a>
@@ -148,7 +209,7 @@
                         {/each}
                     {/if}
                 </div>
-                <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end" style="right: -30px;">
+                <div class="position-absolute d-flex d-lg-none text-rotate top-0 text-end fade-up" style="right: -30px;">
                     <div class="bg-blue font-5 fw-bold text-white text-center py-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCases" aria-controls="offcanvasCases" style="width:30px;min-height:150px;">+ Cases</div>
                 </div>
 
@@ -161,7 +222,7 @@
                     <div class="swiper-container scrollSwiperSonicMobile">
                         <div class="swiper-wrapper">
                             {#each [].concat(...Array(1).fill([...caseItems])) as caseItem}
-                                <div class="swiper-slide">
+                                <div class="swiper-slide stagger-item">
                                     <a 
                                         href={`/cases/${caseItem.slug || ''}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
@@ -197,7 +258,7 @@
             </div>
 
             <!-- Main content area -->
-            <div class="col-lg-8 h-100 min-h-100 pe-10px-mob">
+            <div class="col-lg-8 h-100 min-h-100 pe-10px-mob fade-in">
                <div class="max-h-screen min-h-mob-screen h-100 scrolling border-lg border-black px-lg-3 py-lg-3 overflow-x-hidden">
                     <div>
                         <slot />
@@ -206,7 +267,7 @@
             </div>
 
             <!-- Desktop sidebar -->
-            <div class="col-lg-4 h-100 ps-lg-1 d-none d-lg-block">
+            <div class="col-lg-4 h-100 ps-lg-1 d-none d-lg-block fade-in">
                 <div class="h-100 max-h-screen border border-black overflow-hidden">
                     <div class="bg-blue sticky-top border-bottom border-black">
                         <p class="font-2 text-end text-white p-2 mb-0"><b>Cases</b></p>
@@ -214,7 +275,7 @@
                     <div class="swiper-container scrollSwiperSonic">
                         <div class="swiper-wrapper">
                             {#each [].concat(...Array(1).fill([...caseItems])) as caseItem}
-                                <div class="swiper-slide">
+                                <div class="swiper-slide stagger-item">
                                     <a 
                                         href={`/cases/${caseItem.slug || ''}`}
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
@@ -251,3 +312,30 @@
         </div>
     </div>
 </section>
+
+<style>
+    /* Hide elements before animations start to prevent flash */
+    .stagger-item {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .fade-up {
+        opacity: 0;
+    }
+    
+    .fade-in {
+        opacity: 0;
+    }
+    
+    .content-fade-up {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    /* Ensure Swiper clones don't override our animations */
+    .swiper-slide-duplicate {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+</style>

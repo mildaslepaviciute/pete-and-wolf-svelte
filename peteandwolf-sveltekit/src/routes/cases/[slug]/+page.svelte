@@ -23,17 +23,40 @@
     const newSlug = $page.params.slug;
     const newProject = caseItems.find(item => newSlug && item.slug === newSlug);
     
-    if (newSlug !== previousSlug) {
-      if (previousSlug && !isFirstLoad && newProject && !isTransitioning) {
-        // Start transition
+    // Only trigger animations if the slug actually changed (not just hash/anchor changes)
+    if (newSlug !== previousSlug && newSlug) {
+      if (previousSlug && !isFirstLoad && newProject && !isTransitioning && newProject.slug !== currentProject?.slug) {
+        // Start transition only if it's actually a different project
         animateContentTransition(newProject);
-      } else if (newProject) {
-        // First load or no previous slug
+      } else if (newProject && (isFirstLoad || !currentProject)) {
+        // First load or no current project
         currentProject = newProject;
+        if (isFirstLoad) {
+          // Add entrance animation for first load - much faster now
+          setTimeout(() => {
+            animateContentEntrance();
+          }, 200);
+        }
         isFirstLoad = false;
+      } else if (newProject && newProject.slug === currentProject?.slug) {
+        // Same project, just update reference but don't animate
+        currentProject = newProject;
       }
       previousSlug = newSlug;
     }
+  }
+
+  function animateContentEntrance() {
+    if (!mainContent) return;
+    
+    // Stagger animate content elements with faster timing
+    gsap.to('.content-fade-up', {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      stagger: 0.08, // Faster stagger
+      ease: "power2.out"
+    });
   }
 
   async function animateContentTransition(targetProject) {
@@ -42,14 +65,7 @@
     console.log('Starting transition from', currentProject?.slug, 'to', targetProject?.slug);
     isTransitioning = true;
     
-    // Fade out OLD content (currentProject is still the old one)
-    await gsap.to(mainContent, {
-      opacity: 0,
-      duration: 0.5,
-      ease: 'none'
-    });
-    
-    // Reset scroll while invisible
+    // Reset scroll immediately
     const mainContentArea = document.querySelector(".scrolling");
     if (mainContentArea) {
       mainContentArea.style.scrollBehavior = 'auto';
@@ -59,24 +75,21 @@
       }, 50);
     }
     
-    // Small delay to ensure scroll reset completes
-    await new Promise(resolve => setTimeout(resolve, 50));
-    
-    console.log('Updating to new content');
-    
-    // NOW update to new content
+    // Update to new content immediately
     currentProject = targetProject;
     
     await tick(); // Wait for new content to render
     
-    console.log('Fading in new content');
-    
-    // Fade in NEW content
-    await gsap.to(mainContent, {
-      opacity: 1,
-      duration: 0.5,
-      ease: 'none'
+    // Reset content elements to hidden state
+    gsap.set('.content-fade-up', {
+      opacity: 0,
+      y: 20
     });
+    
+    // Small delay then animate in new content
+    setTimeout(() => {
+      animateContentEntrance();
+    }, 100);
     
     console.log('Transition complete');
     isTransitioning = false;
@@ -110,7 +123,7 @@
         {#each currentProject.sections as section, sectionIndex}
           <div
             id={section.title.replace(/\s+/g, '-').toLowerCase()}
-            class="mb-last-0"
+            class="mb-last-0 content-fade-up"
           >
             {#if sectionIndex === 0}
               <h1
@@ -127,7 +140,7 @@
             {/if}
             <hr class="my-4" />
             {#each section.blocks as block, blockIndex}
-              <div class="row gy-3 gy-lg-0">
+              <div class="row gy-3 gy-lg-0 content-fade-up">
                 {#if block.grid === 1}
                   <Column columnData={block.col_1} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_1`} />
                 {:else if block.grid === 2}
@@ -140,7 +153,7 @@
                 {/if}
               </div>
               {#if !(sectionIndex === currentProject.sections.length - 1 && blockIndex === section.blocks.length - 1)}
-                <hr class="my-4" />
+                <hr class="my-4 content-fade-up" />
               {/if}
             {/each}
           </div>

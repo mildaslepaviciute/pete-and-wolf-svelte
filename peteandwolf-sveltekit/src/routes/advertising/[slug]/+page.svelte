@@ -25,6 +25,7 @@
     let isFirstLoad = true;
     let previousProject = null;
     let shadowCredits = null;
+    let hasAnimated = false;
 
     $: if ($page.params.slug && desktopCredits) {
         if (previousSlug !== $page.params.slug) {
@@ -32,6 +33,55 @@
             animateProjectTransition();
             previousSlug = $page.params.slug;
         }
+    }
+
+    function initializeAnimations() {
+        if (hasAnimated) return;
+        
+        // Create main timeline for static elements
+        const mainTl = gsap.timeline();
+
+        // Animate video container and thumbnails
+        mainTl.to('#main-video-container', {
+            opacity: 1,
+            duration: 0.6,
+            ease: "power2.out"
+        })
+        .to('.thumbnail-item:not(.swiper-slide-duplicate)', {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: "power2.out",
+            onComplete: () => {
+                // Make sure all thumbnails (including clones) are visible
+                gsap.set('.thumbnail-item', { opacity: 1, y: 0 });
+            }
+        }, 0.1)
+        .to('.fade-element', {
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power2.out"
+        }, 0.3);
+
+        hasAnimated = true;
+    }
+
+    function animateCreditsOnly() {
+        // Animate only credits/text elements when changing projects
+        setTimeout(() => {
+            const creditsElements = document.querySelectorAll('.fade-element');
+            if (creditsElements.length > 0) {
+                gsap.set(creditsElements, { opacity: 0 });
+                gsap.to(creditsElements, {
+                    opacity: 1,
+                    duration: 0.6,
+                    stagger: 0.1,
+                    ease: "power2.out"
+                });
+            }
+        }, 100);
     }
 
     async function animateProjectTransition() {
@@ -131,6 +181,9 @@
             duration: 0.5,
             ease: 'none',
         });
+
+        // Animate mobile credits too
+        animateCreditsOnly();
 
         setTimeout(() => {
             if (shadowCredits && shadowCredits.parentNode) {
@@ -510,6 +563,10 @@ onDestroy(() => {
                 init: function() {
                      setTimeout(() => {
                         initializeWebpFeed();
+                        // Initialize animations after Swiper is ready
+                        setTimeout(() => {
+                            initializeAnimations();
+                        }, 50);
                     }, 100);
                 }
             }
@@ -560,7 +617,7 @@ onDestroy(() => {
             <div class="col-lg-8 d-flex flex-column px-0-mob h-lg-100" bind:this={leftColumn}>
                 <div class="position-relative d-flex d-lg-none">
                     <!-- Collapse toggle button -->
-                    <div class="position-absolute dropstart text-rotate top-0 end-0 text-end" style="z-index: 15;">
+                    <div class="position-absolute dropstart text-rotate top-0 end-0 text-end fade-element" style="z-index: 15;">
                         <!-- svelte-ignore a11y_click_events_have_key_events -->
                         <!-- svelte-ignore a11y_no_static_element_interactions -->
                         <div class="bg-blue font-5 fw-bold text-white text-center py-4 credits-toggle" 
@@ -572,16 +629,16 @@ onDestroy(() => {
                     </div>
 
                     <!-- Mobile credits panel - Custom implementation -->
-                    <div class="position-absolute credits-panel" 
+                    <div class="position-absolute credits-panel fade-element" 
                         style="top: 1px; right: 0; z-index: 10; transform: translateX(100%); transition: transform 0.3s ease-in-out;"
                         bind:this={collapseElement}>
                         <div class="card card-body border-0 rounded-0 font-9 p-3 w-100" id="cardCredits">
-                            <h2 class="font-7 text-underline" fm-fade-in>{currentProject?.title}</h2>
-                            <div class="mb-2" fm-fade-in style="max-width:75%">
+                            <h2 class="font-7 text-underline">{currentProject?.title}</h2>
+                            <div class="mb-2" style="max-width:75%">
                                 {@html renderBlocks(currentProject.description)}
                             </div>
-                            <p class="mb-2" fm-fade-in>{currentProject.type}</p>
-                            <p class="mb-0" fm-fade-in>
+                            <p class="mb-2">{currentProject.type}</p>
+                            <p class="mb-0">
                                 {@html renderBlocks(currentProject.credits)}
                             </p>
                         </div>
@@ -603,34 +660,34 @@ onDestroy(() => {
 
                 <!-- Desktop credits section -->
                 <div class="d-none d-lg-flex font-8 pt-3 flex-column h-100" bind:this={desktopCredits} style="position: relative;">
-                    <hr class="mt-0 mb-2">
+                    <hr class="mt-0 mb-2 fade-element">
                     <div class="position-relative overflow-hidden">
                         <div class="row justify-content-between align-items-center">
                             <div class="col-lg-8">
-                                <h2 class="font-5 font-3-mt-negative mb-0 fade-text" >{currentProject.title}</h2>
+                                <h2 class="font-5 font-3-mt-negative mb-0 fade-text fade-element">{currentProject.title}</h2>
                             </div>
                             <div class="col-lg-4 text-lg-end">
-                                <p class="mb-0 fade-text" >{currentProject.type}</p>
+                                <p class="mb-0 fade-text fade-element">{currentProject.type}</p>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-2 mb-0 border-black">
+                    <hr class="mt-2 mb-0 border-black fade-element">
                     <div class="flex-grow-1"></div>
                     <div class="position-relative overflow-hidden">
                         <div class="row justify-content-between align-items-end">
                             <div class="col-lg-5">
-                                <div class="mb-0 fade-text">
+                                <div class="mb-0 fade-text fade-element">
                                     {@html renderBlocks(currentProject.description)}
                                 </div>
                             </div>
                             <div class="col-lg-4 text-lg-end">
-                                <div class="mb-0 fade-text">
+                                <div class="mb-0 fade-text fade-element">
                                     {@html renderBlocks(currentProject.credits)}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-2 mb-0">
+                    <hr class="mt-2 mb-0 fade-element">
                 </div>
             </div>
 
@@ -640,7 +697,7 @@ onDestroy(() => {
                     <div class="swiper-container scrollSwiperAdvertising">
                         <div class="swiper-wrapper h-100">
                             {#each data.advertisingProjects as project}
-                                <div class="swiper-slide">
+                                <div class="swiper-slide thumbnail-item">
                                     <a href="/advertising/{project.slug.current}"
                                         class="d-flex align-items-center border-bottom border-black text-decoration-none swiper-slide-link"
                                         data-slug={project.slug.current}>
@@ -668,6 +725,20 @@ onDestroy(() => {
 </section>
 
 <style>
+    /* Hide elements before animations start */
+    .thumbnail-item {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .fade-element {
+        opacity: 0;
+    }
+    
+    #main-video-container {
+        opacity: 0;
+    }
+
     .video-wrapper {
         position: relative;
         width: 100%;
@@ -719,5 +790,11 @@ onDestroy(() => {
     :global(.credits-shadow) {
         backface-visibility: hidden;
         transform: translateZ(0);
+    }
+
+    /* Ensure Swiper clones don't override our animations */
+    :global(.swiper-slide-duplicate) {
+        opacity: 1 !important;
+        transform: none !important;
     }
 </style>
