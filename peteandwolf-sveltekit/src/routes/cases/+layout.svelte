@@ -9,8 +9,6 @@
     } from 'swiper';
     import { tick } from 'svelte';
     import { gsap } from 'gsap';
-    import { browser } from '$app/environment';
-
 
     Swiper.use([Mousewheel, FreeMode]);
  
@@ -25,11 +23,6 @@
 
     $: navSections = currentProject ? currentProject.sections : null;
 
-    // Update active slides whenever the current project changes
-    $: if (browser && currentProject?.slug) {
-        updateActiveSlides(currentProject.slug);
-        animateNavigationLinks();
-    }
 
     let swiperSonic, swiperSonicMobile;
     let offcanvasCases;
@@ -62,11 +55,9 @@
                 gsap.to(navElements, {
                     opacity: 1,
                     duration: 0.6,
-                    stagger: 0.15,
-                    ease: "power2.out"
                 });
             }
-        }, 100);
+        }, 0);
     }
 
     function hideOffcanvasElements() {
@@ -120,7 +111,7 @@
 
     onMount(async () => {
         // Wait a tick for DOM to be ready, then initialize Swiper FIRST
-        await tick();
+        // await tick();
 
         swiperSonic = new Swiper(".scrollSwiperSonic", {
             direction: "vertical",
@@ -170,6 +161,7 @@
         // Update active slides on route change
         if (currentProject?.slug) {
             updateActiveSlides(currentProject.slug);
+            animateNavigationLinks();
         }
     });
 </script>

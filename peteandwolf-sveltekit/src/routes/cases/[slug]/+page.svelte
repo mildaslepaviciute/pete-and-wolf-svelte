@@ -107,11 +107,11 @@
   }
 
   onMount(() => {
-    if (mainContent) {
-      gsap.set(mainContent, {
-        opacity: 1,
-      });
-    }
+    // if (mainContent) {
+    //   gsap.set(mainContent, {
+    //     opacity: 1,
+    //   });
+    // }
   });
 </script>
 
