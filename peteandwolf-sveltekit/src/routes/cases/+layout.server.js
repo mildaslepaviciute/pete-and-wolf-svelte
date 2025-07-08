@@ -33,6 +33,7 @@ export async function load() {
                         title
                     },
                     videoId,
+                    videoControls,
                     "videoPosterImage": {
                         "url": videoPosterImage.asset->url,
                         "alt": videoPosterImage.alt
@@ -53,6 +54,7 @@ export async function load() {
                         title
                     },
                     videoId,
+                    videoControls,
                     "videoPosterImage": {
                         "url": videoPosterImage.asset->url,
                         "alt": videoPosterImage.alt
@@ -73,6 +75,7 @@ export async function load() {
                         title
                     },
                     videoId,
+                    videoControls,
                     "videoPosterImage": {
                         "url": videoPosterImage.asset->url,
                         "alt": videoPosterImage.alt

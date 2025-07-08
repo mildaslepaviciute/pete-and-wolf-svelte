@@ -82,6 +82,12 @@ export default {
       hidden: ({ parent }) => parent?.type !== 'video',
     },
     {
+      name: 'videoControls',
+      title: 'Use video controls?',
+      type: 'boolean',
+      hidden: ({ parent }) => parent?.type !== 'video',
+    },
+    {
       name: 'videoPosterImage',
       title: 'Video Poster Image',
       type: 'image',

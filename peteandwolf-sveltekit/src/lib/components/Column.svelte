@@ -41,6 +41,7 @@
             <VideoPlayer 
                 videoId={columnData.videoId || ""} 
                 poster={columnData.videoPosterImage || ""}
+                videoControls={columnData.videoControls || false}
             />
         {/if}
     </div>

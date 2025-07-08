@@ -119,6 +119,8 @@
         animateContentEntrance();
       }, 100);
     }
+
+    console.log(caseItems)
   });
 </script>
 
