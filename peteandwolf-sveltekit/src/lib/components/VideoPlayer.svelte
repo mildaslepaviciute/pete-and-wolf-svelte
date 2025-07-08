@@ -9,14 +9,13 @@
     let video;
     let isPlaying = false;
     let player = null;
-    let componentId = Math.random().toString(36); // Unique ID for this component instance
+    let componentId = Math.random().toString(36);
     
     const videoUrl = `https://vz-8d625025-b12.b-cdn.net/${videoId}/play_720p.mp4`;
     
     // Subscribe to the store to pause when another video starts
     const unsubscribe = videoPlayerActive.subscribe((activeVideoId) => {
         if (activeVideoId && activeVideoId !== componentId && isPlaying) {
-            // Another video is playing, pause this one
             pauseVideo();
         }
     });
@@ -34,7 +33,6 @@
     function playVideo() {
         if (!video) return;
         
-        // Set this video as the currently playing one
         videoPlayerActive.set(componentId);
         video.play().catch(console.error);
     }
@@ -43,19 +41,16 @@
         if (!video) return;
         
         video.pause();
-        // Clear the currently playing video if it's this one
         videoPlayerActive.update(current => current === componentId ? null : current);
     }
     
     function handlePlay() {
         isPlaying = true;
-        // Set this video as playing when it starts (for Plyr controls too)
         videoPlayerActive.set(componentId);
     }
     
     function handlePause() {
         isPlaying = false;
-        // Clear if this video stops
         videoPlayerActive.update(current => current === componentId ? null : current);
     }
     
@@ -63,10 +58,49 @@
         if (videoControls && video) {
             player = new Plyr(video, {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+                fullscreen: {
+                    enabled: true,
+                    fallback: true, // Use fallback for iOS
+                    iosNative: true, // Use native iOS fullscreen
+                    container: null // Use the video element itself
+                },
+                // Mobile specific settings
+                clickToPlay: true,
+                keyboard: { focused: true, global: false },
+                tooltips: { controls: false, seek: true },
+                // Better mobile UX
+                seekTime: 10,
+                volume: 1,
+                muted: false,
+                hideControls: true,
+                resetOnEnd: false,
+                // Important for mobile fullscreen
+                ratio: null, // Let video determine its own ratio
+                invertTime: false,
+                toggleInvert: true
             });
             
             player.on('play', handlePlay);
             player.on('pause', handlePause);
+            
+            // Add custom fullscreen handling for mobile
+            player.on('enterfullscreen', (event) => {
+                console.log('Entered fullscreen');
+                // Force landscape orientation hint
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(err => {
+                        console.log('Could not lock orientation:', err);
+                    });
+                }
+            });
+            
+            player.on('exitfullscreen', (event) => {
+                console.log('Exited fullscreen');
+                // Unlock orientation
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            });
         }
     });
     
@@ -74,8 +108,7 @@
         if (player) {
             player.destroy();
         }
-        unsubscribe(); // Clean up store subscription
-        // Clear this video from store if it was playing
+        unsubscribe();
         videoPlayerActive.update(current => current === componentId ? null : current);
     });
 </script>
@@ -91,6 +124,9 @@
             src={videoUrl}
             poster={poster?.url}
             playsinline
+            webkit-playsinline
+            x-webkit-airplay="allow"
+            controls={videoControls ? true : false}
             on:play={handlePlay}
             on:pause={handlePause}
         >
@@ -142,6 +178,7 @@
         transform: translate(-50%, -50%) scale(1.1);
     }
     
+    /* Mobile fullscreen improvements */
     :global(.plyr) {
         width: 100% !important;
     }
@@ -149,6 +186,22 @@
     :global(.plyr video) {
         width: 100% !important;
         height: auto !important;
+    }
+    
+    /* Ensure fullscreen works on mobile */
+    :global(.plyr--fullscreen-active) {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+    }
+    
+    :global(.plyr--fullscreen-active video) {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
     }
     
     .has-controls {
