@@ -442,36 +442,36 @@
         webpFeedInitialized = true;
     }
 
-let webpObjectUrls = new Map(); // videoId => blobUrl
+    let webpObjectUrls = new Map(); // videoId => blobUrl
 
-// Returns blob URL from cache or creates a new one from fetch (using browser cache for repeated fetches)
-async function getOrCreateWebpObjectUrl(videoId, webpUrl) {
-    if (webpObjectUrls.has(videoId)) {
-        return webpObjectUrls.get(videoId);
+    // Returns blob URL from cache or creates a new one from fetch (using browser cache for repeated fetches)
+    async function getOrCreateWebpObjectUrl(videoId, webpUrl) {
+        if (webpObjectUrls.has(videoId)) {
+            return webpObjectUrls.get(videoId);
+        }
+        const response = await fetch(webpUrl, { cache: "force-cache" }); // ensures browser cache
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        webpObjectUrls.set(videoId, objectUrl);
+        return objectUrl;
     }
-    const response = await fetch(webpUrl, { cache: "force-cache" }); // ensures browser cache
-    const blob = await response.blob();
-    const objectUrl = URL.createObjectURL(blob);
-    webpObjectUrls.set(videoId, objectUrl);
-    return objectUrl;
-}
 
-function cleanupWebpBlob(videoId) {
-    const blobUrl = webpObjectUrls.get(videoId);
-    if (blobUrl) {
-        URL.revokeObjectURL(blobUrl);
-        webpObjectUrls.delete(videoId);
+    function cleanupWebpBlob(videoId) {
+        const blobUrl = webpObjectUrls.get(videoId);
+        if (blobUrl) {
+            URL.revokeObjectURL(blobUrl);
+            webpObjectUrls.delete(videoId);
+        }
     }
-}
 
-// On destroy, clean up any blobs left
-import { onDestroy } from "svelte";
-onDestroy(() => {
-    for (const blobUrl of webpObjectUrls.values()) {
-        URL.revokeObjectURL(blobUrl);
-    }
-    webpObjectUrls.clear();
-});
+    // On destroy, clean up any blobs left
+    import { onDestroy } from "svelte";
+    onDestroy(() => {
+        for (const blobUrl of webpObjectUrls.values()) {
+            URL.revokeObjectURL(blobUrl);
+        }
+        webpObjectUrls.clear();
+    });
 
     async function preloadAllWebps(webpElements) {
         const loadPromises = [];
@@ -499,46 +499,46 @@ onDestroy(() => {
         await Promise.all(loadPromises);
     }
 
-  function startWebpObserver(webpElements) {
-    if (webpObserver) webpObserver.disconnect();
+    function startWebpObserver(webpElements) {
+        if (webpObserver) webpObserver.disconnect();
 
-    let debounceTimers = new Map();
+        let debounceTimers = new Map();
 
-    webpObserver = new IntersectionObserver(async (entries) => {
-        for (const entry of entries) {
-            const img = entry.target;
-            const videoId = img.dataset.videoId;
-            const webpUrl = img.dataset.webpSrc;
-            const thumbnailUrl = img.dataset.thumbnailSrc;
+        webpObserver = new IntersectionObserver(async (entries) => {
+            for (const entry of entries) {
+                const img = entry.target;
+                const videoId = img.dataset.videoId;
+                const webpUrl = img.dataset.webpSrc;
+                const thumbnailUrl = img.dataset.thumbnailSrc;
 
-            if (debounceTimers.has(videoId)) {
-                clearTimeout(debounceTimers.get(videoId));
-                debounceTimers.delete(videoId);
-            }
-
-            if (entry.isIntersecting) {
-                if (img.src !== webpObjectUrls.get(videoId)) {
-                    const objectUrl = await getOrCreateWebpObjectUrl(videoId, webpUrl);
-                    img.src = objectUrl;
-                }
-            } else {
-                const delay = window.innerWidth < 992 ? 200 : 50;
-                const timer = setTimeout(() => {
-                    if (!entry.isIntersecting) {
-                        img.src = thumbnailUrl;
-                        cleanupWebpBlob(videoId);
-                    }
+                if (debounceTimers.has(videoId)) {
+                    clearTimeout(debounceTimers.get(videoId));
                     debounceTimers.delete(videoId);
-                }, delay);
-                debounceTimers.set(videoId, timer);
-            }
-        }
-    }, { threshold: 1 });
+                }
 
-    webpElements.forEach(img => {
-        webpObserver.observe(img);
-    });
-}
+                if (entry.isIntersecting) {
+                    if (img.src !== webpObjectUrls.get(videoId)) {
+                        const objectUrl = await getOrCreateWebpObjectUrl(videoId, webpUrl);
+                        img.src = objectUrl;
+                    }
+                } else {
+                    const delay = window.innerWidth < 992 ? 200 : 50;
+                    const timer = setTimeout(() => {
+                        if (!entry.isIntersecting) {
+                            img.src = thumbnailUrl;
+                            cleanupWebpBlob(videoId);
+                        }
+                        debounceTimers.delete(videoId);
+                    }, delay);
+                    debounceTimers.set(videoId, timer);
+                }
+            }
+        }, { threshold: 1 });
+
+        webpElements.forEach(img => {
+            webpObserver.observe(img);
+        });
+    }
 
     function updateActiveSlides(slug) {
         if (!swiper) return;
