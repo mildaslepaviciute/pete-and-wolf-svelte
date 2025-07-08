@@ -128,46 +128,49 @@
   <div bind:this={wrapper} class="single-case-wrapper">
     <!-- Main content (current project) -->
     <div bind:this={mainContent} class="main-content">
-      <div id={currentProject.slug}>
-        {#each currentProject.sections as section, sectionIndex}
-          <div
-            id={section.title.replace(/\s+/g, '-').toLowerCase()}
-            class="mb-last-0 content-fade-up"
-          >
-            {#if sectionIndex === 0}
-              <h1
-                class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold pt-2 {getTitleAlignmentClass(section.titleAlignment)}"
-              >
-                {section.title}
-              </h1>
-            {:else}
-              <h2
-                class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold pt-2 {getTitleAlignmentClass(section.titleAlignment)}"
-              >
-                {section.title}
-              </h2>
-            {/if}
-            <hr class="my-4" />
-            {#each section.blocks as block, blockIndex}
-              <div class="row gy-3 gy-lg-0 content-fade-up">
-                {#if block.grid === 1}
-                  <Column columnData={block.col_1} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_1`} />
-                {:else if block.grid === 2}
-                  <Column columnData={block.col_1} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_1`} />
-                  <Column columnData={block.col_2} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_2`} />
-                {:else if block.grid === 3}
-                  <Column columnData={block.col_1} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_1`} />
-                  <Column columnData={block.col_2} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_2`} />
-                  <Column columnData={block.col_3} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_3`} />
-                {/if}
-              </div>
-              {#if !(sectionIndex === currentProject.sections.length - 1 && blockIndex === section.blocks.length - 1)}
-                <hr class="my-4 content-fade-up" />
+      <!-- KEY CHANGE: Force recreation of entire content when project changes -->
+      {#key currentProject.slug}
+        <div id={currentProject.slug}>
+          {#each currentProject.sections as section, sectionIndex}
+            <div
+              id={section.title.replace(/\s+/g, '-').toLowerCase()}
+              class="mb-last-0 content-fade-up"
+            >
+              {#if sectionIndex === 0}
+                <h1
+                  class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold pt-2 {getTitleAlignmentClass(section.titleAlignment)}"
+                >
+                  {section.title}
+                </h1>
+              {:else}
+                <h2
+                  class="{section.titleSize ? section.titleSize : 'font-2'} fw-bold pt-2 {getTitleAlignmentClass(section.titleAlignment)}"
+                >
+                  {section.title}
+                </h2>
               {/if}
-            {/each}
-          </div>
-        {/each}
-      </div>
+              <hr class="my-4" />
+              {#each section.blocks as block, blockIndex}
+                <div class="row gy-3 gy-lg-0 content-fade-up">
+                  {#if block.grid === 1}
+                    <Column columnData={block.col_1} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_1`} />
+                  {:else if block.grid === 2}
+                    <Column columnData={block.col_1} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_1`} />
+                    <Column columnData={block.col_2} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_2`} />
+                  {:else if block.grid === 3}
+                    <Column columnData={block.col_1} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_1`} />
+                    <Column columnData={block.col_2} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_2`} />
+                    <Column columnData={block.col_3} grid={block.grid} block_id={`${sectionIndex}_${blockIndex}_3`} />
+                  {/if}
+                </div>
+                {#if !(sectionIndex === currentProject.sections.length - 1 && blockIndex === section.blocks.length - 1)}
+                  <hr class="my-4 content-fade-up" />
+                {/if}
+              {/each}
+            </div>
+          {/each}
+        </div>
+      {/key}
     </div>
   </div>
 {/if}
