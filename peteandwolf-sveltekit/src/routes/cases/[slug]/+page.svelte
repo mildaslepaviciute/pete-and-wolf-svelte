@@ -107,11 +107,18 @@
   }
 
   onMount(() => {
-    // if (mainContent) {
-    //   gsap.set(mainContent, {
-    //     opacity: 1,
-    //   });
-    // }
+    // Set initial state for all content elements immediately
+    gsap.set('.content-fade-up', {
+      opacity: 0,
+      y: 20
+    });
+    
+    // If we have a current project, animate it in
+    if (currentProject) {
+      setTimeout(() => {
+        animateContentEntrance();
+      }, 100);
+    }
   });
 </script>
 
@@ -173,5 +180,11 @@
   .main-content {
     width: 100%;
     min-height: 100vh;
+  }
+
+  /* Set initial state for animated elements */
+  :global(.content-fade-up) {
+    opacity: 0;
+    transform: translateY(20px);
   }
 </style>

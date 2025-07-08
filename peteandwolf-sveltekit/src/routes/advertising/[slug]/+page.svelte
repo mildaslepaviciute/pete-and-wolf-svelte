@@ -49,6 +49,7 @@
             opacity: 1,
             filter: 'blur(0px)',
             duration: 0.8,
+            delay: 0.2,
             ease: "power2.out"
         })
         // Animate thumbnails with stagger (but NOT the duplicates)
