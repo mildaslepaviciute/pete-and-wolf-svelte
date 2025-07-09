@@ -67,7 +67,7 @@
           <img id="about-image" src={aboutData.mainImage.url} alt={aboutData.mainImage.alt || ""} class="w-100"/>
         </div>
       </div>
-      <div class="col-lg-5 h-lg-100 d-flex flex-column scrolling-lg">
+      <div class="col-lg-5 h-lg-100 d-flex flex-column">
         <hr class="mt-0 mb-2 mb-lg-0 fade-up-mobile fade-up-desktop">
         
         <h1 id="about-title" class="w-100 sticky-top bg-white font-2 font-3-mob mb-0 pb-0 fade-up-mobile fade-up-desktop">
