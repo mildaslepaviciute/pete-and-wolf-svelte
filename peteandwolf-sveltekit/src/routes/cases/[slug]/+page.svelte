@@ -127,7 +127,7 @@
 {#if currentProject}
   <div bind:this={wrapper} class="single-case-wrapper">
     <!-- Main content (current project) -->
-    <div bind:this={mainContent} class="main-content">
+    <div bind:this={mainContent} >
       <!-- KEY CHANGE: Force recreation of entire content when project changes -->
       {#key currentProject.slug}
         <div id={currentProject.slug}>
@@ -176,17 +176,6 @@
 {/if}
 
 <style>
-  .single-case-wrapper {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-  }
-
-  .main-content {
-    width: 100%;
-    min-height: 100vh;
-  }
-
   /* Set initial state for animated elements */
   :global(.content-fade-up) {
     opacity: 0;
