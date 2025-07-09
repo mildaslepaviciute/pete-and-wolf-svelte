@@ -133,7 +133,7 @@
         <div id={currentProject.slug}>
           {#each currentProject.sections as section, sectionIndex}
             <div
-              id={section.title.replace(/\s+/g, '-').toLowerCase()}
+              id={section.title?.replace(/\s+/g, '-').toLowerCase()}
               class="mb-last-0 content-fade-up"
             >
               {#if sectionIndex === 0}
