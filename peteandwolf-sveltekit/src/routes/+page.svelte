@@ -32,7 +32,7 @@
       opacity: 1,
       // filter: 'blur(0px)',
       duration: 1.4,
-      ease: "power2.out"
+      // ease: "power2.out"
     }, 0.6); // Start image fade after a short delay
 
     // Create timeline for desktop animations
@@ -40,8 +40,8 @@
     desktopTl.to('.fade-in-desktop', {
       opacity: 1,
       // filter: 'blur(0px)',
-      duration: 1.4,
-      ease: "power2.out"
+      duration: 2,
+      // ease: "power2.out"
     })
     .to('.fade-up-desktop', {
       opacity: 1,
