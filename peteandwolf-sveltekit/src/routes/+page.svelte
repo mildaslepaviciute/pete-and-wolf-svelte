@@ -16,7 +16,7 @@
     // Set initial state for fade-in elements (images with blur)
     gsap.set('.fade-in', {
       opacity: 0,
-      filter: 'blur(20px)'
+      // filter: 'blur(20px)'
     });
 
     // Create timeline for mobile animations
@@ -30,7 +30,7 @@
     })
     .to('.fade-in-mobile', {
       opacity: 1,
-      filter: 'blur(0px)',
+      // filter: 'blur(0px)',
       duration: 1.4,
       ease: "power2.out"
     }, 0.6); // Start image fade after a short delay
@@ -39,7 +39,7 @@
     const desktopTl = gsap.timeline();
     desktopTl.to('.fade-in-desktop', {
       opacity: 1,
-      filter: 'blur(0px)',
+      // filter: 'blur(0px)',
       duration: 1.4,
       ease: "power2.out"
     })

@@ -47,7 +47,7 @@
         // Animate video container with blur fade-in
         initTl.to('#main-video-container', {
             opacity: 1,
-            filter: 'blur(0px)',
+            // filter: 'blur(0px)',
             duration: 0.8,
             delay: 0.2,
             ease: "power2.out"
@@ -330,7 +330,7 @@
 
         gsap.set(currentLayer, {
             opacity: 1,
-            filter: 'blur(0px)',
+            // filter: 'blur(0px)',
             zIndex: 1,
             pointerEvents: 'auto'
         });
@@ -340,7 +340,7 @@
 
         gsap.set(newLayer, { 
             opacity: 0, 
-            filter: 'blur(10px)',
+            // filter: 'blur(10px)',
             zIndex: 2,
             pointerEvents: 'none'
         });
@@ -372,13 +372,13 @@
 
         tl.to(currentLayer, {
             opacity: 0,
-            filter: 'blur(10px)',
+            // filter: 'blur(10px)',
             duration: 0.5,
             ease: 'power2.inOut'
         })
         .to(newLayer, {
             opacity: 1,
-            filter: 'blur(0px)',
+            // filter: 'blur(0px)',
             duration: 0.4,
             ease: 'power2.out'
         }, 0.1)
@@ -766,7 +766,7 @@
     
     #main-video-container {
         opacity: 0;
-        filter: blur(8px);
+        /* filter: blur(8px); */
     }
 
     /* Desktop-only credits animation - mobile credits are always visible */

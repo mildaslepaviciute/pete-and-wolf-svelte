@@ -9,11 +9,15 @@
   onMount(() => {
     // Set initial states for mobile
     gsap.set('.fade-up-mobile', { opacity: 0, y: 30 });
-    gsap.set('.fade-in-mobile', { opacity: 0, filter: 'blur(20px)' });
+    gsap.set('.fade-in-mobile', { opacity: 0, 
+      // filter: 'blur(20px)'
+     });
 
     // Set initial states for desktop
     gsap.set('.fade-up-desktop', { opacity: 0, y: 30 });
-    gsap.set('.fade-in-desktop', { opacity: 0, filter: 'blur(20px)' });
+    gsap.set('.fade-in-desktop', { opacity: 0, 
+      // filter: 'blur(20px)'
+     });
 
     // Detect viewport
     const isDesktop = window.innerWidth >= 992;
@@ -23,7 +27,7 @@
       gsap.timeline()
         .to('.fade-in-desktop', {
           opacity: 1,
-          filter: 'blur(0px)',
+          // filter: 'blur(0px)',
           duration: 1.4,
           ease: "power2.out"
         })
@@ -38,7 +42,7 @@
       gsap.timeline()
         .to('.fade-in-mobile', {
             opacity: 1,
-            filter: 'blur(0px)',
+            // filter: 'blur(0px)',
             duration: 1.4,
             ease: "power2.out"
           }) 
