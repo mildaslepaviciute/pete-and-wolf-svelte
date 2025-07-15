@@ -75,7 +75,7 @@
         <hr class="mt-0 mb-2 mb-lg-0 fade-up-mobile fade-up-desktop">
         
         <h1 id="about-title" class="w-100 sticky-top bg-white font-2 font-3-mob mb-0 pb-0 fade-up-mobile fade-up-desktop">
-          <b>{aboutData.title}</b>
+          <b>{@html aboutData.title}</b>
         </h1>
         
         <hr class="mb-3 mt-2 mt-lg-0 fade-up-mobile fade-up-desktop">
