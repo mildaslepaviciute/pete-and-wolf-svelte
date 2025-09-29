@@ -55,7 +55,7 @@
 
 <svelte:head>
   <title>Pete & Wolf - {homeData.title}</title>
-  <meta name="description" content="We help you to unmute your brand">
+  <meta name="description" content="We collaborate with ambitious brands to create custom music, sound design, and sonic identities that inspire and tell powerful stories.">
   <meta name="google-site-verification" content="YOdbV_KUTiiUnLNlWbjRhxsD9vGh1mjxVobbLEvPIek" />
 </svelte:head>
 
